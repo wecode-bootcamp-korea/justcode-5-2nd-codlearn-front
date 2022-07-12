@@ -16,8 +16,12 @@ function Router() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/courses/:id" element={<Detail />} />
+        <Route path="/courses" element={<Courses />}>
+          <Route path=":cat1" element={<Courses />}>
+            <Route path=":cat2" element={<Courses />} />
+          </Route>
+        </Route>
+        <Route path="/course/:id" element={<Detail />} />
         <Route path="/carts" element={<Carts />} />
         <Route path="/dashboard" element={<DashBoard />} />
       </Routes>
