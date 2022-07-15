@@ -4,6 +4,10 @@ import reset from 'styled-reset';
 const GlobalStyle = createGlobalStyle`
   ${reset}
 	
+  * {
+    box-sizing: border-box;
+  }
+
 	img {
     max-width: 100%;
     max-height: 100%;
