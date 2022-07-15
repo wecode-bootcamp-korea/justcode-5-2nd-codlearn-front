@@ -4,7 +4,10 @@ import reset from 'styled-reset';
 const GlobalStyle = createGlobalStyle`
   ${reset}
 	
-	// 전역스타일
+	img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 	
 `;
 
