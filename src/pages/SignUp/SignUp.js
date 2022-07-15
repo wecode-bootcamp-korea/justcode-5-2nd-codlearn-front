@@ -144,9 +144,8 @@ function SignUp() {
     });
   };
 
-  const onSubmitHandler = () => {
-    if
-
+  const onSubmitHandler = event => {
+    event.preventDefault();
   };
 
   return (
