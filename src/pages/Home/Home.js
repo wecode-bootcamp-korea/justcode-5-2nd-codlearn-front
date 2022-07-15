@@ -1,5 +1,11 @@
+import MainSlider from './Slider/MainSlider';
+
 function Home() {
-  return <div>Home</div>;
+  return (
+    <div className="HomeWrap">
+      <MainSlider />
+    </div>
+  );
 }
 
 export default Home;
