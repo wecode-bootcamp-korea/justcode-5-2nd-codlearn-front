@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Class from '../../components/Class/Class';
+import Filter from '../../components/Filter/Filter';
 
 const categories = [
   {
@@ -102,18 +104,30 @@ const MainWrapper = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
 `;
-const Course = styled.div`
-  background-color: red;
-  width: 220px;
-  height: 300px;
-  cursor: pointer;
+const MainSortWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
 `;
+
+const MainSort = styled.div`
+  display: flex;
+  flex-direction: column;
+  span {
+    position: relative;
+    z-index: 3;
+  }
+`;
+
 function Courses() {
   const navigate = useNavigate();
   const location = useLocation();
   const [select, setSelect] = useState('');
   const [cat1, setCat1] = useState({ name: '', value: '' });
   const [cat2, setCat2] = useState({ name: '', value: '' });
+  const [courseData, setCourseData] = useState();
+  const [sortOn, setSortOn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   function showSubCat(target) {
     setSelect(prev => {
@@ -136,8 +150,22 @@ function Courses() {
     }
   }, [cat2]);
 
+  useEffect(() => {
+    const getData = async () => {
+      const result = await (
+        await fetch('http://localhost:8000/courses')
+      ).json();
+      console.log(result);
+      setCourseData(result);
+    };
+    getData();
+  }, []);
   return (
-    <Wrapper>
+    <Wrapper
+      onClick={() => {
+        setShowModal(false);
+      }}
+    >
       <aside>
         <CategoryWrapper>
           <Category
@@ -203,18 +231,29 @@ function Courses() {
             <span>{location?.state?.category2}</span>
           )}
         </MainHeader>
+        <MainSortWrapper>
+          <Filter showModal={showModal} setShowModal={setShowModal} />
+          <MainSort>
+            <span
+              onClick={() => {
+                setSortOn(prev => !prev);
+              }}
+            >
+              기본순
+            </span>
+            {sortOn && (
+              <>
+                <span>인기순</span>
+                <span>평점순</span>
+                <span>학생수순</span>
+              </>
+            )}
+          </MainSort>
+        </MainSortWrapper>
         <MainWrapper>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
-          <Course></Course>
+          {courseData?.map(el => (
+            <Class key={el.class_name} data={el} />
+          ))}
         </MainWrapper>
       </main>
     </Wrapper>
