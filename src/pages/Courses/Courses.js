@@ -128,7 +128,7 @@ function Courses() {
   const [courseData, setCourseData] = useState();
   const [sortOn, setSortOn] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  console.log(location.search);
   function showSubCat(target) {
     setSelect(prev => {
       if (prev === target) return '';
@@ -153,13 +153,12 @@ function Courses() {
   useEffect(() => {
     const getData = async () => {
       const result = await (
-        await fetch('http://localhost:8000/courses')
+        await fetch(`http://localhost:8000/courses${location.search}`)
       ).json();
-      console.log(result);
       setCourseData(result);
     };
     getData();
-  }, []);
+  }, [location.search]);
   return (
     <Wrapper
       onClick={() => {
