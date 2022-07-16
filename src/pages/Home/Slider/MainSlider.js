@@ -238,7 +238,6 @@ const Button = styled.button`
 
 //-------------------------------------------//
 const MoveButtonBox = styled.div`
-  height: 22px;
   line-height: 19px;
   padding: 5px 20px;
   border-radius: 20px;
