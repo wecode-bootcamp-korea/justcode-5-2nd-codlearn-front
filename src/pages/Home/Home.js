@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import MainSlider from './Slider/MainSlider';
 
 function Home() {
@@ -9,10 +8,5 @@ function Home() {
     </Homes>
   );
 }
-
-const Homes = styled.div`
-  height: 100vh;
-  background: ligthgray;
-`;
 
 export default Home;
