@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,19 +7,27 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMagnifyingGlass, faCartShopping, faBell, faUser } from '@fortawesome/free-solid-svg-icons';
 library.add(faMagnifyingGlass,faCartShopping, faBell, faUser);
 
-function Header() {
-  return(
-    <Wrapper>
-      <TopWrapper>
-        <Education>
-          <img alt='codlearn-icon' src='images/icon.png' />
-          <span>교육</span>
-        </Education>
-        <Employment>
-          <img alt='codlearn-icon' src='images/icon.png' />
-          <span>채용</span>
-        </Employment>
-      </TopWrapper>
+function HeaderBottom() {
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollToggle, setScrollToggle] = useState(false);
+  useEffect(() => {
+    (() => {
+      window.addEventListener('scroll', () => setScrollY(window.pageYOffset));
+      if (scrollY > 104) {
+        setScrollToggle(true);
+      } else if (scrollY < 104) {
+        setScrollToggle(false);
+      }
+    })();
+    return () => {
+      window.removeEventListener('scroll', () =>
+        setScrollY(window.pageYOffset)
+      );
+    };
+  });
+
+  return (
+    <HeaderBottomWrapper style={ scrollToggle ? { position: 'sticky', top: 0 } : { position: 'static' }}>
       <BottomWrapper>
         <BottomLeftWrapper>
           <img alt='codlearn-logo' src='images/logo.png' />
@@ -62,53 +71,24 @@ function Header() {
           </IconWrapper>
         </BottomRightWrapper>
       </BottomWrapper>
-    </Wrapper>
+    </HeaderBottomWrapper>
   );
 }
 
-const Wrapper = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const TopWrapper = styled.div`
-  display: flex;
-  height: 40px;
-  padding: 0 32px;
-  font-size: 14px;
-  border-bottom: 1px solid #f1f3f5;
-
-  img {
-    width: 14px;
-    height: 14px;
-    margin: 0 8px 0 0;
-  }
-`;
-
-const Education = styled.div`
-  display: flex;
-  align-items: center;
-
-  &:after {
-    content: '';
-    
-    width: 1px;
-    height: 12px;
-    margin: 0 8px;
-    background: #d5dbe2;
-  }
-`;
-
-const Employment = styled.div`
-  display: flex;
-  align-items: center;
+const HeaderBottomWrapper = styled.div`
+  transition-duration: 1s;
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid pink;
 `;
 
 const BottomWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 0 32px;
+  max-width: 1200px;
   height: 64px;
+  margin: 0 auto;
+  padding: 0 32px;
 `;
 
 const BottomLeftWrapper = styled.div`
@@ -124,9 +104,8 @@ const BottomLeftWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px 12px;
-    width: 60px;
-    height: 52px;
+    padding: 8px 16px;
+    height: 64px;
   }
 `;
 
@@ -139,8 +118,8 @@ const Search = styled.div`
   position: relative;
   
   input {
-    width: 128px;
-    height: 24px;
+    width: 148px;
+    height: 36px;
     padding: 5px 9px;
     border: 1px solid transparent;
     border-radius: 3px;
@@ -163,8 +142,7 @@ const Share = styled.div`
   justify-content: center;
   align-items: center;
   padding: 8px 0 8px 8px;
-  width: 84px;
-  height: 48px;
+  height: 64px;
 `;
 
 const IconWrapper = styled.div`
@@ -175,9 +153,9 @@ const IconWrapper = styled.div`
     justify-content: center;
     align-items: center;
     padding: 8px 10px;
-    width: 24px;
-    height: 48px;
+    width: 44px;
+    height: 64px;
   }
 `;
 
-export default Header;
+export default HeaderBottom;
