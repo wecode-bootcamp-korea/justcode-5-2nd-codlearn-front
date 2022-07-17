@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import BASE_URL from '../../ApiOrigin';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import SignUpErrModal from '../../components/Modal/SignUpErrModal';
 
 const PWGuideLineComponent = ({ message, validation }) => {
   console.log('validation:', validation);
@@ -94,6 +93,8 @@ function SignUp() {
     }
   };
 
+  /////비밀번호 재확인
+
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
   const [confirmPasswordErrMessage, setConfirmPasswordErrMessage] =
@@ -101,6 +102,7 @@ function SignUp() {
 
   const onConfirmPasswordHandler = event => {
     setConfirmPassword(event.currentTarget.value);
+
     if (password === confirmPassword) {
       setConfirmPasswordErrMessage('');
       setConfirmPasswordValid(true);
@@ -110,12 +112,8 @@ function SignUp() {
     }
   };
 
+  /////비밀번호 숨김 OR 표출 기능
   const [passwordType, setPasswordType] = useState({
-    type: 'password',
-    visible: false,
-  });
-
-  const [confirmPasswordType, setConfirmPasswordType] = useState({
     type: 'password',
     visible: false,
   });
@@ -132,6 +130,12 @@ function SignUp() {
     });
   };
 
+  /////비밀번호재확인 숨김 OR 표출 기능
+  const [confirmPasswordType, setConfirmPasswordType] = useState({
+    type: 'password',
+    visible: false,
+  });
+
   const handleConfirmPasswordType = e => {
     setConfirmPasswordType(() => {
       if (!confirmPasswordType.visible) {
@@ -147,6 +151,40 @@ function SignUp() {
   const onSubmitHandler = event => {
     event.preventDefault();
   };
+
+  const [openModal, setOpenModal] = useState(false);
+  const [modalText, setModalText] = useState('');
+
+  const navigate = useNavigate();
+  const onSignUp = () => {
+    // fetch(`http://localhost:3000/signup`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     email: email,
+    //     password: password,
+    //   }),
+    // })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     console.log('data', data);
+    //     if (data.status === 201) {
+    //       navigate('/hello');
+    //     } else if (data.message === 'EXISTING_USER') {
+    //       setOpenModal(true);
+    //       setModalText(
+    //         '이미 가입한 이메일 입니다.'
+    //         // '이메일 형식이 올바르지 않습니다.' /
+    //         // '비밀번호 형식이 올바르지 않습니다.'
+    //       );
+    //     } else {
+    setOpenModal(true);
+    setModalText('이메일 형식이 올바르지 않습니다.');
+  };
+  //     });
+  // };
 
   return (
     <Main>
@@ -232,7 +270,10 @@ function SignUp() {
               </PWInputBlock>
               <PWConfirmErr>{confirmPasswordErrMessage}</PWConfirmErr>
             </FormInputWrapper>
-            <SignUpButton>가입하기</SignUpButton>
+            <SignUpButton onClick={onSignUp}>가입하기</SignUpButton>
+            {openModal && (
+              <SignUpErrModal setOpenModal={setOpenModal} text={modalText} />
+            )}
             <SignUpFooter>
               <FooterFolicy>
                 가입 시, 통합 계정으로 코드런이 제공하는 서비스를 모두 이용하실
@@ -354,7 +395,7 @@ const PWToggleForm = styled.span`
   cursor: pointer;
 `;
 const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
-  width: 16;
+  width: 16px;
 `;
 const PWGuideLineAria = styled.p`
   display: flex;

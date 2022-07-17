@@ -8,6 +8,7 @@ import Carts from './pages/Carts/Carts';
 import DashBoard from './pages/DashBoard/DashBoard';
 import Detail from './pages/Detail/Detail';
 import SignUp from './pages/SignUp/SignUp';
+import Hello from './pages/Hello/Hello';
 
 function Router() {
   return (
@@ -16,6 +17,7 @@ function Router() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/hello" element={<Hello />} />
         <Route path="/courses" element={<Courses />}>
           <Route path=":cat1" element={<Courses />}>
             <Route path=":cat2" element={<Courses />} />
