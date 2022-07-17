@@ -91,7 +91,6 @@ function MainSlider() {
   const newSlide = addSlide();
   const slidelength = newSlide.length;
   const clickPrev = () => {
-    console.log('prev클릭');
     sliderContainerRef.current.style.transform = `translateX(-${
       (slideIndex - 1) * 100
     }vw)`;
@@ -100,7 +99,6 @@ function MainSlider() {
   };
 
   const clickNext = () => {
-    console.log('next클릭');
     sliderContainerRef.current.style.transform = `translateX(-${
       (slideIndex + 1) * 100
     }vw)`;
@@ -109,7 +107,6 @@ function MainSlider() {
   };
 
   const clickPause = () => {
-    console.log('pause클릭');
     setPause(!pause);
     //setSlideIndex(10);
   };
