@@ -13,4 +13,5 @@ function Home() {
 const Main = styled.div`
   height: 100vh;
 `;
+
 export default Home;
