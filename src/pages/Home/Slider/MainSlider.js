@@ -12,76 +12,84 @@ function MainSlider() {
   const items = [
     {
       id: 1,
-      color: '#89a52a',
+      color: '#38e5ff',
+      label: '첫번째',
       maincontent: '첫번째입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
+      gif: 'https://icons8.com/icon/g7FGqx8h2AxR/선물',
       button: '첫번째배너 🎁',
     },
     {
       id: 2,
       color: '#ffcb6b',
+      label: '두번째',
       maincontent: '두번째입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
       button: '두번째배너',
     },
     {
       id: 3,
       color: '#929292',
+      label: '세번째',
       maincontent: '세번째입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
       button: '세번째배너',
     },
     {
       id: 4,
-      color: '#ffe4e1',
+      color: '#ff7836',
+      label: '네번째',
       maincontent: '네번째입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
       button: '네번째배너 😎',
     },
     {
       id: 5,
       color: '#6ccad0',
+      label: '다섯번째',
       maincontent: '다섯번째입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
       button: '다섯번째배너',
     },
     {
       id: 6,
       color: '#ff627f',
+      label: '여섯번째',
       maincontent: '여섯번째입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
       button: '여섯번째배너',
     },
     {
       id: 7,
-      color: '#a5ea89',
+      color: '#086394',
+      label: '마지막',
       maincontent: '마지막입니다',
-      subcontent: '강의입니다. 추천해요 들어보세요 어쩌고 저쩌고',
+      subcontent:
+        '강의입니다. 추천해요! 들어보세요!\n 매일 업데이트 되는 코드런 신규강의를 만나보세요!',
       button: '마지막배너',
     },
   ];
   const itemsLength = items.length;
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [slideIndex, setSlideIndex] = useState(1);
-  const [stop, setStop] = useState(false);
+  const [pause, setPause] = useState(false);
   const sliderContainerRef = useRef();
   const sliderRef = useRef();
 
-  let newItems = [...items];
   const addSlide = () => {
     let addFront = [];
     let addLast = [];
-    addFront.unshift(newItems[newItems.length - 1]);
-    addFront[0].id = 0;
-    addLast.push(newItems[0]);
-    addLast[0].id = 9;
-    console.log(addFront, addLast);
-
+    addFront.unshift(items[items.length - 1]);
+    addLast.push(items[0]);
     return [...addFront, ...items, ...addLast];
   };
   const newSlide = addSlide();
   const slidelength = newSlide.length;
-  console.log(newSlide);
   const clickPrev = () => {
     console.log('prev클릭');
     sliderContainerRef.current.style.transform = `translateX(-${
@@ -96,13 +104,13 @@ function MainSlider() {
     sliderContainerRef.current.style.transform = `translateX(-${
       (slideIndex + 1) * 100
     }vw)`;
-    sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
+    sliderContainerRef.current.style.transition = 'transform 1s ease-in';
     setSlideIndex(prev => prev + 1);
   };
 
-  const clickStop = () => {
-    console.log('stop클릭');
-    setStop(!stop);
+  const clickPause = () => {
+    console.log('pause클릭');
+    setPause(!pause);
     //setSlideIndex(10);
   };
 
@@ -128,11 +136,10 @@ function MainSlider() {
         setSlideIndex(1);
       }
     }, 2000);
-
     return () => {
       clearTimeout(timer);
     };
-  }, [slideIndex]);
+  }, [slideIndex, slidelength, pause]);
 
   return (
     <SliderWrap>
@@ -145,6 +152,7 @@ function MainSlider() {
           >
             <SliderText>
               <div className="mainContent">
+                <span className="slideLabel">{data.label}</span>
                 {data.maincontent}
                 <div className="subContent">{data.subcontent}</div>
               </div>
@@ -162,52 +170,49 @@ function MainSlider() {
               <PrevButton onClick={clickPrev}>
                 <FontAwesomeIcon icon={faAngleLeft} />
               </PrevButton>
-              <StopButton
+              <PauseButton
                 onClick={() => {
-                  clickStop();
+                  clickPause();
                 }}
               >
-                {!stop ? (
+                {!pause ? (
                   <FontAwesomeIcon icon={faPause} />
                 ) : (
                   <FontAwesomeIcon icon={faCaretRight} />
                 )}
-              </StopButton>
+              </PauseButton>
               <NextButton onClick={clickNext}>
                 <FontAwesomeIcon icon={faAngleRight} />
               </NextButton>
             </ButtonIcon>
           </MoveButtonBox>
-          <BannerButtonBox>
-            {items.map((data, index) => {
-              const btnIndex = slideIndex => {
+          <PageButtonBox>
+            {items.map(data => {
+              let btnIndex = slideIndex => {
                 if (slideIndex === 8) {
                   return (slideIndex = 1);
                 } else {
-                  return index;
+                  return slideIndex;
                 }
               };
-              //console.log('index : ', index, 'slideIndex : ', slideIndex);
               return (
-                <BannerButton
-                  key={index}
-                  className={
-                    btnIndex(slideIndex) === slideIndex - 1 && 'select'
-                  }
+                <PageButton
+                  key={data.id}
+                  className={data.id === btnIndex(slideIndex) && 'select'}
                   onClick={() => {
                     sliderContainerRef.current.style.transform = `translateX(-${
-                      index * 100
+                      (data.id - 1) * 100
                     }vw)`;
                     sliderContainerRef.current.style.transition =
                       'transform 0.5s ease-in';
-                    setSlideIndex(index);
+                    setSlideIndex(data.id);
                   }}
                 >
                   {data.button}
-                </BannerButton>
+                </PageButton>
               );
             })}
-          </BannerButtonBox>
+          </PageButtonBox>
         </ButtonCenter>
       </ButtonWrap>
     </SliderWrap>
@@ -216,8 +221,8 @@ function MainSlider() {
 
 const SliderWrap = styled.div`
   box-sizing: border-box;
-  border-bottom: 1px solid rgb(206, 212, 218);
   overflow: hidden;
+  border-bottom: 1px solid rgb(206, 212, 218);
 `;
 
 const SliderContainer = styled.div`
@@ -231,27 +236,44 @@ const Slider = styled.div`
   transform: translateX(-100vw);
 `;
 
+// slider contents
 const SliderText = styled.div`
   display: flex;
   align-items: center;
-  width: 1130px;
+  max-width: 1130px;
   height: 100%;
   margin: 0 auto;
   color: white;
   div {
     width: 100%;
+    white-space: pre-line;
+  }
+  .slideLabel {
+    position: absolute;
+    padding: 5px 10px;
+    top: 65px;
+    border-radius: 10px;
+    background-color: #1dc078;
+    font-size: small;
+    font-weight: 600;
   }
   .mainContent {
-    font-size: xx-large;
+    margin-top: 40px;
+    font-size: 45px;
     font-weight: 900;
+    &:nth-child(4) {
+      color: black;
+    }
   }
   .subContent {
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: medium;
     font-weight: 500;
+    line-height: 25px;
   }
 `;
-//-------------------------------------------//
+
+// slider button
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
@@ -262,22 +284,21 @@ const ButtonWrap = styled.div`
 const ButtonCenter = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 1130px;
+  min-width: 1130px;
 `;
-
 const Button = styled.button`
   text-align: center;
   cursor: pointer;
 `;
 
-//-------------------------------------------//
+// slider button - index / prev&next / play&pause
 const MoveButtonBox = styled.div`
   display: flex;
   justify-content: space-between;
   width: 130px;
-  height: 100%;
-  line-height: 19px;
+  height: 36px;
   padding: 5px 10px 5px 15px;
+  line-height: 36px;
   border-radius: 20px;
   color: white;
   background-color: gray;
@@ -289,33 +310,34 @@ const MoveButtonBox = styled.div`
 `;
 const ButtonIcon = styled.div`
   width: 60px;
+  line-height: 25px;
   ${Button} {
     width: 33.333%;
   }
 `;
 const BannerIndex = styled.div`
+  margin-right: 10px;
+  line-height: 26px;
   font-size: small;
   font-weight: 500;
   letter-spacing: 2px;
-  margin-right: 10px;
 `;
 
 const PrevButton = styled(Button)``;
 const NextButton = styled(Button)``;
-const StopButton = styled(Button)``;
+const PauseButton = styled(Button)``;
 
-//-------------------------------------------//
-
-const BannerButtonBox = styled.div``;
-const BannerButton = styled(Button)`
-  height: 100%;
+// slider button - pagenation
+const PageButtonBox = styled.div``;
+const PageButton = styled(Button)`
+  height: 36px;
   margin-right: 10px;
   padding: 5px 20px;
   border-radius: 20px;
   color: #495057;
   font-weight: 600;
-  background-color: white;
   border: 1.5px solid rgb(206, 212, 218);
+  background-color: white;
   &:last-child {
     margin-right: 0px;
   }
