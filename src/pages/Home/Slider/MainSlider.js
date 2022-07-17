@@ -129,7 +129,7 @@ function MainSlider() {
         sliderContainerRef.current.style.transform = `translateX(-${
           slideIndex * 100
         }vw)`;
-        sliderContainerRef.current.style.transition = 'transform 0.8s ease-in';
+        sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
       } else if (slideIndex === slidelength - 1) {
         sliderContainerRef.current.style.transition = 'transform 0s ';
         sliderContainerRef.current.style.transform = `translateX(-0vw)`;
