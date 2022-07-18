@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Header from './components/Header/Header';
+import HeaderTop from './components/Header/HeaderTop'
+import HeaderBottom from './components/Header/HeaderBottom';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import Courses from './pages/Courses/Courses';
@@ -13,7 +14,8 @@ import Hello from './pages/Hello/Hello';
 function Router() {
   return (
     <BrowserRouter>
-      <Header />
+      <HeaderTop />
+      <HeaderBottom />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
