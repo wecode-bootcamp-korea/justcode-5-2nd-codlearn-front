@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 
@@ -38,7 +38,11 @@ const categories = [
     ],
   },
 ];
-
+const filterOpts = [
+  { name: '기본순', value: 'default' },
+  { name: '평점순', value: 'rating' },
+  { name: '학생수순', value: 'famous' },
+];
 const Wrapper = styled.div`
   margin-top: 30px;
   padding: 0px 115px;
@@ -119,6 +123,46 @@ const MainSort = styled.div`
   }
 `;
 
+const SortWrapper = styled.div`
+  display: flex;
+  position : relative;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  padding: 10px 0px;
+  border: ${props =>
+    props.sortOn ? '1px solid #1EC077' : '1px solid #b8b8b8'};
+  border-radius: 3px;
+  cursor: pointer;
+  &:hover{
+    border: ${props =>
+      props.sortOn ? '1px solid #1EC077' : '1px solid black'};
+  }
+  }
+`;
+const SortOptions = styled.div`
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  z-index: 3;
+  top: 35px;
+  display: ${props => (props.sortOn ? 'flex' : 'none')};
+  border: 1px solid #1ec077;
+  border-top: none;
+  flex-direction: column;
+  align-items: center;
+  & > div {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0px;
+  }
+  & > div:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  & > div:last-child {
+  }
+`;
+
 function Courses() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -127,8 +171,10 @@ function Courses() {
   const [cat2, setCat2] = useState({ name: '', value: '' });
   const [courseData, setCourseData] = useState();
   const [sortOn, setSortOn] = useState(false);
+  const [sort, setSort] = useState();
   const [showModal, setShowModal] = useState(false);
-  console.log(location.search);
+  const [query, setQuery] = useSearchParams();
+  const searchParams = new URLSearchParams(query);
   function showSubCat(target) {
     setSelect(prev => {
       if (prev === target) return '';
@@ -159,10 +205,21 @@ function Courses() {
     };
     getData();
   }, [location.search]);
+
+  function toUrl(target, value) {
+    if (searchParams.has(target)) {
+      searchParams.set(target, value);
+      setQuery(searchParams.toString());
+    } else {
+      setQuery(searchParams.toString() + `&${target}=${value}`);
+    }
+  }
+
   return (
     <Wrapper
       onClick={() => {
         setShowModal(false);
+        setSortOn(false);
       }}
     >
       <aside>
@@ -231,22 +288,35 @@ function Courses() {
           )}
         </MainHeader>
         <MainSortWrapper>
-          <Filter showModal={showModal} setShowModal={setShowModal} />
+          <Filter
+            showModal={showModal}
+            setShowModal={setShowModal}
+            query={query}
+            setQuery={setQuery}
+          />
           <MainSort>
-            <span
-              onClick={() => {
+            <SortWrapper
+              sortOn={sortOn}
+              onClick={e => {
+                e.stopPropagation();
                 setSortOn(prev => !prev);
               }}
             >
-              기본순
-            </span>
-            {sortOn && (
-              <>
-                <span>인기순</span>
-                <span>평점순</span>
-                <span>학생수순</span>
-              </>
-            )}
+              <div>{searchParams.has('rating') ? sort : '선택'}</div>
+              <SortOptions sortOn={sortOn}>
+                {filterOpts.map(el => (
+                  <div
+                    onClick={() => {
+                      setSort(el.name);
+                      toUrl('rating', el.value);
+                    }}
+                    key={el.value}
+                  >
+                    {el.name}
+                  </div>
+                ))}
+              </SortOptions>
+            </SortWrapper>
           </MainSort>
         </MainSortWrapper>
         <MainWrapper>
