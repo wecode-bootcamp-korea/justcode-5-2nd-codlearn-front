@@ -1,13 +1,17 @@
 import React from 'react';
+import MainSlider from './Slider/MainSlider';
 import styled from 'styled-components';
 
 function Home() {
-  return <Homes>Home</Homes>;
+  return (
+    <Main>
+      <MainSlider />
+    </Main>
+  );
 }
 
-const Homes = styled.div`
-  height: 3000px;
-  background: lightgreen;
+const Main = styled.div`
+  height: 100vh;
 `;
 
 export default Home;
