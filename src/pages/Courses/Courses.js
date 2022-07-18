@@ -2,7 +2,12 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import {
+  useNavigate,
+  useLocation,
+  useSearchParams,
+  useParams,
+} from 'react-router-dom';
 import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 
@@ -173,14 +178,34 @@ function Courses() {
   const [sortOn, setSortOn] = useState(false);
   const [sort, setSort] = useState();
   const [showModal, setShowModal] = useState(false);
+  const params = useParams();
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
+
   function showSubCat(target) {
     setSelect(prev => {
       if (prev === target) return '';
       else return target;
     });
   }
+
+  function toUrl(target, value) {
+    if (searchParams.has(target)) {
+      searchParams.set(target, value);
+      setQuery(searchParams.toString());
+    } else {
+      setQuery(searchParams.toString() + `&${target}=${value}`);
+    }
+  }
+
+  function literal() {
+    if (params.cat1 && !params.cat2) {
+      return `/${params.cat1}`;
+    } else if (params.cat1 && params.cat2) {
+      return `/${params.cat1}/${params.cat2}`;
+    }
+  }
+  const parameters = literal();
 
   useEffect(() => {
     if (cat1.value && cat2.value) {
@@ -199,21 +224,16 @@ function Courses() {
   useEffect(() => {
     const getData = async () => {
       const result = await (
-        await fetch(`http://localhost:8000/courses${location.search}`)
+        await fetch(
+          params.cat1
+            ? `http://localhost:8000/courses${parameters}${location.search}`
+            : `http://localhost:8000/courses${location.search}`
+        )
       ).json();
-      setCourseData(result);
+      setCourseData(result.slice(0, 15));
     };
     getData();
-  }, [location.search]);
-
-  function toUrl(target, value) {
-    if (searchParams.has(target)) {
-      searchParams.set(target, value);
-      setQuery(searchParams.toString());
-    } else {
-      setQuery(searchParams.toString() + `&${target}=${value}`);
-    }
-  }
+  }, [params.cat1, parameters, location.search]);
 
   return (
     <Wrapper
@@ -321,7 +341,7 @@ function Courses() {
         </MainSortWrapper>
         <MainWrapper>
           {courseData?.map(el => (
-            <Class key={el.class_name} data={el} />
+            <Class key={el.id} data={el} />
           ))}
         </MainWrapper>
       </main>
