@@ -152,39 +152,39 @@ function SignUp() {
     event.preventDefault();
   };
 
-  const [openModal, setOpenModal] = useState(false);
-  const [modalText, setModalText] = useState('');
+  const [openErrModal, setOpenErrModal] = useState(false);
+  const [errModalText, setErrModalText] = useState('');
 
   const navigate = useNavigate();
   const onSignUp = () => {
-    // fetch(`http://localhost:3000/signup`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     email: email,
-    //     password: password,
-    //   }),
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     console.log('data', data);
-    //     if (data.status === 201) {
-    //       navigate('/hello');
-    //     } else if (data.message === 'EXISTING_USER') {
-    //       setOpenModal(true);
-    //       setModalText(
-    //         '이미 가입한 이메일 입니다.'
-    //         // '이메일 형식이 올바르지 않습니다.' /
-    //         // '비밀번호 형식이 올바르지 않습니다.'
-    //       );
-    //     } else {
-    setOpenModal(true);
-    setModalText('이메일 형식이 올바르지 않습니다.');
+    fetch(`http://localhost:3000/users/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('data', data);
+        if (data.status === 201) {
+          navigate('/hello');
+        } else if (data.message === 'EXISTING_USER') {
+          setOpenErrModal(true);
+          setErrModalText(
+            '이미 가입한 이메일 입니다.'
+            // '이메일 형식이 올바르지 않습니다.' /
+            // '비밀번호 형식이 올바르지 않습니다.'
+          );
+        } else {
+          setOpenErrModal(true);
+          setErrModalText('이메일 또는 비밀번호 형식이 올바르지 않습니다.');
+        }
+      });
   };
-  //     });
-  // };
 
   return (
     <Main>
@@ -271,8 +271,11 @@ function SignUp() {
               <PWConfirmErr>{confirmPasswordErrMessage}</PWConfirmErr>
             </FormInputWrapper>
             <SignUpButton onClick={onSignUp}>가입하기</SignUpButton>
-            {openModal && (
-              <SignUpErrModal setOpenModal={setOpenModal} text={modalText} />
+            {openErrModal && (
+              <SignUpErrModal
+                setOpenModal={setOpenErrModal}
+                errModaltext={errModalText}
+              />
             )}
             <SignUpFooter>
               <FooterFolicy>
