@@ -212,6 +212,24 @@ function Courses() {
   }
   const parameters = literal();
 
+  function toUrl(target, value) {
+    if (searchParams.has(target)) {
+      searchParams.set(target, value);
+      setQuery(searchParams.toString());
+    } else {
+      setQuery(searchParams.toString() + `&${target}=${value}`);
+    }
+  }
+
+  function literal() {
+    if (params.cat1 && !params.cat2) {
+      return `/${params.cat1}`;
+    } else if (params.cat1 && params.cat2) {
+      return `/${params.cat1}/${params.cat2}`;
+    }
+  }
+  const parameters = literal();
+
   useEffect(() => {
     if (cat1.value && cat2.value) {
       navigate(`${cat1.value}/${cat2.value}`, {
@@ -231,11 +249,13 @@ function Courses() {
       const result = await (
         await fetch(
           params.cat1
+ feature/listDetail
             ? `http://localhost:10010/courses${parameters}${location.search}`
             : `http://localhost:10010/courses${location.search}`
+
         )
       ).json();
-      setCourseData(result);
+      setCourseData(result.slice(0, 15));
     };
     getData();
   }, [params.cat1, parameters, location.search]);
@@ -345,8 +365,10 @@ function Courses() {
           </MainSort>
         </MainSortWrapper>
         <MainWrapper>
+ feature/listDetail
           {courseData?.data.map(el => (
             <Class navigate={navigate} key={el.id} data={el} />
+
           ))}
         </MainWrapper>
         <PageboxWrapper>
