@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import Comments from '../../components/Comments';
 const DetailWrapper = styled.div`
   margin-bottom: 50px;
 `;
@@ -250,11 +251,14 @@ function Detail() {
                 ))}
               </ObjRight>
             </DBodyObj>
+            <Comments />
           </DetailBody>
           <StickyAside>
             <div style={{ padding: '24px' }}>
               <DetailPrice>
-                {data.price
+                {data.discounted_price
+                  ? Number(data.discounted_price).toLocaleString('en') + '원'
+                  : data.price
                   ? Number(data.price).toLocaleString('en') + '원'
                   : '무료'}
               </DetailPrice>
@@ -266,7 +270,7 @@ function Detail() {
             <DetailMoreInfo>
               <ul>
                 <li>지식공유자 : {data.instructor_name}</li>
-                <li>총 {data.sessions || 12}개 수업</li>
+                <li>총 {data.sessions}개 수업</li>
                 <li>수강기한 : 무제한</li>
                 <li>수료증 : 발급</li>
                 <li>
