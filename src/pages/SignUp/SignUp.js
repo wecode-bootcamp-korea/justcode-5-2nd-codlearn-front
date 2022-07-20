@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import SignUpErrModal from '../../components/Modal/SignUpErrModal';
+import BASE_URL from '../../config';
+import Login from '../../components/Login/Login';
 
 const PWGuideLineComponent = ({ message, validation }) => {
   console.log('validation:', validation);
@@ -103,13 +105,14 @@ function SignUp() {
   const onConfirmPasswordHandler = event => {
     setConfirmPassword(event.currentTarget.value);
 
-    if (password === confirmPassword) {
-      setConfirmPasswordErrMessage('');
-      setConfirmPasswordValid(true);
-    } else {
-      setConfirmPasswordErrMessage('비밀번호가 일치하지 않습니다.');
-      setConfirmPasswordValid(false);
-    }
+    // if (password === confirmPassword) {
+    // {
+    setConfirmPasswordErrMessage('');
+    setConfirmPasswordValid(true);
+    // } else {
+    //   setConfirmPasswordErrMessage('비밀번호가 일치하지 않습니다.');
+    //   setConfirmPasswordValid(false);
+    // }
   };
 
   /////비밀번호 숨김 OR 표출 기능
@@ -157,38 +160,35 @@ function SignUp() {
 
   const navigate = useNavigate();
   const onSignUp = () => {
-    // fetch(`http://localhost:3000/signup`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     email: email,
-    //     password: password,
-    //   }),
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     console.log('data', data);
-    //     if (data.status === 201) {
-    //       navigate('/hello');
-    //     } else if (data.message === 'EXISTING_USER') {
-    //       setOpenModal(true);
-    //       setModalText(
-    //         '이미 가입한 이메일 입니다.'
-    //         // '이메일 형식이 올바르지 않습니다.' /
-    //         // '비밀번호 형식이 올바르지 않습니다.'
-    //       );
-    //     } else {
-    setOpenModal(true);
-    setModalText('이메일 형식이 올바르지 않습니다.');
+    fetch(`${BASE_URL}/user/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('data', data);
+        if (data.status === 201) {
+          navigate('/hello');
+        } else if (data.msg === 'SIGNUP_FAILED: EMAIL_EXIST') {
+          setOpenModal(true);
+          setModalText('이미 가입한 이메일 입니다.');
+        } else {
+          setOpenModal(false);
+          setModalText('이메일 또는 비밀번호 형식이 올바르지 않습니다.');
+        }
+      });
   };
-  //     });
-  // };
 
   return (
     <Main>
       <Section>
+        <Login></Login>
         <Title>회원가입</Title>
         <SignUpMessages>
           <HiddenMessage>회원가입 메세지</HiddenMessage>
