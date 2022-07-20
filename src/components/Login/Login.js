@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,7 +7,19 @@ import BASE_URL from '../../config';
 import KakaoLogin from './KakaoLogin';
 function Login() {
   const navigate = useNavigate();
+  const [openLoginModal, setOpenLoginModal] = useState(false);
 
+  const [email, setEmail] = useState('');
+  const onEmailHandler = e => {
+    setEmail(e.currentTarget.value);
+    console.log('emailvalue :', e.currentTarget.value);
+  };
+
+  const [password, setPassword] = useState('');
+  const onPasswordHandler = e => {
+    setPassword(e.currentTarget.value);
+    console.log('pwvalue :', e.currentTarget.value);
+  };
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
@@ -31,25 +43,22 @@ function Login() {
       headers: {
         'Content-Type': 'application/json',
       },
-      // body: JSON.stringify({
-      //   email: email,
-      //   password: password,
-      // }),
-    }).then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-    });
-    // .then(result => {
-    //   if (result.token) {
-    //     localStorage.setItem('login-token', result.token);
-    //     navigate('/');
-    //     setOpenLoginModal(false);
-    //   } else {
-    //     alert('이메일 또는 비밀번호를 확인해주세요.');
-    //     setOpenLoginModal(false);
-    //   }
-    // });
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (result.token) {
+          localStorage.setItem('login-token', result.token);
+          navigate('/');
+          setOpenLoginModal(false);
+        } else {
+          alert('이메일 또는 비밀번호를 확인해주세요.');
+          setOpenLoginModal(false);
+        }
+      });
   };
 
   const signUpBtnHandle = event => {
@@ -64,19 +73,22 @@ function Login() {
   const goToMain = () => {
     navigate('/');
   };
+  const closeBtn = () => {
+    setOpenLoginModal(!openLoginModal);
+  };
 
   return (
     <ModalCover>
       <ModalBackground />
       <ModalBox>
-        {/* <Close
-          id="closeBtn"
-          onClick={() => {
-            setOpenLoginModal(false);
+        <Close
+          onClick={e => {
+            closeBtn();
+            // clickOutsideModal(e);
           }}
         >
           <CloseIcon icon={faXmark} />
-        </Close> */}
+        </Close>
         <Logo>
           <img src="images/logo.png" alt="logo" />
         </Logo>
@@ -85,13 +97,15 @@ function Login() {
             <EmailInput
               type="email"
               placeholder="이메일"
-              // onChange={onEmailHandler}
+              value={email}
+              onChange={onEmailHandler}
             />
             <PWInputBox>
               <PWInput
-                type="password"
+                type={passwordType.type}
                 placeholder="비밀번호"
-                // onChange={onPasswordHandler}
+                value={password}
+                onChange={onPasswordHandler}
               />
               <PWToggleForm onClick={handlePasswordType}>
                 {passwordType.visible ? (
@@ -233,7 +247,7 @@ const Button = styled.button`
   font-weight: 700;
   border-radius: 3px;
   background-color: #00c471;
-  border: 1px solid;
+  border: none;
   color: #fff;
   cursor: pointer;
 `;
