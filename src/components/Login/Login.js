@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
-
+import { KAKAO_AUTH_URL } from './OAuth';
+import BASE_URL from '../../config';
 function Login() {
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
 
-  const [inputValue, setInputValue] = useState({
+  const [inputs, setInputs] = useState({
     email: '',
     password: '',
   });
 
   const onChangeInput = event => {
     const { name, value } = event.target;
-    setInputValue({
-      ...inputValue,
+    setInputs({
+      ...inputs,
       [name]: value,
     });
   };
@@ -39,14 +39,14 @@ function Login() {
   };
 
   const onLogin = () => {
-    fetch('http://localhost:3000/login', {
+    fetch('http://localhost:3000/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: inputValue.email,
-        password: inputValue.password,
+        email: inputs.email,
+        password: inputs.password,
       }),
     })
       .then(res => res.json())
@@ -59,9 +59,54 @@ function Login() {
         }
       });
   };
+
   const signUpBtnHandle = event => {
     event.preventDefault();
     navigate('/signup');
+  };
+
+  // const getLoginToken = async () => {
+  //   console.log('getLoginToken');
+  //   //constawait fetch(`http://localhost:8000/user/kakao/request`);
+  //   //Promise.all();
+  //   console.log(`request done`);
+  // };
+
+  const onKakaoLogin = async () => {
+    console.log('onKakaoLogin start');
+    //fetch 이후에 location으로 이동
+    await fetch(`${BASE_URL}/user/kakao/request`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => {
+        if (res.redirected) {
+          window.location.href = res.url;
+        }
+      })
+      .catch(function (err) {
+        console.info(err + ' url: ' + `${BASE_URL}/user/kakao/request`);
+      });
+    //   res.headers.get('Location'));
+    // .then(data => {
+    //   console.log('data', data);
+    // });
+    // console.log('onKakaoLogin done');
+    // console.log('console.log(Location)', Location)
+  };
+
+  const handleKakaoLogin = () => {
+    onKakaoLogin();
+  };
+
+  const saveLoginToken = loginToken => {
+    localStorage.setItem('loginToken', loginToken);
+  };
+
+  const goToMain = () => {
+    navigate('/');
   };
 
   return (
@@ -71,7 +116,7 @@ function Login() {
         <Close
           id="closeBtn"
           onClick={() => {
-            setOpenModal(false);
+            setOpenLoginModal(false);
           }}
         >
           <CloseIcon icon={faXmark} />
@@ -111,9 +156,9 @@ function Login() {
         </SignInMoreAction>
         <SignUpSocial>
           <SocialLine />
-          <SocialTitle>간편 회원가입</SocialTitle>
-          <SocialSignUpBtn>
-            <KakaoSVG></KakaoSVG>
+          <SocialTitle>간편 로그인</SocialTitle>
+          <SocialSignUpBtn onClick={handleKakaoLogin}>
+            <KakaoLogo src="images/kakao_login.png" alt="logo" />
           </SocialSignUpBtn>
         </SignUpSocial>
       </ModalBox>
@@ -212,7 +257,6 @@ const PWInput = styled.input`
   background: none;
   :focus {
     outline: none;
-    border-color: #00c471;
   }
 `;
 
@@ -289,7 +333,7 @@ const SocialLine = styled.hr`
   display: block;
 `;
 const SocialTitle = styled.span`
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   padding: 0 8px;
   font-size: 11px;
   color: #abb0b5;
@@ -300,5 +344,12 @@ const SocialSignUpBtn = styled.button`
   width: 50px;
   height: 50px;
   margin-top: 4px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
 `;
-const KakaoSVG = styled.svg``;
+const KakaoLogo = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+`;
