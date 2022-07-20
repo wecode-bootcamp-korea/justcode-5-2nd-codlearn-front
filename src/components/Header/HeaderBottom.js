@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,20 +19,20 @@ function HeaderBottom() {
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
-  
+
   const navigate = useNavigate();
-  
+
   const goToHome = () => {
     navigate('/');
-  }
+  };
 
   const openLogInModal = () => {
     navigate('/openLogInModal');
-  }
+  };
 
   const goToSignUp = () => {
     navigate('/signup');
-  }
+  };
 
   useEffect(() => {
     (() => {
@@ -50,27 +50,27 @@ function HeaderBottom() {
     };
   });
 
-  const writeText = (e) => {
+  const writeText = e => {
     setText(e.target.value);
   };
 
   const resetText = () => {
     setText('');
-  }
-  
+  };
+
   const nextToSearch = () => {
     if (text !== '') {
       navigate(`/courses?s=${text}`);
       resetText();
     }
-  }
-  
-  const searchByEnter = (e) => {
+  };
+
+  const searchByEnter = e => {
     if (text !== '' && e.key === 'Enter') {
       nextToSearch();
     }
-  }
-  
+  };
+
   useEffect(() => {
     console.log(text);
   }, [text]);
@@ -82,25 +82,21 @@ function HeaderBottom() {
       }
     >
       <BottomWrapper>
-        <BottomLeftWrapper>          
-          <img alt='codlearn-logo' src='images/logo.png' onClick={goToHome} />
+        <BottomLeftWrapper>
+          <img alt="codlearn-logo" src="images/logo.png" onClick={goToHome} />
           <Courses>
             <span>
-              <Link to="courses">
-                강의
-              </Link>
+              <Link to="courses">강의</Link>
             </span>
-            <Categories className='categories'>
+            <Categories className="categories">
               <Category1>
-                <Link to="courses/it-programming">
-                  개발 · 프로그래밍
-                </Link>
-                <Dep2Categories className='it-programming'>
+                <Link to="courses/it-programming">개발 · 프로그래밍</Link>
+                <Dep2Categories className="it-programming">
                   <Category4>
                     <Link to="courses/it-programming/front-end">
                       프론트엔드
                     </Link>
-                    <Dep3Categories className='front-end'>
+                    <Dep3Categories className="front-end">
                       <li>
                         <Link to="courses/it-programming/front-end?skill=javascript">
                           Javascript
@@ -119,10 +115,8 @@ function HeaderBottom() {
                     </Dep3Categories>
                   </Category4>
                   <Category5>
-                    <Link to="courses/it-programming/back-end">
-                      백엔드
-                    </Link>
-                    <Dep3Categories className='back-end'>
+                    <Link to="courses/it-programming/back-end">백엔드</Link>
+                    <Dep3Categories className="back-end">
                       <li>
                         <Link to="courses/it-programming/back-end?skill=java">
                           Java
@@ -141,10 +135,8 @@ function HeaderBottom() {
                     </Dep3Categories>
                   </Category5>
                   <Category6>
-                    <Link to="courses/it-programming/game-dev">
-                      게임개발
-                    </Link>
-                    <Dep3Categories className='game-dev'>
+                    <Link to="courses/it-programming/game-dev">게임개발</Link>
+                    <Dep3Categories className="game-dev">
                       <li>
                         <Link to="courses/it-programming/game-dev?skill=ios">
                           IOS
@@ -165,15 +157,11 @@ function HeaderBottom() {
                 </Dep2Categories>
               </Category1>
               <Category2>
-                <Link to="courses/it">
-                  보안 · 네트워크
-                </Link>
-                <Dep2Categories className='it'>
+                <Link to="courses/it">보안 · 네트워크</Link>
+                <Dep2Categories className="it">
                   <Category7>
-                    <Link to="courses/it/security">
-                      보안
-                    </Link>
-                    <Dep3Categories className='security'>
+                    <Link to="courses/it/security">보안</Link>
+                    <Dep3Categories className="security">
                       <li>
                         <Link to="courses/it/security?skill=imformation-security">
                           정보보안
@@ -192,14 +180,10 @@ function HeaderBottom() {
                     </Dep3Categories>
                   </Category7>
                   <Category8>
-                    <Link to="courses/it/cloud">
-                      클라우드
-                    </Link>
-                    <Dep3Categories className='cloud'>
+                    <Link to="courses/it/cloud">클라우드</Link>
+                    <Dep3Categories className="cloud">
                       <li>
-                        <Link to="courses/it/cloud?skill=cloud">
-                          클라우드
-                        </Link>
+                        <Link to="courses/it/cloud?skill=cloud">클라우드</Link>
                       </li>
                       <li>
                         <Link to="courses/it/cloud?skill=network">
@@ -214,19 +198,15 @@ function HeaderBottom() {
                     </Dep3Categories>
                   </Category8>
                   <Category9>
-                    <Link to="courses/it/blockchain">
-                      블록체인
-                    </Link>
-                    <Dep3Categories className='blockchain'>
+                    <Link to="courses/it/blockchain">블록체인</Link>
+                    <Dep3Categories className="blockchain">
                       <li>
                         <Link to="courses/it/blockchain?skill=blockchain">
                           블록체인
                         </Link>
                       </li>
                       <li>
-                        <Link to="courses/it/blockchain?skill=nft">
-                          NFT
-                        </Link>
+                        <Link to="courses/it/blockchain?skill=nft">NFT</Link>
                       </li>
                       <li>
                         <Link to="courses/it/blockchain?skill=system">
@@ -238,15 +218,13 @@ function HeaderBottom() {
                 </Dep2Categories>
               </Category2>
               <Category3>
-                <Link to="courses/data-science">
-                  데이터 사이언스
-                </Link>
-                <Dep2Categories className='data-science'>
+                <Link to="courses/data-science">데이터 사이언스</Link>
+                <Dep2Categories className="data-science">
                   <Category10>
                     <Link to="courses/data-science/data-analysis">
                       데이터 분석
                     </Link>
-                    <Dep3Categories className='data-analysis'>
+                    <Dep3Categories className="data-analysis">
                       <li>
                         <Link to="courses/data-science/data-analysis?skill=data-analysis">
                           데이터 분석
@@ -268,7 +246,7 @@ function HeaderBottom() {
                     <Link to="courses/data-science/artificial-intelligence">
                       인공지능
                     </Link>
-                    <Dep3Categories className='artificial-intelligence'>
+                    <Dep3Categories className="artificial-intelligence">
                       <li>
                         <Link to="courses/data-science/artificial-intelligence?skill=machine-learning">
                           머신러닝
@@ -290,7 +268,7 @@ function HeaderBottom() {
                     <Link to="courses/data-science/data-visualization">
                       데이터 시각화
                     </Link>
-                    <Dep3Categories className='data-visualization'>
+                    <Dep3Categories className="data-visualization">
                       <li>
                         <Link to="courses/data-science/data-visualization?skill=data-vis">
                           데이터 시각화
@@ -326,14 +304,13 @@ function HeaderBottom() {
           </div>
         </BottomLeftWrapper>
         <BottomRightWrapper>
-          <Search style={ token ? { padding: 0 } : { padding: '0 24px 0 0' }}>
-            <input 
-              value={text}
-              onChange={writeText}
-              onKeyUp={searchByEnter}
-            />            
-            <div style={ token ? { right: '10px'} : { right: '32px' }}>
-              <FontAwesomeIcon onClick={nextToSearch} icon="fa-solid fa-magnifying-glass" />
+          <Search style={token ? { padding: 0 } : { padding: '0 24px 0 0' }}>
+            <input value={text} onChange={writeText} onKeyUp={searchByEnter} />
+            <div style={token ? { right: '10px' } : { right: '32px' }}>
+              <FontAwesomeIcon
+                onClick={nextToSearch}
+                icon="fa-solid fa-magnifying-glass"
+              />
             </div>
           </Search>
           <Share>
@@ -342,17 +319,17 @@ function HeaderBottom() {
           {token ? (
             <IconWrapper>
               <div>
-                <Link to='/carts'>
+                <Link to="/carts">
                   <FontAwesomeIcon icon="fa-solid fa-cart-shopping" />
                 </Link>
               </div>
               <div>
-                <Link to='/messages'>
+                <Link to="/messages">
                   <FontAwesomeIcon icon="fa-solid fa-bell" />
                 </Link>
               </div>
               <div>
-                <Link to='/dashboard'>
+                <Link to="/dashboard">
                   <FontAwesomeIcon icon="fa-solid fa-user" />
                 </Link>
               </div>
@@ -374,6 +351,8 @@ const HeaderBottomWrapper = styled.div`
   width: 100%;
   background: white;
   box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
+  position: relative;
+  z-index: 99;
 `;
 
 const BottomWrapper = styled.div`
@@ -423,7 +402,7 @@ const Courses = styled.div`
 
   &:hover {
     :before {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 4px;
       left: 50%;
@@ -434,7 +413,7 @@ const Courses = styled.div`
     }
 
     :after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 4px;
       left: 50%;
@@ -642,7 +621,7 @@ const Share = styled.div`
   align-items: center;
   padding: 8px 0 8px 8px;
   height: 64px;
-  
+
   &:hover {
     color: #1dc078;
     cursor: pointer;
@@ -651,7 +630,7 @@ const Share = styled.div`
 
 const IconWrapper = styled.div`
   display: flex;
-  
+
   div {
     display: flex;
     justify-content: center;
