@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import SignUpErrModal from '../../components/Modal/SignUpErrModal';
 import BASE_URL from '../../config';
-import Login from '../../components/Login/Login';
 import KakaoLogin from '../../components/Login/KakaoLogin';
 
 const PWGuideLineComponent = ({ message, validation }) => {
@@ -34,6 +33,25 @@ function SignUp() {
       setEmailValid(true);
     }
   };
+  ////////////////////////username/////////////////////
+
+  const [name, setName] = useState('');
+  const [nameValid, setNameValid] = useState(false);
+  const [nameErrMessage, setNameErrMessage] = useState('');
+
+  const onNameInput = e => {
+    setName(e.currentTarget.value);
+  };
+
+  const NameValidation = () => {
+    if (1 < name.length && name.length < 10) {
+      setNameValid(true);
+    } else {
+      setNameErrMessage('닉네임을 입력하세요.');
+      setNameValid(false);
+    }
+  };
+
   ///////////////////////password///////////////////////
   const [password, setPassword] = useState(''); //비밀번호 input
   const [passwordValid, setPasswordValid] = useState(false); //비밀번호 유효성 검사
@@ -171,6 +189,7 @@ function SignUp() {
       },
       body: JSON.stringify({
         email: email,
+        user_name: name,
         password: password,
       }),
     })
@@ -219,6 +238,18 @@ function SignUp() {
                 value={email}
                 onChange={onEmailHandler}
               ></EmailInput>
+              <FormErrEmail>{emailErrMessage}</FormErrEmail>
+            </FormInputWrapper>
+            <FormInputWrapper>
+              <Label for="name">닉네임</Label>
+              <NameInput
+                name="name"
+                type="text"
+                placeholder="닉네임을 입력해주세요"
+                value={name}
+                onChange={onNameInput}
+                onKeyUp={NameValidation}
+              ></NameInput>
               <FormErrEmail>{emailErrMessage}</FormErrEmail>
             </FormInputWrapper>
             <FormInputWrapper>
@@ -356,6 +387,20 @@ const Label = styled.label`
   color: #3e4042;
 `;
 const EmailInput = styled.input`
+  appearance: none;
+  margin-top: 4px;
+  padding: 13px 12px;
+  width: 320px;
+  font-size: 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #fff;
+  :focus {
+    outline: none;
+    border-color: #00c471;
+  }
+`;
+const NameInput = styled.input`
   appearance: none;
   margin-top: 4px;
   padding: 13px 12px;
