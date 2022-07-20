@@ -48,6 +48,7 @@ function Comments() {
           ]}
           ratingValue={rating} /* Available Props */
         />
+        <p>별점을 입력해주세요.</p>
       </Body>
     </Wrapper>
   );
