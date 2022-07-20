@@ -12,6 +12,11 @@ const GlobalStyle = createGlobalStyle`
     max-width: 100%;
     max-height: 100%;
   }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
 	
 `;
 
