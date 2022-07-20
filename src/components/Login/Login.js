@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import BASE_URL from '../../config';
+import axios from 'axios';
 import KakaoLogin from './KakaoLogin';
 function Login() {
   const navigate = useNavigate();
@@ -18,8 +19,9 @@ function Login() {
   const [password, setPassword] = useState('');
   const onPasswordHandler = e => {
     setPassword(e.currentTarget.value);
-    console.log('pwvalue :', e.currentTarget.value);
+    // console.log('pwvalue :', e.currentTarget.value);
   };
+  console.log(password);
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
@@ -37,29 +39,39 @@ function Login() {
     });
   };
 
-  const onLogin = () => {
-    fetch(`${BASE_URL}/user/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then(res => res.json())
-      .then(result => {
-        if (result.token) {
-          localStorage.setItem('login-token', result.token);
-          navigate('/');
-          setOpenLoginModal(false);
-        } else {
-          alert('이메일 또는 비밀번호를 확인해주세요.');
-          setOpenLoginModal(false);
-        }
-      });
-  };
+  // const onLogin = () => {
+  //   fetch(`${BASE_URL}/user/login`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       email,
+  //       password,
+  //     }),
+  //   })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       if (result.token) {
+  //         console.log('로그인 성공!');
+  //         localStorage.setItem('login-token', result.token);
+  //         navigate('/');
+  //         setOpenLoginModal(false);
+  //       } else {
+  //         alert('이메일 또는 비밀번호를 확인해주세요.');
+  //         setOpenLoginModal(false);
+  //       }
+  //     });
+  // };
+
+  async function onLogin() {
+    const result = await axios.post('http://localhost:10010/user/login', {
+      email,
+      password,
+    });
+    console.log(result);
+    localStorage.setItem('login-token', result.data.token);
+  }
 
   const signUpBtnHandle = event => {
     event.preventDefault();
@@ -92,34 +104,32 @@ function Login() {
         <Logo>
           <img src="images/logo.png" alt="logo" />
         </Logo>
-        <SignInForm>
-          <InputBlock>
-            <EmailInput
-              type="email"
-              placeholder="이메일"
-              value={email}
-              onChange={onEmailHandler}
+        <InputBlock>
+          <EmailInput
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={onEmailHandler}
+          />
+          <PWInputBox>
+            <PWInput
+              type={passwordType.type}
+              placeholder="비밀번호"
+              value={password}
+              onChange={onPasswordHandler}
             />
-            <PWInputBox>
-              <PWInput
-                type={passwordType.type}
-                placeholder="비밀번호"
-                value={password}
-                onChange={onPasswordHandler}
-              />
-              <PWToggleForm onClick={handlePasswordType}>
-                {passwordType.visible ? (
-                  <EyeIcon icon={faEyeSlash}></EyeIcon>
-                ) : (
-                  <EyeIcon icon={faEye}></EyeIcon>
-                )}
-              </PWToggleForm>
-            </PWInputBox>
-          </InputBlock>
-          <Button id="loginBtn" onClick={onLogin}>
-            로그인
-          </Button>
-        </SignInForm>
+            <PWToggleForm onClick={handlePasswordType}>
+              {passwordType.visible ? (
+                <EyeIcon icon={faEyeSlash}></EyeIcon>
+              ) : (
+                <EyeIcon icon={faEye}></EyeIcon>
+              )}
+            </PWToggleForm>
+          </PWInputBox>
+        </InputBlock>
+        <Button id="loginBtn" onClick={onLogin}>
+          로그인
+        </Button>
         <SignInMoreAction>
           <FindPW>비밀번호 찾기</FindPW>
           <SignUp onClick={signUpBtnHandle}>회원 가입</SignUp>
@@ -145,7 +155,7 @@ const ModalCover = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 80;
+  z-index: 99;
 `;
 
 const ModalBackground = styled.div`
@@ -154,6 +164,7 @@ const ModalBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 99;
   background: rgba(11, 19, 30, 0.37); ;
 `;
 
@@ -164,7 +175,7 @@ const ModalBox = styled.article`
   margin: auto;
   background-color: #fff;
   border-radius: 6px;
-  z-index: 10;
+  z-index: 99;
 `;
 
 const Close = styled.span`

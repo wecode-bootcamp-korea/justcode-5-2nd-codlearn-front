@@ -271,12 +271,14 @@ function Comments({ id }) {
                 setShowUpdate={setShowUpdate}
                 id={id}
                 reviewId={el.id}
+                get={get}
               />
             )}
             {showDelete && (
               <Deletemodal
                 setShowDelete={setShowDelete}
                 id={id}
+                get={get}
                 reviewId={el.id}
               />
             )}

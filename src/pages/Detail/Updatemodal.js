@@ -36,6 +36,7 @@ export const Header = styled.h1`
   padding: 20px;
   font-weight: 600;
 `;
+
 const Input = styled.textarea`
   margin-top: 20px;
   width: 420px;
@@ -47,6 +48,7 @@ const Input = styled.textarea`
     outline: none;
   }
 `;
+
 export const ButtonWrapper = styled.div`
   margin-top: 20px;
   button {
@@ -63,7 +65,8 @@ export const ButtonWrapper = styled.div`
     }
   }
 `;
-function Updatemodal({ setShowUpdate, id, reviewId }) {
+
+function Updatemodal({ setShowUpdate, id, reviewId, get }) {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState();
   console.log(reviewId);
@@ -124,6 +127,7 @@ function Updatemodal({ setShowUpdate, id, reviewId }) {
           <button
             onClick={() => {
               submit();
+              get();
               modalClose();
             }}
           >
