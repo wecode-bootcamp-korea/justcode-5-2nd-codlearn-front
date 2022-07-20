@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import SignUpErrModal from '../../components/Modal/SignUpErrModal';
+import BASE_URL from '../../config';
+import Login from '../../components/Login/Login';
+import KakaoLogin from '../../components/Login/KakaoLogin';
 
 const PWGuideLineComponent = ({ message, validation }) => {
   console.log('validation:', validation);
@@ -12,17 +15,17 @@ const PWGuideLineComponent = ({ message, validation }) => {
 };
 
 function SignUp() {
-  const [email, setEmail] = useState(''); //이메일 input
-  const [emailValid, setEmailValid] = useState(false); //이메일 유효성 검사
-  const [emailErrMessage, setEmailErrMessage] = useState(''); // 이메일 에러 메시지
+  /////////////////////////email////////////////////////
+  const [email, setEmail] = useState('');
+  const [emailValid, setEmailValid] = useState(false);
+  const [emailErrMessage, setEmailErrMessage] = useState('');
 
   const emailRegExp =
     /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
-  const onEmailHandler = event => {
-    setEmail(event.currentTarget.value);
-    console.log('emailvalue :', event.currentTarget.value);
-
+  const onEmailHandler = e => {
+    setEmail(e.currentTarget.value);
+    console.log('emailvalue :', e.currentTarget.value);
     if (!emailRegExp.test(email)) {
       setEmailErrMessage('이메일 형식이 올바르지 않습니다.');
       setEmailValid(false);
@@ -31,7 +34,7 @@ function SignUp() {
       setEmailValid(true);
     }
   };
-
+  ///////////////////////password///////////////////////
   const [password, setPassword] = useState(''); //비밀번호 input
   const [passwordValid, setPasswordValid] = useState(false); //비밀번호 유효성 검사
 
@@ -43,7 +46,7 @@ function SignUp() {
 
   // 1. errMessage map 돌리기
   // 2. PWGuideLine validation 기반 스타일 바꿔주기
-  // 3. onPasswordHandle 안에서 스테이트 바꾸기
+  // 3. passwordValidation 안에서 스테이트 바꾸기
 
   const passwordRegEx = {
     number: password.search(/[0-9]/g),
@@ -52,25 +55,27 @@ function SignUp() {
       /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\']/g
     ),
   };
-
-  console.log('passwordErrMessage: ', passwordErrMessage);
-  const onPasswordHandler = event => {
-    setPassword(event.currentTarget.value);
-    console.log('PWvalue :', event.currentTarget.value);
+  const onPasswordInput = e => {
+    setPassword(e.currentTarget.value);
+    console.log('PWvalue :', e.currentTarget.value);
     console.log('PWlength: ', password.length);
-    ////////영문 숫자 특수 문자 2가지 이상 포함 검사
+  };
+
+  const passwordValidation = () => {
+    //영문 숫자 특수 문자 2가지 이상 포함 검사
     if (
       (passwordRegEx.number > 0 && passwordRegEx.english > 0) ||
       (passwordRegEx.english > 0 && passwordRegEx.specialChar > 0) ||
       (passwordRegEx.specialChar > 0 && passwordRegEx.number > 0)
     ) {
+      // 새 객체를 만들어서 기존의 값에 변경된 값을 덮어씀 : 기존의 값을 그대로 유지
       setPasswordErrMessage(prev =>
         prev.map(el => (el.id === 1 ? { ...el, validation: 1 } : el))
-      ); // 새 객체를 만들어서 기존의 값에 변경된 값을 덮어씀 : 기존의 값을 그대로 유지
+      );
       setPasswordValid(true);
     }
 
-    ////////8자 이상 32자 이하 입력 (공백제외) 검사
+    //8자 이상 32자 이하 입력 (공백제외) 검사
     if (
       password.length >= 8 &&
       password.length <= 32
@@ -82,28 +87,30 @@ function SignUp() {
       setPasswordValid(true);
     }
 
-    ////////연속 3자 이상 동일한 문자/숫자 제외 검사
+    //연속 3자 이상 동일한 문자/숫자 제외 검사
     if (/[^(\w)\1\1]/.test(password)) {
       setPasswordErrMessage(prev =>
         prev.map(el => (el.id === 3 ? { ...el, validation: 1 } : el))
       );
       setPasswordValid(true);
     } else {
+      /////false 일때 validation : 2 ,,,????
       setPasswordValid(false);
     }
   };
 
-  /////비밀번호 재확인
-
+  ///////////////////////confirm password//////////////////////
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
+  const [confirmPasswordValid, setConfirmPasswordValid] = useState(true);
   const [confirmPasswordErrMessage, setConfirmPasswordErrMessage] =
     useState('');
 
-  const onConfirmPasswordHandler = event => {
-    setConfirmPassword(event.currentTarget.value);
+  const onConfirmPasswordInput = e => {
+    setConfirmPassword(e.currentTarget.value);
+  };
 
-    if (password === confirmPassword) {
+  const confirmPasswordValidation = () => {
+    if (confirmPassword === password) {
       setConfirmPasswordErrMessage('');
       setConfirmPasswordValid(true);
     } else {
@@ -148,8 +155,8 @@ function SignUp() {
     });
   };
 
-  const onSubmitHandler = event => {
-    event.preventDefault();
+  const onSubmitHandler = e => {
+    e.preventDefault();
   };
 
   const [openErrModal, setOpenErrModal] = useState(false);
@@ -157,7 +164,7 @@ function SignUp() {
 
   const navigate = useNavigate();
   const onSignUp = () => {
-    fetch(`http://localhost:3000/users/signup`, {
+    fetch(`${BASE_URL}/user/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -170,15 +177,12 @@ function SignUp() {
       .then(res => res.json())
       .then(data => {
         console.log('data', data);
-        if (data.status === 201) {
+        if (data.message === 'SIGNUP_SUCCEEDED') {
+          console.log(data.status);
           navigate('/hello');
-        } else if (data.message === 'EXISTING_USER') {
+        } else if (data.message === 'SIGNUP_FAILED: EMAIL_EXIST') {
           setOpenErrModal(true);
-          setErrModalText(
-            '이미 가입한 이메일 입니다.'
-            // '이메일 형식이 올바르지 않습니다.' /
-            // '비밀번호 형식이 올바르지 않습니다.'
-          );
+          setErrModalText('이미 가입한 이메일 입니다.');
         } else {
           setOpenErrModal(true);
           setErrModalText('이메일 또는 비밀번호 형식이 올바르지 않습니다.');
@@ -189,6 +193,7 @@ function SignUp() {
   return (
     <Main>
       <Section>
+        <Login></Login>
         <Title>회원가입</Title>
         <SignUpMessages>
           <HiddenMessage>회원가입 메세지</HiddenMessage>
@@ -226,7 +231,8 @@ function SignUp() {
                   type={passwordType.type}
                   placeholder="******"
                   value={password}
-                  onChange={event => onPasswordHandler(event)}
+                  onChange={onPasswordInput}
+                  onKeyUp={passwordValidation}
                 ></PWInput>
                 <PWToggleForm onClick={handlePasswordType}>
                   {passwordType.visible ? (
@@ -256,7 +262,8 @@ function SignUp() {
                   type={confirmPasswordType.type}
                   placeholder="******"
                   value={confirmPassword}
-                  onChange={onConfirmPasswordHandler}
+                  onChange={onConfirmPasswordInput}
+                  onKeyUp={confirmPasswordValidation}
                 ></PWInput>
                 <PWToggleForm onClick={handleConfirmPasswordType}>
                   {confirmPasswordType.visible ? (
@@ -273,8 +280,8 @@ function SignUp() {
             <SignUpButton onClick={onSignUp}>가입하기</SignUpButton>
             {openErrModal && (
               <SignUpErrModal
-                setOpenModal={setOpenErrModal}
-                errModaltext={errModalText}
+                setOpenErrModal={setOpenErrModal}
+                text={errModalText}
               />
             )}
             <SignUpFooter>
@@ -297,9 +304,7 @@ function SignUp() {
           <SignUpSocial>
             <SocialLine />
             <SocialTitle>간편 회원가입</SocialTitle>
-            <SocialSignUpBtn>
-              <KakaoSVG></KakaoSVG>
-            </SocialSignUpBtn>
+            <KakaoLogin></KakaoLogin>
           </SignUpSocial>
         </SignUpMain>
       </Section>
@@ -371,15 +376,14 @@ const FormErrEmail = styled.span`
 `;
 const PWInputBlock = styled.div`
   display: flex;
-  padding: 13px 12px;
+  padding: 9.5px 12px;
   margin-top: 4px;
   width: 320px;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   background-color: #fff;
   align-items: center;
-  :focus {
-    outline: none;
+  :focus-within {
     border-color: #00c471;
   }
 `;
@@ -497,9 +501,3 @@ const SocialTitle = styled.span`
   z-index: 1;
   background-color: #fff;
 `;
-const SocialSignUpBtn = styled.button`
-  width: 50px;
-  height: 50px;
-  margin-top: 4px;
-`;
-const KakaoSVG = styled.svg``;

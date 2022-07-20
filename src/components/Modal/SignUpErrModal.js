@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-function SignUpErrModal({ setOpenErrModal, errModaltext }) {
+function SignUpErrModal({ setOpenErrModal, text }) {
   return (
     <ModalCover>
       <ModalBackground />
@@ -14,7 +14,7 @@ function SignUpErrModal({ setOpenErrModal, errModaltext }) {
               <StyledIcon icon={faTriangleExclamation} />
             </ModalIcon>
             <Title>회원 가입에 실패했습니다.</Title>
-            <Description>{errModaltext}</Description>
+            <Description>{text}</Description>
           </ModalIconContent>
           <ButtonPosition>
             <Button
@@ -60,7 +60,7 @@ const ModalBox = styled.div`
   width: calc(100% - 40px);
   max-width: 416px;
   min-width: 320px;
-  padding: 38px 64px;
+  padding: 38px 55px;
   border-radius: 4px;
   background-color: #fff;
 `;
