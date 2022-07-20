@@ -177,7 +177,7 @@ const FakeCat = styled.div`
   }
 `;
 
-function Class({ data }) {
+function Class({ data, navigate }) {
   const [fakecat, setFakecat] = useState(false);
   const [fakeheart, setFakeheart] = useState(false);
   return (
@@ -217,10 +217,14 @@ function Class({ data }) {
         )}
         {data.discounted_price && <CourseDiscount>할인중</CourseDiscount>}
       </div>
-      <Fake>
+      <Fake
+        onClick={() => {
+          navigate(`/course/${data.id}`);
+        }}
+      >
         <FakeName>{data.class_name}</FakeName>
         <FakeDesc>
-          {data.description.length > 80
+          {data?.description?.length > 80
             ? data.description.slice(0, 80) + '...'
             : data.description}
         </FakeDesc>
@@ -230,7 +234,7 @@ function Class({ data }) {
         </FakeLev>
         <FakeCat>
           <FontAwesomeIcon icon={faFolderTree} />
-          <span>{data.categories.join(', ')}</span>
+          <span>{data?.categories?.join(', ')}</span>
         </FakeCat>
         <FakeButtons>
           <Fakecartwrapper>
