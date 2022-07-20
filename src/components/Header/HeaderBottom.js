@@ -78,7 +78,7 @@ function HeaderBottom() {
   return (
     <HeaderBottomWrapper
       style={
-        scrollToggle ? { position: 'sticky', top: 0 } : { position: 'static' }
+        scrollToggle ? { position: 'sticky', top: 0 } : { position: 'relative' }
       }
     >
       <BottomWrapper>
@@ -351,7 +351,6 @@ const HeaderBottomWrapper = styled.div`
   width: 100%;
   background: white;
   box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
-  position: relative;
   z-index: 99;
 `;
 
@@ -397,7 +396,6 @@ const BottomLeftWrapper = styled.div`
 
 const Courses = styled.div`
   position: relative;
-  z-index: 50;
   cursor: pointer;
 
   &:hover {
