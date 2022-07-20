@@ -3,29 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { KAKAO_AUTH_URL } from './OAuth';
 import BASE_URL from '../../config';
+import KakaoLogin from './KakaoLogin';
 function Login() {
   const navigate = useNavigate();
   const [openLoginModal, setOpenLoginModal] = useState(false);
 
-  const [inputs, setInputs] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const onChangeInput = event => {
-    const { name, value } = event.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
+  const onEmailHandler = event => {
+    setEmail(event.currentTarget.value);
+    console.log('emailvalue :', event.currentTarget.value);
+  };
+  const onPasswordHandler = event => {
+    setPassword(event.currentTarget.value);
+    console.log('passwordvalue :', event.currentTarget.value);
   };
 
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
   });
+
   const handlePasswordType = e => {
     setPasswordType(() => {
       if (!passwordType.visible) {
@@ -39,23 +39,29 @@ function Login() {
   };
 
   const onLogin = () => {
-    fetch('http://localhost:3000/user/login', {
+    fetch(`${BASE_URL}/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: inputs.email,
-        password: inputs.password,
+        email: email,
+        password: password,
       }),
     })
-      .then(res => res.json())
-      .then(res => {
-        if (res.token) {
-          localStorage.setItem('login-token', res.token);
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then(result => {
+        if (result.token) {
+          localStorage.setItem('login-token', result.token);
           navigate('/');
+          setOpenLoginModal(false);
         } else {
           alert('이메일 또는 비밀번호를 확인해주세요.');
+          setOpenLoginModal(false);
         }
       });
   };
@@ -63,42 +69,6 @@ function Login() {
   const signUpBtnHandle = event => {
     event.preventDefault();
     navigate('/signup');
-  };
-
-  // const getLoginToken = async () => {
-  //   console.log('getLoginToken');
-  //   //constawait fetch(`http://localhost:8000/user/kakao/request`);
-  //   //Promise.all();
-  //   console.log(`request done`);
-  // };
-
-  const onKakaoLogin = async () => {
-    console.log('onKakaoLogin start');
-    //fetch 이후에 location으로 이동
-    await fetch(`${BASE_URL}/user/kakao/request`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => {
-        if (res.redirected) {
-          window.location.href = res.url;
-        }
-      })
-      .catch(function (err) {
-        console.info(err + ' url: ' + `${BASE_URL}/user/kakao/request`);
-      });
-    //   res.headers.get('Location'));
-    // .then(data => {
-    //   console.log('data', data);
-    // });
-    // console.log('onKakaoLogin done');
-    // console.log('console.log(Location)', Location)
-  };
-
-  const handleKakaoLogin = () => {
-    onKakaoLogin();
   };
 
   const saveLoginToken = loginToken => {
@@ -129,13 +99,13 @@ function Login() {
             <EmailInput
               type="email"
               placeholder="이메일"
-              onChange={onChangeInput}
+              onChange={onEmailHandler}
             />
             <PWInputBox>
               <PWInput
                 type="password"
                 placeholder="비밀번호"
-                onChange={onChangeInput}
+                onChange={onPasswordHandler}
               />
               <PWToggleForm onClick={handlePasswordType}>
                 {passwordType.visible ? (
@@ -157,9 +127,7 @@ function Login() {
         <SignUpSocial>
           <SocialLine />
           <SocialTitle>간편 로그인</SocialTitle>
-          <SocialSignUpBtn onClick={handleKakaoLogin}>
-            <KakaoLogo src="images/kakao_login.png" alt="logo" />
-          </SocialSignUpBtn>
+          <KakaoLogin></KakaoLogin>
         </SignUpSocial>
       </ModalBox>
     </ModalCover>
@@ -339,17 +307,4 @@ const SocialTitle = styled.span`
   color: #abb0b5;
   z-index: 1;
   background-color: #fff;
-`;
-const SocialSignUpBtn = styled.button`
-  width: 50px;
-  height: 50px;
-  margin-top: 4px;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-`;
-const KakaoLogo = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 6px;
 `;

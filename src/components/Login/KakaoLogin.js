@@ -1,78 +1,52 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BASE_URL from '../../config';
+import styled from 'styled-components';
 
 function KakaoLogin() {
   const navigate = useNavigate();
 
-  const API_KEY = process.env.REACT_APP_KAKAO_API_KEY;
-  const KAKAO_CODE = new URL(window.location.href).searchParams.get('code');
-
-  const getLoginToken = () => {
-    fetch(` http://localhost:8000/user/kakao/request/`, {
-      // method: 'GET',
-      // headers: {
-      //   Authorization: kakaoToken,
-      // },
+  const onKakaoLogin = async () => {
+    console.log('onKakaoLogin start');
+    await fetch(`${BASE_URL}/user/kakao/request`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
-      .then(res => res.json())
-      .then(data => {
-        //data 아니고 쿼리로
-        if (data => data.access_token) {
-          localStorage.setItem('token', data.access_token);
-        } else {
-          navigate('/');
+      .then(res => {
+        if (res.redirected) {
+          window.location.href = res.url;
         }
+      })
+      .catch(function (err) {
+        console.info(err + ' url: ' + `${BASE_URL}/user/kakao/request`);
       });
   };
 
-  const saveLoginToken = loginToken => {
-    localStorage.setItem('loginToken', loginToken);
+  const handleKakaoLogin = () => {
+    onKakaoLogin();
   };
 
-  const goToMain = () => {
-    navigate('/');
-  };
-
-  return null;
-
-  // useEffect(() => {
-  //   getKakaoToken();
-  // }, []);
-
-  // const getKakaoToken = () => {
-  //   fetch('https://kauth.kakao.com/oauth/authorize', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-  //     },
-  //     body: `grant_type=authorization_code&client_id=${API_KEY}&redirect_uri=${REDIRECT_URI}&code=${KAKAO_CODE}`,
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       sendData(data);
-  //     });
-
-  //   const sendData = async data => {
-  //     await fetch(`http://localhost:10010/user/kakao/login`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       params: {
-  //         grant_type: 'authorization_code',
-  //         client_id: API_KEY,
-  //         redirect_uri: REDIRECT_URI,
-  //         code: KAKAO_CODE,
-  //       },
-  //     })
-  //       .then(res => res.json())
-  //       .then(res => {
-  //         if (!res.token) return;
-  //         localStorage.setItem('token', res.token);
-  //         navigate('/');
-  //       });
-  //   };
-  // };
+  return (
+    <SocialSignUpBtn onClick={handleKakaoLogin}>
+      <KakaoLogo src="images/kakao_login.png" alt="logo" />
+    </SocialSignUpBtn>
+  );
 }
-
 export default KakaoLogin;
+
+const SocialSignUpBtn = styled.button`
+  width: 50px;
+  height: 50px;
+  margin-top: 4px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+`;
+const KakaoLogo = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+`;
