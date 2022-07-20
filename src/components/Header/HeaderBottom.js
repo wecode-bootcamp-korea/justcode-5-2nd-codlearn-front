@@ -4,8 +4,13 @@ import styled from 'styled-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMagnifyingGlass, faCartShopping, faBell, faUser } from '@fortawesome/free-solid-svg-icons';
-library.add(faMagnifyingGlass,faCartShopping, faBell, faUser);
+import {
+  faMagnifyingGlass,
+  faCartShopping,
+  faBell,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
+library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
   const [scrollY, setScrollY] = useState(0);
@@ -27,10 +32,14 @@ function HeaderBottom() {
   });
 
   return (
-    <HeaderBottomWrapper style={ scrollToggle ? { position: 'sticky', top: 0 } : { position: 'static' }}>
+    <HeaderBottomWrapper
+      style={
+        scrollToggle ? { position: 'sticky', top: 0 } : { position: 'static' }
+      }
+    >
       <BottomWrapper>
         <BottomLeftWrapper>
-          <img alt='codlearn-logo' src='images/logo.png' />
+          <img alt="codlearn-logo" src="images/logo.png" />
           <div>
             <span>강의</span>
           </div>
@@ -49,8 +58,7 @@ function HeaderBottom() {
         </BottomLeftWrapper>
         <BottomRightWrapper>
           <Search>
-            <input>
-            </input>
+            <input></input>
             <div>
               <FontAwesomeIcon icon="fa-solid fa-magnifying-glass" />
             </div>
@@ -78,8 +86,10 @@ function HeaderBottom() {
 const HeaderBottomWrapper = styled.div`
   transition-duration: 1s;
   width: 100%;
-  background: white;
+  background-color: white;
   border-bottom: 1px solid pink;
+  position: relative;
+  z-index: 2;
 `;
 
 const BottomWrapper = styled.div`
@@ -116,7 +126,7 @@ const BottomRightWrapper = styled.div`
 
 const Search = styled.div`
   position: relative;
-  
+
   input {
     width: 148px;
     height: 36px;
@@ -125,10 +135,10 @@ const Search = styled.div`
     border-radius: 3px;
     background: #f6f6f6;
 
-    &:hover{
+    &:hover {
       border: 1px solid #5f5f5f;
-    }  
-  }  
+    }
+  }
 
   div {
     position: absolute;

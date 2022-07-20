@@ -6,11 +6,11 @@ function HeaderTop() {
     <HeaderTopWrapper>
       <TopWrapper>
         <Education>
-          <img alt='codlearn-icon' src='images/icon.png' />
+          <img alt="codlearn-icon" src="images/icon.png" />
           <span>교육</span>
         </Education>
         <Employment>
-          <img alt='codlearn-icon' src='images/icon.png' />
+          <img alt="codlearn-icon" src="images/icon.png" />
           <span>채용</span>
         </Employment>
       </TopWrapper>
@@ -44,7 +44,7 @@ const Education = styled.div`
 
   &:after {
     content: '';
-    
+
     width: 1px;
     height: 12px;
     margin: 0 8px;
