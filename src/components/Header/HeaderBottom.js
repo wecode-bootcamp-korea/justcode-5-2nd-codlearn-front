@@ -365,6 +365,7 @@ const HeaderBottomWrapper = styled.div`
   width: 100%;
   background: white;
   box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
+  z-index: 100;
 `;
 
 const BottomWrapper = styled.div`
@@ -409,7 +410,7 @@ const BottomLeftWrapper = styled.div`
 
 const Courses = styled.div`
   position: relative;
-  z-index: 5;
+  z-index: 50;
   cursor: pointer;
 
   &:hover {
