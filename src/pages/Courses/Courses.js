@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
+import Pagination from './Pagination';
 
 const categories = [
   {
@@ -37,7 +38,7 @@ const categories = [
     value: 'data-science',
     inner: [
       { name: 'ALL', value: '' },
-      { name: '보안', value: 'sequrity' },
+      { name: '보안', value: 'security' },
       { name: '인공지능', value: 'artificial-intelligence' },
       { name: '데이터 시각화', value: 'data-visualization' },
     ],
@@ -70,7 +71,7 @@ const CategoryWrapper = styled.div`
 
 const Category = styled.div`
   padding: 15px;
-  width: 150px;
+  width: 200px;
   font-size: 16px;
   color: #595959;
   border-bottom: 1px solid #e4e4e4;
@@ -112,6 +113,7 @@ const MainWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
+  margin-bottom: 20px;
 `;
 const MainSortWrapper = styled.div`
   display: flex;
@@ -130,7 +132,7 @@ const MainSort = styled.div`
 
 const SortWrapper = styled.div`
   display: flex;
-  position : relative;
+  position: relative;
   flex-direction: column;
   align-items: center;
   width: 100px;
@@ -139,10 +141,9 @@ const SortWrapper = styled.div`
     props.sortOn ? '1px solid #1EC077' : '1px solid #b8b8b8'};
   border-radius: 3px;
   cursor: pointer;
-  &:hover{
+  &:hover {
     border: ${props =>
       props.sortOn ? '1px solid #1EC077' : '1px solid black'};
-  }
   }
 `;
 const SortOptions = styled.div`
@@ -167,6 +168,11 @@ const SortOptions = styled.div`
   & > div:last-child {
   }
 `;
+const PageboxWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 45px 0px;
+`;
 
 function Courses() {
   const navigate = useNavigate();
@@ -188,6 +194,23 @@ function Courses() {
       else return target;
     });
   }
+  function toUrl(target, value) {
+    if (searchParams.has(target)) {
+      searchParams.set(target, value);
+      setQuery(searchParams.toString());
+    } else {
+      setQuery(searchParams.toString() + `&${target}=${value}`);
+    }
+  }
+
+  function literal() {
+    if (params.cat1 && !params.cat2) {
+      return `/${params.cat1}`;
+    } else if (params.cat1 && params.cat2) {
+      return `/${params.cat1}/${params.cat2}`;
+    }
+  }
+  const parameters = literal();
 
   function toUrl(target, value) {
     if (searchParams.has(target)) {
@@ -226,8 +249,10 @@ function Courses() {
       const result = await (
         await fetch(
           params.cat1
-            ? `http://localhost:8000/courses${parameters}${location.search}`
-            : `http://localhost:8000/courses${location.search}`
+ feature/listDetail
+            ? `http://localhost:10010/courses${parameters}${location.search}`
+            : `http://localhost:10010/courses${location.search}`
+
         )
       ).json();
       setCourseData(result.slice(0, 15));
@@ -322,13 +347,13 @@ function Courses() {
                 setSortOn(prev => !prev);
               }}
             >
-              <div>{searchParams.has('rating') ? sort : '선택'}</div>
+              <div>{searchParams.has('order') ? sort : '선택'}</div>
               <SortOptions sortOn={sortOn}>
                 {filterOpts.map(el => (
                   <div
                     onClick={() => {
                       setSort(el.name);
-                      toUrl('rating', el.value);
+                      toUrl('order', el.value);
                     }}
                     key={el.value}
                   >
@@ -340,10 +365,15 @@ function Courses() {
           </MainSort>
         </MainSortWrapper>
         <MainWrapper>
-          {courseData?.map(el => (
-            <Class key={el.id} data={el} />
+ feature/listDetail
+          {courseData?.data.map(el => (
+            <Class navigate={navigate} key={el.id} data={el} />
+
           ))}
         </MainWrapper>
+        <PageboxWrapper>
+          <Pagination totalPage={Number(courseData?.pages)} toUrl={toUrl} />
+        </PageboxWrapper>
       </main>
     </Wrapper>
   );

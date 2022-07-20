@@ -8,7 +8,6 @@ import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
 function Login() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
-
   const [inputValue, setInputValue] = useState({
     email: '',
     password: '',

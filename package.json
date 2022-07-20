@@ -19,6 +19,7 @@
     "react-star-ratings": "^2.3.0",
     "styled-components": "^5.3.5",
     "styled-reset": "^4.4.2",
+    "swiper": "^8.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
