@@ -178,6 +178,7 @@ function Courses() {
   const navigate = useNavigate();
   const location = useLocation();
   const [select, setSelect] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [cat1, setCat1] = useState({ name: '', value: '' });
   const [cat2, setCat2] = useState({ name: '', value: '' });
   const [courseData, setCourseData] = useState();
@@ -228,6 +229,7 @@ function Courses() {
 
   useEffect(() => {
     const getData = async () => {
+      setIsLoading(true);
       const result = await (
         await fetch(
           params.cat1
@@ -236,8 +238,10 @@ function Courses() {
         )
       ).json();
       setCourseData(result);
+      setIsLoading(false);
     };
     getData();
+    window.scrollTo(0, 0);
   }, [params.cat1, parameters, location.search]);
 
   return (
@@ -345,9 +349,11 @@ function Courses() {
           </MainSort>
         </MainSortWrapper>
         <MainWrapper>
-          {courseData?.data.map(el => (
-            <Class navigate={navigate} key={el.id} data={el} />
-          ))}
+          {!isLoading
+            ? courseData?.data.map(el => (
+                <Class navigate={navigate} key={el.id} data={el} />
+              ))
+            : 'Loading...'}
         </MainWrapper>
         <PageboxWrapper>
           <Pagination totalPage={Number(courseData?.pages)} toUrl={toUrl} />
