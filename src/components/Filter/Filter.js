@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const MainFilterWrapper = styled.div`
   position: relative;
 `;
@@ -107,10 +107,9 @@ const Confirm = styled(Reset)`
   color: black;
 `;
 
-function Filter({ showModal, setShowModal }) {
+function Filter({ showModal, setShowModal, query, setQuery }) {
   const [charge, setCharge] = useState([]);
   const [level, setLevel] = useState([]);
-  const [query, setQuery] = useSearchParams();
   const navigate = useNavigate();
   const chargeQuery = query.get('charge');
   const levelQuery = query.get('level');
