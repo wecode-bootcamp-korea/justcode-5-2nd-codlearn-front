@@ -5,13 +5,13 @@ function HeaderTop() {
   return (
     <HeaderTopWrapper>
       <TopWrapper>
-        <Education>
-          <img alt="codlearn-icon" src="images/icon.png" />
-          <span>교육</span>
+        <Education>          
+          <img alt='codlearn-icon' src='images/icon.png' />
+          <span>교육</span>          
         </Education>
-        <Employment>
-          <img alt="codlearn-icon" src="images/icon.png" />
-          <span>채용</span>
+        <Employment>          
+          <img alt='codlearn-icon' src='images/icon.png' />
+          <span>채용</span>          
         </Employment>
       </TopWrapper>
     </HeaderTopWrapper>
@@ -41,10 +41,10 @@ const TopWrapper = styled.div`
 const Education = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   &:after {
     content: '';
-
     width: 1px;
     height: 12px;
     margin: 0 8px;
@@ -55,6 +55,13 @@ const Education = styled.div`
 const Employment = styled.div`
   display: flex;
   align-items: center;
+  color: #858a8d;
+  cursor: pointer;
+
+  img {
+    -webkit-filter: opacity(0.5) drop-shadow(0 0 0 #858a8d);
+    filter: opacity(0.5) drop-shadow(0 0 0 #858a8d);
+  }
 `;
 
 export default HeaderTop;
