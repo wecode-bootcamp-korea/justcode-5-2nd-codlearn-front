@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faHashtag } from '@fortawesome/free-solid-svg-icons';
-import Comments from '../../components/Comments';
+import Comments from './Comments';
 const DetailWrapper = styled.div`
   margin-bottom: 50px;
 `;
