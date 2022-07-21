@@ -383,8 +383,9 @@ const BottomLeftWrapper = styled.div`
   align-items: center;
 
   img {
-    width: 110px;
+    width: 120px;
     height: 100%;
+    object-fit: cover;
   }
 
   div {
