@@ -1,9 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -19,7 +18,8 @@ function HeaderBottom() {
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
-
+  const [query, setQuery] = useSearchParams();
+  const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
 
   const goToHome = () => {
@@ -351,7 +351,8 @@ const HeaderBottomWrapper = styled.div`
   width: 100%;
   background: white;
   box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
-  z-index: 99;
+  position: relative;
+  z-index: 98;
 `;
 
 const BottomWrapper = styled.div`
@@ -361,7 +362,6 @@ const BottomWrapper = styled.div`
   height: 64px;
   margin: 0 auto;
   padding: 0 32px;
-
   img {
     &:hover {
       cursor: pointer;
@@ -600,7 +600,9 @@ const Search = styled.div`
     border: 1px solid transparent;
     border-radius: 3px;
     background: #f6f6f6;
-
+    &:focus {
+      outline: #1ec077;
+    }
     &:hover {
       border: 1px solid #5f5f5f;
     }
