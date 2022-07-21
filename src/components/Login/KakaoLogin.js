@@ -24,12 +24,8 @@ function KakaoLogin() {
       });
   };
 
-  const handleKakaoLogin = () => {
-    onKakaoLogin();
-  };
-
   return (
-    <SocialSignUpBtn onClick={handleKakaoLogin}>
+    <SocialSignUpBtn onClick={onKakaoLogin}>
       <KakaoLogo src="images/kakao_login.png" alt="logo" />
     </SocialSignUpBtn>
   );
