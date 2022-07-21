@@ -143,6 +143,7 @@ function Comments({ id }) {
   const [showOption, setShowOption] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [cart, setCart] = useState();
   const [targetID, setTargetID] = useState();
 
   const handleRating = rate => {
@@ -151,7 +152,7 @@ function Comments({ id }) {
   const handleContent = e => {
     setContent(e.target.value);
   };
-  const token = localStorage.getItem('login-token');
+  const token = localStorage.getItem('token');
 
   async function get() {
     const result = await axios.get(
@@ -164,6 +165,7 @@ function Comments({ id }) {
     );
     setReviews(result.data);
   }
+
   const submit = async () => {
     await axios.post(
       `http://localhost:10010/course/${id}/review`,
@@ -185,7 +187,6 @@ function Comments({ id }) {
     get();
   }, [id]);
 
-  console.log(reviews);
   return (
     <Wrapper>
       <Header>

@@ -181,13 +181,28 @@ const FakeCat = styled.div`
 function Class({ data, navigate }) {
   const [fakecat, setFakecat] = useState(false);
   const [fakeheart, setFakeheart] = useState(false);
-  const token = localStorage.getItem('login-token');
+  const token = localStorage.getItem('token');
   function cart() {
-    axios.put(`http://localhost:10010/cart?${data.id}`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+    axios.put(
+      `http://localhost:10010/cart?classId=${data.id}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+  function wishList() {
+    axios.put(
+      `http://localhost:10010/wishlist?classId=${data.id}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
   }
   return (
     <Course>
@@ -276,6 +291,10 @@ function Class({ data, navigate }) {
               </>
             )}
             <Fakeheart
+              onClick={e => {
+                e.stopPropagation();
+                wishList();
+              }}
               onMouseEnter={() => {
                 setFakeheart(true);
               }}

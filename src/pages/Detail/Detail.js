@@ -164,10 +164,28 @@ const DetailDifficulty = styled.span`
     color: black;
   }
 `;
+const ModalBox = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #3d4042;
+  color: white;
+  font-weight: 700;
+  border-radius: 20px;
+  width: 300px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  span:last-child {
+    cursor: pointer;
+  }
+`;
 
 function Detail() {
   const { id } = useParams();
   const [data, setData] = useState();
+  const [confirm, setConfirm] = useState(false);
   const difficulty = ['입문', '초급', '중급이상'];
   useEffect(() => {
     const fetchData = async () => {
@@ -179,6 +197,15 @@ function Detail() {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    if (confirm) {
+      setTimeout(() => {
+        setConfirm(false);
+      }, 3000);
+      return () => clearTimeout();
+    }
+  }, [confirm]);
+
   return (
     data && (
       <DetailWrapper>
@@ -187,7 +214,11 @@ function Detail() {
           <DetailInfo>
             <DetailCategory>
               {data.categories.map((el, idx) =>
-                idx === 2 ? <span>{el}</span> : <span>{el} &gt;</span>
+                idx === 2 ? (
+                  <span key={idx}>{el}</span>
+                ) : (
+                  <span key={idx}>{el} &gt;</span>
+                )
               )}
             </DetailCategory>
             <DetailName>{data.class_name}</DetailName>
@@ -211,7 +242,7 @@ function Detail() {
             <DetailHashTag>
               <FontAwesomeIcon icon={faHashtag} />
               {[...new Set(data.categories)].map(el => (
-                <button>{el}</button>
+                <button key={el}>{el}</button>
               ))}
             </DetailHashTag>
           </DetailInfo>
@@ -283,6 +314,18 @@ function Detail() {
             </DetailMoreInfo>
           </StickyAside>
         </DetailBodyWrapper>
+        {confirm && (
+          <ModalBox>
+            <span>바구니에 담기 성공!</span>
+            <span
+              onClick={() => {
+                setConfirm(false);
+              }}
+            >
+              X
+            </span>
+          </ModalBox>
+        )}
       </DetailWrapper>
     )
   );

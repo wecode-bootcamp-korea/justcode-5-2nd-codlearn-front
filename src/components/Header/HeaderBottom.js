@@ -16,7 +16,11 @@ import { LoginContext } from '../../App';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
+
+  const token = localStorage.getItem('token');
+
   const [isLogin, setIsLogin] = useContext(LoginContext);
+
   const [modal, setModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
@@ -334,6 +338,7 @@ function HeaderBottom() {
           <Share>
             <span>지식공유참여</span>
           </Share>
+
           {isLogin ? (
             <IconWrapper>
               <div>
@@ -360,6 +365,7 @@ function HeaderBottom() {
                 </Logout>
               </MyPage>
             </IconWrapper>
+
           ) : (
             <>
               <LoginButton onClick={openModal}>로그인</LoginButton>
@@ -738,10 +744,21 @@ const SignupButton = styled.div`
   background: #ff7867;
   color: #fff;
   cursor: pointer;
-
   &:hover {
     background: #ff6d5a;
   }
 `;
-
+const UserMenu = styled.div`
+  display: block;
+  position: absolute;
+  padding: 20px 10px;
+  top: 47px;
+  right: 80px;
+`;
+const Fakediv = styled.div`
+  position: absolute;
+  background-color: tomato;
+  width: 100px;
+  z-index: 99;
+`;
 export default HeaderBottom;
