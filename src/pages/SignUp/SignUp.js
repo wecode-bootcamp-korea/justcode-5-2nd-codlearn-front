@@ -241,11 +241,11 @@ function SignUp() {
               <FormErrEmail>{emailErrMessage}</FormErrEmail>
             </FormInputWrapper>
             <FormInputWrapper>
-              <Label for="name">닉네임</Label>
+              <Label for="name">이름</Label>
               <NameInput
                 name="name"
                 type="text"
-                placeholder="닉네임을 입력해주세요"
+                placeholder="이름을 입력해주세요"
                 value={name}
                 onChange={onNameInput}
                 onKeyUp={NameValidation}
