@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
   useNavigate,
   useLocation,
@@ -328,7 +328,7 @@ function Courses() {
                 setSortOn(prev => !prev);
               }}
             >
-              <div>{searchParams.has('order') ? sort : '선택'}</div>
+              <div>{searchParams.has('order') ? sort || '기본순' : '선택'}</div>
               <SortOptions sortOn={sortOn}>
                 {filterOpts.map(el => (
                   <div
