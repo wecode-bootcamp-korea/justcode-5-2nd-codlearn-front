@@ -146,7 +146,7 @@ function Comments({ id }) {
   const handleRating = rate => {
     setRating(rate / 20);
   };
-  console.log(reviews);
+  console.log(reviews, 123);
   const handleContent = e => {
     setContent(e.target.value);
   };
