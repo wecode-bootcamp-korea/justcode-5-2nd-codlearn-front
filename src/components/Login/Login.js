@@ -51,6 +51,7 @@ function Login({ openModal, setModal }) {
       alert('입력하신 정보를 확인해주세요.');
     }
     setModal(false);
+    goToMain();
   }
 
   const signUpBtnHandle = event => {
@@ -62,6 +63,9 @@ function Login({ openModal, setModal }) {
     event.preventDefault();
   };
 
+  const goToMain = () => {
+    navigate('/');
+  };
   return (
     <>
       <Overlay

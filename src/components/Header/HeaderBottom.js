@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,19 +12,19 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import Login from '../Login/Login';
+import { LoginContext } from '../../App';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-  const [token, setToken] = useState(false);
-
+  const [isLogin, setIsLogin] = useContext(LoginContext);
   const [modal, setModal] = useState(false);
-
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
+  const loginToken = localStorage.getItem('token');
 
   const openModal = () => {
     setModal(true);
@@ -32,10 +32,6 @@ function HeaderBottom() {
 
   const goToHome = () => {
     navigate('/');
-  };
-
-  const openLogInModal = () => {
-    navigate('/openLogInModal');
   };
 
   const goToSignUp = () => {
@@ -82,6 +78,19 @@ function HeaderBottom() {
   useEffect(() => {
     console.log(text);
   }, [text]);
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [loginToken]);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsLogin(false);
+  };
 
   return (
     <HeaderBottomWrapper
@@ -313,9 +322,9 @@ function HeaderBottom() {
           </div>
         </BottomLeftWrapper>
         <BottomRightWrapper>
-          <Search style={token ? { padding: 0 } : { padding: '0 24px 0 0' }}>
+          <Search style={isLogin ? { padding: 0 } : { padding: '0 24px 0 0' }}>
             <input value={text} onChange={writeText} onKeyUp={searchByEnter} />
-            <div style={token ? { right: '10px' } : { right: '32px' }}>
+            <div style={isLogin ? { right: '10px' } : { right: '32px' }}>
               <FontAwesomeIcon
                 onClick={nextToSearch}
                 icon="fa-solid fa-magnifying-glass"
@@ -325,7 +334,7 @@ function HeaderBottom() {
           <Share>
             <span>지식공유참여</span>
           </Share>
-          {token ? (
+          {isLogin ? (
             <IconWrapper>
               <div>
                 <Link to="/carts">
@@ -337,11 +346,19 @@ function HeaderBottom() {
                   <FontAwesomeIcon icon="fa-solid fa-bell" />
                 </Link>
               </div>
-              <div>
+              <MyPage>
                 <Link to="/dashboard">
                   <FontAwesomeIcon icon="fa-solid fa-user" />
                 </Link>
-              </div>
+                <Logout
+                  className="logout"
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  로그아웃
+                </Logout>
+              </MyPage>
             </IconWrapper>
           ) : (
             <>
@@ -434,6 +451,53 @@ const Courses = styled.div`
       display: block;
     }
   }
+`;
+
+const MyPage = styled.div`
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    :before {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      border-color: transparent transparent #e2e3e4;
+      border-style: solid;
+      border-width: 0 12px 12px;
+    }
+
+    :after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      border-color: transparent transparent #fff;
+      border-style: solid;
+      border-width: 0 10px 10px;
+    }
+
+    .logout {
+      display: block;
+    }
+  }
+`;
+
+const Logout = styled.p`
+  display: none;
+  position: absolute;
+  text-align: center;
+  border-radius: 10px;
+  width: 80px;
+  background: #fff;
+  top: 60px;
+  left: 0;
+  padding: 10px;
+  font-weight: 600;
+  cursor: pointer;
 `;
 
 const Categories = styled.ul`
