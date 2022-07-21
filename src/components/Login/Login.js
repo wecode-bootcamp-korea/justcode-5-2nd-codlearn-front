@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,9 +7,8 @@ import BASE_URL from '../../config';
 import KakaoLogin from './KakaoLogin';
 import axios from 'axios';
 
-function Login() {
+function Login({ openModal, setModal }) {
   const navigate = useNavigate();
-  const [openLoginModal, setOpenLoginModal] = useState(false);
 
   const [email, setEmail] = useState('');
   const onEmailHandler = e => {
@@ -20,8 +19,8 @@ function Login() {
   const [password, setPassword] = useState('');
   const onPasswordHandler = e => {
     setPassword(e.currentTarget.value);
+    console.log('pwvalue :', e.currentTarget.value);
   };
-  console.log(password);
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
@@ -51,7 +50,7 @@ function Login() {
       console.log(err);
       alert('입력하신 정보를 확인해주세요.');
     }
-    setOpenLoginModal(false);
+    setModal(false);
   }
 
   const signUpBtnHandle = event => {
@@ -59,103 +58,99 @@ function Login() {
     navigate('/signup');
   };
 
-  const saveLoginToken = loginToken => {
-    localStorage.setItem('login-token', loginToken);
-  };
-
-  const goToMain = () => {
-    navigate('/');
-  };
-
   const onSubmitHandler = event => {
     event.preventDefault();
   };
 
   return (
-    <ModalCover>
-      <ModalBackground />
-      <ModalBox>
-        <Close
-          onClick={() => {
-            setOpenLoginModal(false);
-          }}
-        >
-          <CloseIcon icon={faXmark} />
-        </Close>
-        <Logo>
-          <img src="images/logo.png" alt="logo" />
-        </Logo>
-
-        <SignInForm onSubmit={onSubmitHandler}>
-          <InputBlock>
-            <EmailInput
-              type="email"
-              placeholder="이메일"
-              value={email}
-              onChange={onEmailHandler}
-
-            />
-            <PWToggleForm onClick={handlePasswordType}>
-              {passwordType.visible ? (
-                <EyeIcon icon={faEyeSlash}></EyeIcon>
-              ) : (
-                <EyeIcon icon={faEye}></EyeIcon>
-              )}
-            </PWToggleForm>
-          </PWInputBox>
-        </InputBlock>
-        <Button id="loginBtn" onClick={onLogin}>
-          로그인
-        </Button>
-
-        <SignInMoreAction>
-          <FindPW>비밀번호 찾기</FindPW>
-          <SignUp onClick={signUpBtnHandle}>회원 가입</SignUp>
-        </SignInMoreAction>
-        <SignUpSocial>
-          <SocialLine />
-          <SocialTitle>간편 로그인</SocialTitle>
-          <KakaoLogin></KakaoLogin>
-        </SignUpSocial>
-      </ModalBox>
-    </ModalCover>
+    <>
+      <Overlay
+        onClick={() => {
+          setModal(false);
+        }}
+      />
+      <ModalWrapper>
+        <ModalBox>
+          <Close
+            onClick={() => {
+              setModal(false);
+            }}
+          >
+            <CloseIcon icon={faXmark} />
+          </Close>
+          <Logo>
+            <img src="images/logo.png" alt="logo" />
+          </Logo>
+          <SignInForm onSubmit={onSubmitHandler}>
+            <InputBlock>
+              <EmailInput
+                type="email"
+                placeholder="이메일"
+                value={email}
+                onChange={onEmailHandler}
+              />
+              <PWInputBox>
+                <PWInput
+                  type={passwordType.type}
+                  placeholder="비밀번호"
+                  value={password}
+                  onChange={onPasswordHandler}
+                />
+                <PWToggleForm onClick={handlePasswordType}>
+                  {passwordType.visible ? (
+                    <EyeIcon icon={faEyeSlash}></EyeIcon>
+                  ) : (
+                    <EyeIcon icon={faEye}></EyeIcon>
+                  )}
+                </PWToggleForm>
+              </PWInputBox>
+            </InputBlock>
+            <Button id="loginBtn" onClick={onLogin}>
+              로그인
+            </Button>
+          </SignInForm>
+          <SignInMoreAction>
+            <FindPW>비밀번호 찾기</FindPW>
+            <SignUp onClick={signUpBtnHandle}>회원 가입</SignUp>
+          </SignInMoreAction>
+          <SignUpSocial>
+            <SocialLine />
+            <SocialTitle>간편 로그인</SocialTitle>
+            <KakaoLogin></KakaoLogin>
+          </SignUpSocial>
+        </ModalBox>
+      </ModalWrapper>
+    </>
   );
 }
 export default Login;
-
-const ModalCover = styled.div`
+const Overlay = styled.div`
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+`;
+const ModalWrapper = styled.div`
+  width: 360px;
+  height: 66vh;
+  border-radius: 10px;
+  background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  padding: 30px;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 99;
+  align-items: center;
 `;
-
-const ModalBackground = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(11, 19, 30, 0.37);
-  z-index: 99;
-`;
-
-const ModalBox = styled.article`
-  padding: 24px;
-  width: 360px !important;
-  height: 482px;
-  margin: auto;
-  background-color: #fff;
-  border-radius: 6px;
-  z-index: 99;
-`;
-
+const ModalBox = styled.div``;
 const Close = styled.span`
   display: flex;
   align-items: center;
