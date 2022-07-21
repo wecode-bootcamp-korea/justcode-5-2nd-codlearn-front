@@ -121,18 +121,21 @@ function MainSlider() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (slideIndex < slidelength - 1) {
+      if (slideIndex <= slidelength - 1) {
         setSlideIndex(prev => prev + 1);
+        sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
         sliderContainerRef.current.style.transform = `translateX(-${
           slideIndex * 100
         }vw)`;
-        sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
-      } else if (slideIndex === slidelength - 1) {
-        sliderContainerRef.current.style.transition = 'transform 0s ';
-        sliderContainerRef.current.style.transform = `translateX(-0vw)`;
-        setSlideIndex(1);
       }
     }, 2000);
+    if (slideIndex > slidelength - 1) {
+      sliderContainerRef.current.style.transition = 'transform 0s ';
+      sliderContainerRef.current.style.transform = `translateX(-0vw)`;
+      setSlideIndex(1);
+    }
+
+    console.log('slideIndex : ', slideIndex);
     return () => {
       clearTimeout(timer);
     };
