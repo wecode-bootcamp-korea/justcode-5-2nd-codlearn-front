@@ -15,10 +15,8 @@ import Login from '../Login/Login';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-  const [token, setToken] = useState(false);
-
+  const token = localStorage.getItem('token');
   const [modal, setModal] = useState(false);
-
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
@@ -326,23 +324,29 @@ function HeaderBottom() {
             <span>지식공유참여</span>
           </Share>
           {token ? (
-            <IconWrapper>
-              <div>
-                <Link to="/carts">
-                  <FontAwesomeIcon icon="fa-solid fa-cart-shopping" />
-                </Link>
-              </div>
-              <div>
-                <Link to="/messages">
-                  <FontAwesomeIcon icon="fa-solid fa-bell" />
-                </Link>
-              </div>
-              <div>
-                <Link to="/dashboard">
-                  <FontAwesomeIcon icon="fa-solid fa-user" />
-                </Link>
-              </div>
-            </IconWrapper>
+            <>
+              <IconWrapper>
+                <div>
+                  <Link to="/carts">
+                    <FontAwesomeIcon icon="fa-solid fa-cart-shopping" />
+                  </Link>
+                </div>
+                <div>
+                  <Link to="/messages">
+                    <FontAwesomeIcon icon="fa-solid fa-bell" />
+                  </Link>
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <Link to="/dashboard">
+                    <FontAwesomeIcon icon="fa-solid fa-user" />
+                  </Link>
+                </div>
+              </IconWrapper>
+              {/* <UserMenu>
+                로그아웃
+                <Fakediv />
+              </UserMenu> */}
+            </>
           ) : (
             <>
               <LoginButton onClick={openModal}>로그인</LoginButton>
@@ -673,10 +677,21 @@ const SignupButton = styled.div`
   background: #ff7867;
   color: #fff;
   cursor: pointer;
-
   &:hover {
     background: #ff6d5a;
   }
 `;
-
+const UserMenu = styled.div`
+  display: block;
+  position: absolute;
+  padding: 20px 10px;
+  top: 47px;
+  right: 80px;
+`;
+const Fakediv = styled.div`
+  position: absolute;
+  background-color: tomato;
+  width: 100px;
+  z-index: 99;
+`;
 export default HeaderBottom;

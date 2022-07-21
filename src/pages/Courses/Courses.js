@@ -11,6 +11,7 @@ import {
 import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 import Pagination from './Pagination';
+import { LoginContext } from '../../App';
 
 const categories = [
   {
@@ -186,6 +187,8 @@ function Courses() {
   const params = useParams();
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
+  const [isLogin, setIsLogin] = useContext(LoginContext);
+  console.log(isLogin);
 
   function showSubCat(target) {
     setSelect(prev => {

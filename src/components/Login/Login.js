@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,6 @@ import axios from 'axios';
 
 function Login({ openModal, setModal }) {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const onEmailHandler = e => {
     setEmail(e.currentTarget.value);
