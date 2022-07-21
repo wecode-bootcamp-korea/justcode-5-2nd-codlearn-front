@@ -6,11 +6,12 @@ import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import Courses from './pages/Courses/Courses';
 import Carts from './pages/Carts/Carts';
-import DashBoard from './pages/DashBoard/DashBoard';
 import Detail from './pages/Detail/Detail';
 import SignUp from './pages/SignUp/SignUp';
 import Hello from './pages/Hello/Hello';
 import KakaoLogin from './components/Login/KakaoLogin';
+import DashBoard from './pages/DashBoard/DashBoard';
+import Likes from './pages/Likes/Likes';
 
 function Router() {
   const [openLoginModal, setOpenLoginModal] = useState(false);
@@ -32,6 +33,7 @@ function Router() {
         <Route path="/course/:id" element={<Detail />} />
         <Route path="/carts" element={<Carts />} />
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/likes" element={<Likes />} />
       </Routes>
       <Footer />
     </BrowserRouter>
