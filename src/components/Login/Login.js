@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
-
+import BASE_URL from '../../config';
+import KakaoLogin from './KakaoLogin';
 function Login() {
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
-  const [inputValue, setInputValue] = useState({
-    email: '',
-    password: '',
-  });
+  const [openLoginModal, setOpenLoginModal] = useState(false);
 
-  const onChangeInput = event => {
-    const { name, value } = event.target;
-    setInputValue({
-      ...inputValue,
-      [name]: value,
-    });
+  const [email, setEmail] = useState('');
+  const onEmailHandler = e => {
+    setEmail(e.currentTarget.value);
+    console.log('emailvalue :', e.currentTarget.value);
   };
 
+  const [password, setPassword] = useState('');
+  const onPasswordHandler = e => {
+    setPassword(e.currentTarget.value);
+    console.log('pwvalue :', e.currentTarget.value);
+  };
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
   });
+
   const handlePasswordType = e => {
     setPasswordType(() => {
       if (!passwordType.visible) {
@@ -38,29 +38,43 @@ function Login() {
   };
 
   const onLogin = () => {
-    fetch('http://localhost:3000/login', {
+    fetch(`${BASE_URL}/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: inputValue.email,
-        password: inputValue.password,
+        email: email,
+        password: password,
       }),
     })
       .then(res => res.json())
-      .then(res => {
-        if (res.token) {
-          localStorage.setItem('login-token', res.token);
+      .then(result => {
+        if (result.token) {
+          localStorage.setItem('login-token', result.token);
           navigate('/');
+          setOpenLoginModal(false);
         } else {
           alert('이메일 또는 비밀번호를 확인해주세요.');
+          setOpenLoginModal(false);
         }
       });
   };
+
   const signUpBtnHandle = event => {
     event.preventDefault();
     navigate('/signup');
+  };
+
+  const saveLoginToken = loginToken => {
+    localStorage.setItem('loginToken', loginToken);
+  };
+
+  const goToMain = () => {
+    navigate('/');
+  };
+  const closeBtn = () => {
+    setOpenLoginModal(!openLoginModal);
   };
 
   return (
@@ -68,9 +82,9 @@ function Login() {
       <ModalBackground />
       <ModalBox>
         <Close
-          id="closeBtn"
-          onClick={() => {
-            setOpenModal(false);
+          onClick={e => {
+            closeBtn();
+            // clickOutsideModal(e);
           }}
         >
           <CloseIcon icon={faXmark} />
@@ -83,13 +97,15 @@ function Login() {
             <EmailInput
               type="email"
               placeholder="이메일"
-              onChange={onChangeInput}
+              value={email}
+              onChange={onEmailHandler}
             />
             <PWInputBox>
               <PWInput
-                type="password"
+                type={passwordType.type}
                 placeholder="비밀번호"
-                onChange={onChangeInput}
+                value={password}
+                onChange={onPasswordHandler}
               />
               <PWToggleForm onClick={handlePasswordType}>
                 {passwordType.visible ? (
@@ -110,10 +126,8 @@ function Login() {
         </SignInMoreAction>
         <SignUpSocial>
           <SocialLine />
-          <SocialTitle>간편 회원가입</SocialTitle>
-          <SocialSignUpBtn>
-            <KakaoSVG></KakaoSVG>
-          </SocialSignUpBtn>
+          <SocialTitle>간편 로그인</SocialTitle>
+          <KakaoLogin></KakaoLogin>
         </SignUpSocial>
       </ModalBox>
     </ModalCover>
@@ -211,7 +225,6 @@ const PWInput = styled.input`
   background: none;
   :focus {
     outline: none;
-    border-color: #00c471;
   }
 `;
 
@@ -234,7 +247,7 @@ const Button = styled.button`
   font-weight: 700;
   border-radius: 3px;
   background-color: #00c471;
-  border: 1px solid;
+  border: none;
   color: #fff;
   cursor: pointer;
 `;
@@ -288,16 +301,10 @@ const SocialLine = styled.hr`
   display: block;
 `;
 const SocialTitle = styled.span`
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   padding: 0 8px;
   font-size: 11px;
   color: #abb0b5;
   z-index: 1;
   background-color: #fff;
 `;
-const SocialSignUpBtn = styled.button`
-  width: 50px;
-  height: 50px;
-  margin-top: 4px;
-`;
-const KakaoSVG = styled.svg``;

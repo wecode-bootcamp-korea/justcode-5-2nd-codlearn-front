@@ -8,6 +8,7 @@ import SignUpErrModal from '../../components/Modal/SignUpErrModal';
 import BASE_URL from '../../config';
 import KakaoLogin from '../../components/Login/KakaoLogin';
 
+
 const PWGuideLineComponent = ({ message, validation }) => {
   console.log('validation:', validation);
   return <PWGuideLine validation={validation}>{message}</PWGuideLine>;
@@ -135,7 +136,7 @@ function SignUp() {
       setConfirmPasswordErrMessage('비밀번호가 일치하지 않습니다.');
       setConfirmPasswordValid(false);
     }
-  };
+
 
   /////비밀번호 숨김 OR 표출 기능
   const [passwordType, setPasswordType] = useState({
@@ -205,6 +206,7 @@ function SignUp() {
         } else {
           setOpenErrModal(true);
           setErrModalText('이메일 또는 비밀번호 형식이 올바르지 않습니다.');
+
         }
       });
   };
@@ -212,6 +214,7 @@ function SignUp() {
   return (
     <Main>
       <Section>
+        <Login></Login>
         <Title>회원가입</Title>
         <SignUpMessages>
           <HiddenMessage>회원가입 메세지</HiddenMessage>
