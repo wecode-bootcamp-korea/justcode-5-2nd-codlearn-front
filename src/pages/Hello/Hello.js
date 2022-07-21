@@ -1,26 +1,8 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Confetti from 'react-confetti';
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 function Hello() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  let token = new URL(window.location.href).searchParams.get('token');
-  let auth;
-  useEffect(() => {
-    if (token) {
-      navigate('./', {
-        state: { token: token },
-      });
-    }
-  }, [token]);
-
-  if (location?.state?.token) {
-    auth = location.state.token;
-    console.log('auth ', auth);
-  } 
   return (
     <Main>
       <Section>
@@ -57,7 +39,7 @@ function Hello() {
             함께해 주셔서 감사합니다. 화이팅!!
           </SubIntro>
           <NavButtons>
-            <Link to="/">
+            <Link to="/courses?charge=free">
               <Button>무료 강의 둘러보기</Button>
             </Link>
             <Link to="/">

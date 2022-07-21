@@ -7,14 +7,12 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import SignUpErrModal from '../../components/Modal/SignUpErrModal';
 import BASE_URL from '../../config';
 import KakaoLogin from '../../components/Login/KakaoLogin';
-import Login from '../../components/Login/Login';
+
 const PWGuideLineComponent = ({ message, validation }) => {
-  console.log('validation:', validation);
   return <PWGuideLine validation={validation}>{message}</PWGuideLine>;
 };
 
 function SignUp() {
-  /////////////////////////email////////////////////////
   const [email, setEmail] = useState('');
   const [emailValid, setEmailValid] = useState(false);
   const [emailErrMessage, setEmailErrMessage] = useState('');
@@ -24,7 +22,6 @@ function SignUp() {
 
   const onEmailHandler = e => {
     setEmail(e.currentTarget.value);
-    console.log('emailvalue :', e.currentTarget.value);
     if (!emailRegExp.test(email)) {
       setEmailErrMessage('이메일 형식이 올바르지 않습니다.');
       setEmailValid(false);
@@ -33,7 +30,6 @@ function SignUp() {
       setEmailValid(true);
     }
   };
-  ////////////////////////username/////////////////////
 
   const [name, setName] = useState('');
   const [nameValid, setNameValid] = useState(false);
@@ -52,19 +48,14 @@ function SignUp() {
     }
   };
 
-  ///////////////////////password///////////////////////
-  const [password, setPassword] = useState(''); //비밀번호 input
-  const [passwordValid, setPasswordValid] = useState(false); //비밀번호 유효성 검사
+  const [password, setPassword] = useState('');
+  const [passwordValid, setPasswordValid] = useState(false);
 
   const [passwordErrMessage, setPasswordErrMessage] = useState([
     { id: 1, messsage: '영문/숫자/특수문자 2가지 이상 포함', validation: 0 },
     { id: 2, messsage: '8자 이상 32자 이하 입력 (공백제외)', validation: 0 },
     { id: 3, messsage: '연속 3자 이상 동일한 문자/숫자 제외', validation: 0 },
   ]);
-
-  // 1. errMessage map 돌리기
-  // 2. PWGuideLine validation 기반 스타일 바꿔주기
-  // 3. passwordValidation 안에서 스테이트 바꾸기
 
   const passwordRegEx = {
     number: password.search(/[0-9]/g),
@@ -75,25 +66,20 @@ function SignUp() {
   };
   const onPasswordInput = e => {
     setPassword(e.currentTarget.value);
-    console.log('PWvalue :', e.currentTarget.value);
-    console.log('PWlength: ', password.length);
   };
 
   const passwordValidation = () => {
-    //영문 숫자 특수 문자 2가지 이상 포함 검사
     if (
       (passwordRegEx.number > 0 && passwordRegEx.english > 0) ||
       (passwordRegEx.english > 0 && passwordRegEx.specialChar > 0) ||
       (passwordRegEx.specialChar > 0 && passwordRegEx.number > 0)
     ) {
-      // 새 객체를 만들어서 기존의 값에 변경된 값을 덮어씀 : 기존의 값을 그대로 유지
       setPasswordErrMessage(prev =>
         prev.map(el => (el.id === 1 ? { ...el, validation: 1 } : el))
       );
       setPasswordValid(true);
     }
 
-    //8자 이상 32자 이하 입력 (공백제외) 검사
     if (
       password.length >= 8 &&
       password.length <= 32
@@ -105,19 +91,16 @@ function SignUp() {
       setPasswordValid(true);
     }
 
-    //연속 3자 이상 동일한 문자/숫자 제외 검사
     if (/[^(\w)\1\1]/.test(password)) {
       setPasswordErrMessage(prev =>
         prev.map(el => (el.id === 3 ? { ...el, validation: 1 } : el))
       );
       setPasswordValid(true);
     } else {
-      /////false 일때 validation : 2 ,,,????
       setPasswordValid(false);
     }
   };
 
-  ///////////////////////confirm password//////////////////////
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordValid, setConfirmPasswordValid] = useState(true);
   const [confirmPasswordErrMessage, setConfirmPasswordErrMessage] =
@@ -137,7 +120,6 @@ function SignUp() {
     }
   };
 
-  /////비밀번호 숨김 OR 표출 기능
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
@@ -155,7 +137,6 @@ function SignUp() {
     });
   };
 
-  /////비밀번호재확인 숨김 OR 표출 기능
   const [confirmPasswordType, setConfirmPasswordType] = useState({
     type: 'password',
     visible: false,
@@ -212,7 +193,6 @@ function SignUp() {
   return (
     <Main>
       <Section>
-        <Login />
         <Title>회원가입</Title>
         <SignUpMessages>
           <HiddenMessage>회원가입 메세지</HiddenMessage>
@@ -346,7 +326,7 @@ function SignUp() {
 export default SignUp;
 
 const Main = styled.main`
-  min-height: 800px;
+  min-height: 900px;
   line-height: 1.5;
 `;
 const Section = styled.section`
