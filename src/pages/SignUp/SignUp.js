@@ -212,7 +212,7 @@ function SignUp() {
   return (
     <Main>
       <Section>
-        {/* <Login /> */}
+        <Login />
         <Title>회원가입</Title>
         <SignUpMessages>
           <HiddenMessage>회원가입 메세지</HiddenMessage>
