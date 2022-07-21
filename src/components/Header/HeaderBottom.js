@@ -11,16 +11,24 @@ import {
   faBell,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import Login from '../Login/Login';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-  const [token, setToken] = useState(true);
+  const [token, setToken] = useState(false);
+
+  const [modal, setModal] = useState(false);
+
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
+
+  const openModal = () => {
+    setModal(true);
+  };
 
   const goToHome = () => {
     navigate('/');
@@ -82,6 +90,7 @@ function HeaderBottom() {
       }
     >
       <BottomWrapper>
+        {modal && <Login openModal={openModal} setModal={setModal} />}
         <BottomLeftWrapper>
           <img alt="codlearn-logo" src="images/logo.png" onClick={goToHome} />
           <Courses>
@@ -336,7 +345,7 @@ function HeaderBottom() {
             </IconWrapper>
           ) : (
             <>
-              <LoginButton onClick={openLogInModal}>로그인</LoginButton>
+              <LoginButton onClick={openModal}>로그인</LoginButton>
               <SignupButton onClick={goToSignUp}>회원가입</SignupButton>
             </>
           )}
