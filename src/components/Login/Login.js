@@ -57,6 +57,7 @@ function Login({ openModal, setModal }) {
   const signUpBtnHandle = event => {
     event.preventDefault();
     navigate('/signup');
+    setModal(false);
   };
 
   const onSubmitHandler = event => {
