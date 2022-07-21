@@ -41,12 +41,12 @@ function Login() {
 
   async function onLogin() {
     try {
-      const result = await axios.post('http://localhost:8000/user/login', {
+      const result = await axios.post(`${BASE_URL}/user/login`, {
         email,
         password,
       });
       console.log(result);
-      localStorage.setItem('login-token', result.data.token);
+      localStorage.setItem('token', result.data.token);
     } catch (err) {
       console.log(err);
       alert('입력하신 정보를 확인해주세요.');
