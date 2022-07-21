@@ -12,7 +12,7 @@ import {
   faSignal,
   faFolderTree,
   faCubes,
-  faPlus,
+  faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
@@ -125,7 +125,7 @@ function SubSlider() {
                         className="myFolderText"
                         style={{ display: showMyFolder ? 'block' : 'none' }}
                       >
-                        <span className="text">내 폴더에 추가</span>
+                        <span className="text">장바구니에 추가</span>
                         <div className="arrowIcon"></div>
                       </div>
                       <div
@@ -137,7 +137,7 @@ function SubSlider() {
                           setShowMyFolder(false);
                         }}
                       >
-                        <FontAwesomeIcon icon={faPlus} />
+                        <FontAwesomeIcon icon={faCartShopping} />
                       </div>
                     </div>
                   </div>
@@ -251,7 +251,7 @@ function SubSlider() {
                         className="myFolderText"
                         style={{ display: showMyFolder ? 'block' : 'none' }}
                       >
-                        <span className="text">내 폴더에 추가</span>
+                        <span className="text">장바구니에 추가</span>
                         <div className="arrowIcon"></div>
                       </div>
                       <div
@@ -263,7 +263,7 @@ function SubSlider() {
                           setShowMyFolder(false);
                         }}
                       >
-                        <FontAwesomeIcon icon={faPlus} />
+                        <FontAwesomeIcon icon={faCartShopping} />
                       </div>
                     </div>
                   </div>
@@ -490,6 +490,9 @@ const ContentHover = styled.div`
       }
       .myFolderIcon {
         float: right;
+        &:hover {
+          color: red;
+        }
       }
     }
   }
