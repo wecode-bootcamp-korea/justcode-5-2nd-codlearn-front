@@ -7,7 +7,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import SignUpErrModal from '../../components/Modal/SignUpErrModal';
 import BASE_URL from '../../config';
 import KakaoLogin from '../../components/Login/KakaoLogin';
-
+import Login from '../../components/Login/Login';
 const PWGuideLineComponent = ({ message, validation }) => {
   console.log('validation:', validation);
   return <PWGuideLine validation={validation}>{message}</PWGuideLine>;
@@ -212,6 +212,7 @@ function SignUp() {
   return (
     <Main>
       <Section>
+        {/* <Login /> */}
         <Title>회원가입</Title>
         <SignUpMessages>
           <HiddenMessage>회원가입 메세지</HiddenMessage>

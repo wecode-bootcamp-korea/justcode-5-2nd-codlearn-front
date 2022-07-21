@@ -146,12 +146,12 @@ function Comments({ id }) {
   const handleRating = rate => {
     setRating(rate / 20);
   };
-  console.log('렌더링되었습니다');
+  console.log(reviews);
   const handleContent = e => {
     setContent(e.target.value);
   };
   const token = localStorage.getItem('login-token');
-  console.log(token);
+
   async function get() {
     const result = await axios.get(
       `http://localhost:10010/course/${id}/review`,
