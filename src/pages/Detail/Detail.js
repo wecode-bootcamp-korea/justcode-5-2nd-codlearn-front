@@ -105,6 +105,7 @@ const ObjLeft = styled.div`
   }
   p {
     line-height: 1.4;
+    width: 3.6rem;
   }
 `;
 
@@ -163,16 +164,7 @@ const DetailDifficulty = styled.span`
     color: black;
   }
 `;
-// categories: (3) ['개발 · 프로그래밍', '프론트엔드', 'Vue.js']
-// class_name: "Nuxt.js 시작하기"
-// contents: (3) [{…}, {…}, {…}]
-// description: "내가 만든 Vue.js 사이트가 더 많은 사람들에게 노출 되기를 원한다면? 캡틴판교의 Vue.js 시리즈를 다 듣고 이제는 서버 사이드 렌더링도 해보고 싶은 분들이 듣기 좋은 강좌입니다. Nuxt.js 시작하기 강의!"
-// discounted_price: 41250
-// img: "https://images.unsplash.com/photo-1558901357-ca41e027e43a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGJvb2t8ZW58MHx8MHx8&auto=format&fit=crop&w=1400&q=60"
-// instructor_name: "박조은"
-// price: 55000
-// rate: 4.900000095367432
-// students: 795
+
 function Detail() {
   const { id } = useParams();
   const [data, setData] = useState();
@@ -183,7 +175,6 @@ function Detail() {
         await fetch(`http://localhost:10010/course/${id}`)
       ).json();
       setData(result);
-      console.log(result);
     };
     fetchData();
   }, [id]);
@@ -251,7 +242,7 @@ function Detail() {
                 ))}
               </ObjRight>
             </DBodyObj>
-            <Comments />
+            <Comments id={id} />
           </DetailBody>
           <StickyAside>
             <div style={{ padding: '24px' }}>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import HeaderTop from './components/Header/HeaderTop'
+import HeaderTop from './components/Header/HeaderTop';
 import HeaderBottom from './components/Header/HeaderBottom';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
@@ -10,8 +10,11 @@ import DashBoard from './pages/DashBoard/DashBoard';
 import Detail from './pages/Detail/Detail';
 import SignUp from './pages/SignUp/SignUp';
 import Hello from './pages/Hello/Hello';
+import KakaoLogin from './components/Login/KakaoLogin';
 
 function Router() {
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+
   return (
     <BrowserRouter>
       <HeaderTop />
@@ -19,6 +22,7 @@ function Router() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/oauth/kakao/callback" element={<KakaoLogin />} />
         <Route path="/hello" element={<Hello />} />
         <Route path="/courses" element={<Courses />}>
           <Route path=":cat1" element={<Courses />}>
