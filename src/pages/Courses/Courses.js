@@ -169,8 +169,6 @@ const SortOptions = styled.div`
   }
 `;
 const PageboxWrapper = styled.div`
-  display: flex;
-  justify-content: center;
   margin: 45px 0px;
 `;
 

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 const Pagebox = styled.button`
-  background-color: ${props => (props.active ? 'green' : 'white')};
+  background-color: ${props => (props.active ? '#1EC077' : 'white')};
   color: ${props => (props.active ? 'white' : 'black')};
-  max-width: 30px;
+  min-width: 30px;
   padding: 7px 0px;
   width: 100%;
   text-align: center;
@@ -14,6 +14,26 @@ const Pagebox = styled.button`
     cursor: pointer;
     border: 1px solid #1ec077;
   }
+`;
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const Prev = styled.button`
+  background-color: white;
+  border: 1px solid #b8b8b8;
+  border-radius: 4px;
+  font-size: 12px;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #1ec077;
+  }
+  opacity: ${props => (props.show ? '1' : '0')};
+  pointer-events: ${props => (props.show ? 'auto' : 'none')};
+`;
+const Next = styled(Prev)`
+  opacity: ${props => (props.show ? '1' : '0')};
+  pointer-events: ${props => (props.show ? 'auto' : 'none')};
 `;
 
 function Pagination({ totalPage, toUrl }) {
@@ -40,17 +60,39 @@ function Pagination({ totalPage, toUrl }) {
     pages.push({ pageNum: totalPage, pageVal: totalPage });
   }
 
-  return pages.map(el => (
-    <Pagebox
-      onClick={() => {
-        toUrl('page', el.pageNum);
-        setCurPage(el.pageNum);
-      }}
-      active={curPage === el.pageNum}
-    >
-      {el.pageVal}
-    </Pagebox>
-  ));
+  function prev() {
+    setCurPage(prev => (prev === 1 ? prev : prev - 1));
+  }
+  function next() {
+    setCurPage(prev => (prev === totalPage ? prev : prev + 1));
+  }
+  useEffect(() => {
+    toUrl('page', curPage);
+  }, [curPage]);
+
+  return (
+    <Wrapper>
+      <Prev onClick={prev} show={curPage !== 1}>
+        이전페이지
+      </Prev>
+      <div style={{ display: 'flex' }}>
+        {pages.map(el => (
+          <Pagebox
+            key={el.pageVal}
+            onClick={() => {
+              setCurPage(el.pageNum);
+            }}
+            active={curPage === el.pageNum}
+          >
+            {el.pageVal}
+          </Pagebox>
+        ))}
+      </div>
+      <Next onClick={next} show={curPage !== totalPage}>
+        다음페이지
+      </Next>
+    </Wrapper>
+  );
 }
 
 export default Pagination;

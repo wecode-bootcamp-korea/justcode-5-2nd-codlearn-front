@@ -600,7 +600,9 @@ const Search = styled.div`
     border: 1px solid transparent;
     border-radius: 3px;
     background: #f6f6f6;
-
+    &:focus {
+      outline: #1ec077;
+    }
     &:hover {
       border: 1px solid #5f5f5f;
     }
