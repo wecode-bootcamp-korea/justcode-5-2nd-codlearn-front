@@ -51,17 +51,22 @@ function Login({ openModal, setModal }) {
       alert('입력하신 정보를 확인해주세요.');
     }
     setModal(false);
+    goToMain();
   }
 
   const signUpBtnHandle = event => {
     event.preventDefault();
     navigate('/signup');
+    setModal(false);
   };
 
   const onSubmitHandler = event => {
     event.preventDefault();
   };
 
+  const goToMain = () => {
+    navigate('/');
+  };
   return (
     <>
       <Overlay
