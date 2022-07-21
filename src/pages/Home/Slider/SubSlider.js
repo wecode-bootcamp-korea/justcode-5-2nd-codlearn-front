@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import 'swiper/css';
@@ -36,12 +36,13 @@ function SubSlider() {
         setBeginnerCourse(res.intro15);
       });
   }, []);
+  console.log(freeCourse);
 
   return (
     <SubSliderWrap>
       <FreeSlider>
         <Header>
-          <Link to>
+          <Link to="/courses?charge=free">
             <Title>
               무료강의? 오히려 좋아 ✨ <FontAwesomeIcon icon={faAngleRight} />
             </Title>
@@ -77,7 +78,7 @@ function SubSlider() {
         >
           {freeCourse.map(data => (
             <SwiperSlide key={data.id}>
-              <Link to className="linkHover">
+              <Link to={`/course/${data.id}`} className="linkHover">
                 <ContentHover className="ContentHover">
                   <p className="className">{data.class_name}</p>
                   <p className="level">
@@ -167,7 +168,7 @@ function SubSlider() {
       </FreeSlider>
       <BeginnerSLider>
         <Header>
-          <Link to>
+          <Link to="/courses?level=1">
             <Title>
               왕초보도 할 수 있어요 💪 <FontAwesomeIcon icon={faAngleRight} />
             </Title>

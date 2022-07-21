@@ -218,8 +218,6 @@ function Courses() {
       navigate(`${cat1.value}/${cat2.value}`, {
         state: { category1: cat1.name, category2: cat2.name },
       });
-    } else if (!cat1.value && !cat2.value) {
-      navigate('/courses');
     } else if (cat1.value) {
       navigate(`${cat1.value}`, {
         state: { category1: cat1.name },
