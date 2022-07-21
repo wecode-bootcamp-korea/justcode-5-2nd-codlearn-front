@@ -16,7 +16,6 @@ import { LoginContext } from '../../App';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-
   const token = localStorage.getItem('token');
 
   const [isLogin, setIsLogin] = useContext(LoginContext);
@@ -94,6 +93,7 @@ function HeaderBottom() {
   const logout = () => {
     localStorage.removeItem('token');
     setIsLogin(false);
+    goToHome();
   };
 
   return (
@@ -365,7 +365,6 @@ function HeaderBottom() {
                 </Logout>
               </MyPage>
             </IconWrapper>
-
           ) : (
             <>
               <LoginButton onClick={openModal}>로그인</LoginButton>
