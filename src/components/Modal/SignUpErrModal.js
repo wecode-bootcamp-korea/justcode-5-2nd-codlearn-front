@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-function SignUpErrModal({ setOpenModal, text }) {
+function SignUpErrModal({ setOpenErrModal, text }) {
   return (
     <ModalCover>
       <ModalBackground />
@@ -20,7 +20,7 @@ function SignUpErrModal({ setOpenModal, text }) {
             <Button
               id="cancelBtn"
               onClick={() => {
-                setOpenModal(false);
+                setOpenErrModal(false);
               }}
             >
               확인
@@ -60,7 +60,7 @@ const ModalBox = styled.div`
   width: calc(100% - 40px);
   max-width: 416px;
   min-width: 320px;
-  padding: 38px 64px;
+  padding: 38px 55px;
   border-radius: 4px;
   background-color: #fff;
 `;
