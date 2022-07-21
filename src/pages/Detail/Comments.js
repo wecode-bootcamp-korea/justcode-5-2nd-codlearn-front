@@ -146,20 +146,18 @@ function Comments({ id }) {
   const handleRating = rate => {
     setRating(rate / 20);
   };
-  console.log('렌더링되었습니다');
+  console.log(reviews, 123);
   const handleContent = e => {
     setContent(e.target.value);
   };
-
-  const accessToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.wq6RVyINzhOV6g8cixMo5mc3660Sq3caVOAxBTu1yis';
+  const token = localStorage.getItem('login-token');
 
   async function get() {
     const result = await axios.get(
       `http://localhost:10010/course/${id}/review`,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -167,18 +165,26 @@ function Comments({ id }) {
   }
 
   const submit = async () => {
-    await axios.post(`http://localhost:10010/course/${id}/review`, {
-      class_id: id,
-      user_id: 1,
-      content,
-      rating,
-    });
+    await axios.post(
+      `http://localhost:10010/course/${id}/review`,
+      {
+        class_id: id,
+        content,
+        rating,
+      },
+      {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      }
+    );
     get();
   };
 
   useEffect(() => {
     get();
   }, [id]);
+
   console.log(reviews);
   return (
     <Wrapper>
@@ -271,12 +277,14 @@ function Comments({ id }) {
                 setShowUpdate={setShowUpdate}
                 id={id}
                 reviewId={el.id}
+                get={get}
               />
             )}
             {showDelete && (
               <Deletemodal
                 setShowDelete={setShowDelete}
                 id={id}
+                get={get}
                 reviewId={el.id}
               />
             )}

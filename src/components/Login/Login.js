@@ -20,8 +20,8 @@ function Login() {
   const [password, setPassword] = useState('');
   const onPasswordHandler = e => {
     setPassword(e.currentTarget.value);
-    console.log('pwvalue :', e.currentTarget.value);
   };
+  console.log(password);
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false,
@@ -85,6 +85,7 @@ function Login() {
         <Logo>
           <img src="images/logo.png" alt="logo" />
         </Logo>
+
         <SignInForm onSubmit={onSubmitHandler}>
           <InputBlock>
             <EmailInput
@@ -92,27 +93,21 @@ function Login() {
               placeholder="이메일"
               value={email}
               onChange={onEmailHandler}
+
             />
-            <PWInputBox>
-              <PWInput
-                type={passwordType.type}
-                placeholder="비밀번호"
-                value={password}
-                onChange={onPasswordHandler}
-              />
-              <PWToggleForm onClick={handlePasswordType}>
-                {passwordType.visible ? (
-                  <EyeIcon icon={faEyeSlash}></EyeIcon>
-                ) : (
-                  <EyeIcon icon={faEye}></EyeIcon>
-                )}
-              </PWToggleForm>
-            </PWInputBox>
-          </InputBlock>
-          <Button id="loginBtn" onClick={onLogin}>
-            로그인
-          </Button>
-        </SignInForm>
+            <PWToggleForm onClick={handlePasswordType}>
+              {passwordType.visible ? (
+                <EyeIcon icon={faEyeSlash}></EyeIcon>
+              ) : (
+                <EyeIcon icon={faEye}></EyeIcon>
+              )}
+            </PWToggleForm>
+          </PWInputBox>
+        </InputBlock>
+        <Button id="loginBtn" onClick={onLogin}>
+          로그인
+        </Button>
+
         <SignInMoreAction>
           <FindPW>비밀번호 찾기</FindPW>
           <SignUp onClick={signUpBtnHandle}>회원 가입</SignUp>
@@ -147,7 +142,7 @@ const ModalBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(11, 19, 30, 0.37);
+  background-color: rgba(11, 19, 30, 0.37);
   z-index: 99;
 `;
 

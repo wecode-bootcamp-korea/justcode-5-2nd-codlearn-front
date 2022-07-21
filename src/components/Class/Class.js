@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { useState } from 'react';
+import axios from 'axios';
 
 const Fake = styled.div`
   box-sizing: border-box;
@@ -180,6 +181,14 @@ const FakeCat = styled.div`
 function Class({ data, navigate }) {
   const [fakecat, setFakecat] = useState(false);
   const [fakeheart, setFakeheart] = useState(false);
+  const token = localStorage.getItem('login-token');
+  function cart() {
+    axios.put(`http://localhost:10010/cart?${data.id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
   return (
     <Course>
       <CourseImg src={data.img} />
@@ -245,6 +254,10 @@ function Class({ data, navigate }) {
               </>
             )}
             <Fakecart
+              onClick={e => {
+                e.stopPropagation();
+                cart();
+              }}
               onMouseEnter={() => {
                 setFakecat(true);
               }}
