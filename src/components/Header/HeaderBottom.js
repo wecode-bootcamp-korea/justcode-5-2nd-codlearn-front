@@ -1,9 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -19,7 +18,8 @@ function HeaderBottom() {
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
-
+  const [query, setQuery] = useSearchParams();
+  const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
 
   const goToHome = () => {

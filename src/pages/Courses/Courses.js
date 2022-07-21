@@ -193,6 +193,7 @@ function Courses() {
       else return target;
     });
   }
+
   function toUrl(target, value) {
     if (searchParams.has(target)) {
       searchParams.set(target, value);
@@ -210,7 +211,7 @@ function Courses() {
     }
   }
   const parameters = literal();
-
+  console.log(location.search);
   useEffect(() => {
     if (cat1.value && cat2.value) {
       navigate(`${cat1.value}/${cat2.value}`, {
