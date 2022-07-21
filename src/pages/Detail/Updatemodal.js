@@ -66,7 +66,7 @@ export const ButtonWrapper = styled.div`
   }
 `;
 
-function Updatemodal({ setShowUpdate, id, reviewId, get }) {
+function Updatemodal({ setShowUpdate, id, reviewId, get, setShowOption }) {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState();
   console.log(reviewId);
@@ -128,6 +128,7 @@ function Updatemodal({ setShowUpdate, id, reviewId, get }) {
             onClick={() => {
               submit();
               get();
+              setShowOption(false);
               modalClose();
             }}
           >
