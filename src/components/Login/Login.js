@@ -5,8 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import BASE_URL from '../../config';
 import KakaoLogin from './KakaoLogin';
-import axios from 'axios';
-
 function Login() {
   const navigate = useNavigate();
   const [openLoginModal, setOpenLoginModal] = useState(false);
@@ -39,20 +37,29 @@ function Login() {
     });
   };
 
-  async function onLogin() {
-    try {
-      const result = await axios.post(`${BASE_URL}/user/login`, {
-        email,
-        password,
+  const onLogin = () => {
+    fetch(`${BASE_URL}/user/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (result.token) {
+          localStorage.setItem('login-token', result.token);
+          navigate('/');
+          setOpenLoginModal(false);
+        } else {
+          alert('이메일 또는 비밀번호를 확인해주세요.');
+          setOpenLoginModal(false);
+        }
       });
-      console.log(result);
-      localStorage.setItem('token', result.data.token);
-    } catch (err) {
-      console.log(err);
-      alert('입력하신 정보를 확인해주세요.');
-    }
-    setOpenLoginModal(false);
-  }
+  };
 
   const signUpBtnHandle = event => {
     event.preventDefault();
@@ -60,15 +67,14 @@ function Login() {
   };
 
   const saveLoginToken = loginToken => {
-    localStorage.setItem('login-token', loginToken);
+    localStorage.setItem('loginToken', loginToken);
   };
 
   const goToMain = () => {
     navigate('/');
   };
-
-  const onSubmitHandler = event => {
-    event.preventDefault();
+  const closeBtn = () => {
+    setOpenLoginModal(!openLoginModal);
   };
 
   return (
@@ -76,8 +82,9 @@ function Login() {
       <ModalBackground />
       <ModalBox>
         <Close
-          onClick={() => {
-            setOpenLoginModal(false);
+          onClick={e => {
+            closeBtn();
+            // clickOutsideModal(e);
           }}
         >
           <CloseIcon icon={faXmark} />
@@ -86,14 +93,19 @@ function Login() {
           <img src="images/logo.png" alt="logo" />
         </Logo>
 
-        <SignInForm onSubmit={onSubmitHandler}>
-          <InputBlock>
-            <EmailInput
-              type="email"
-              placeholder="이메일"
-              value={email}
-              onChange={onEmailHandler}
-
+        <InputBlock>
+          <EmailInput
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={onEmailHandler}
+          />
+          <PWInputBox>
+            <PWInput
+              type={passwordType.type}
+              placeholder="비밀번호"
+              value={password}
+              onChange={onPasswordHandler}
             />
             <PWToggleForm onClick={handlePasswordType}>
               {passwordType.visible ? (
