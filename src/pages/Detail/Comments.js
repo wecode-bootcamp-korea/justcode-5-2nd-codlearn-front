@@ -143,10 +143,11 @@ function Comments({ id }) {
   const [showOption, setShowOption] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [targetID, setTargetID] = useState();
+
   const handleRating = rate => {
     setRating(rate / 20);
   };
-  console.log(reviews, 123);
   const handleContent = e => {
     setContent(e.target.value);
   };
@@ -163,7 +164,6 @@ function Comments({ id }) {
     );
     setReviews(result.data);
   }
-
   const submit = async () => {
     await axios.post(
       `http://localhost:10010/course/${id}/review`,
@@ -242,52 +242,58 @@ function Comments({ id }) {
                     />
                     <span>{el.rate}</span>
                   </div>
-                  <Elipsis>
-                    <FontAwesomeIcon
-                      icon={faEllipsisVertical}
-                      onClick={() => setShowOption(prev => !prev)}
-                    />
-                  </Elipsis>
-                  <SModalWrapper show={showOption}>
-                    <Modify
-                      onClick={() => {
-                        setShowUpdate(true);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                      <span>수정</span>
-                    </Modify>
-                    <Delete
-                      onClick={() => {
-                        setShowDelete(true);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                      <span>삭제</span>
-                    </Delete>
-                  </SModalWrapper>
+                  {Object.keys(el).includes('canEdit') ? (
+                    <Elipsis>
+                      <FontAwesomeIcon
+                        icon={faEllipsisVertical}
+                        onClick={() => setShowOption(prev => !prev)}
+                      />
+                    </Elipsis>
+                  ) : null}
+                  {Object.keys(el).includes('canEdit') && (
+                    <SModalWrapper show={showOption}>
+                      <Modify
+                        onClick={() => {
+                          setShowUpdate(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                        <span>수정</span>
+                      </Modify>
+                      <Delete
+                        onClick={() => {
+                          setShowDelete(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTrashCan} />
+                        <span>삭제</span>
+                      </Delete>
+                      {showUpdate && (
+                        <Updatemodal
+                          setShowUpdate={setShowUpdate}
+                          setShowOption={setShowOption}
+                          id={id}
+                          reviewId={el.id}
+                          get={get}
+                        />
+                      )}
+                      {showDelete && (
+                        <Deletemodal
+                          setShowDelete={setShowDelete}
+                          setShowOption={setShowOption}
+                          id={id}
+                          get={get}
+                          reviewId={el.id}
+                        />
+                      )}
+                    </SModalWrapper>
+                  )}
                 </ReviewRatingWrapper>
                 <ReviewUserName>{el.user_name}</ReviewUserName>
               </ReviewInfo>
             </ReviewHeader>
             <ReviewContent>{el.review_content}</ReviewContent>
             <ReviewCreatedAt>{el.created_at.slice(0, 10)}</ReviewCreatedAt>
-            {showUpdate && (
-              <Updatemodal
-                setShowUpdate={setShowUpdate}
-                id={id}
-                reviewId={el.id}
-                get={get}
-              />
-            )}
-            {showDelete && (
-              <Deletemodal
-                setShowDelete={setShowDelete}
-                id={id}
-                get={get}
-                reviewId={el.id}
-              />
-            )}
           </>
         ))}
       </ReviewWrapper>
