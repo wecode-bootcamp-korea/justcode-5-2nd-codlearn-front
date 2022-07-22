@@ -12,6 +12,7 @@ import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 import Pagination from './Pagination';
 import { LoginContext } from '../../App';
+import axios from 'axios';
 
 const categories = [
   {
@@ -172,7 +173,23 @@ const SortOptions = styled.div`
 const PageboxWrapper = styled.div`
   margin: 45px 0px;
 `;
-
+const ModalBox = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #3d4042;
+  color: white;
+  font-weight: 700;
+  border-radius: 20px;
+  width: 300px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  span:last-child {
+    cursor: pointer;
+  }
+`;
 function Courses() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -187,8 +204,9 @@ function Courses() {
   const params = useParams();
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
-  const [isLogin, setIsLogin] = useContext(LoginContext);
-  console.log(isLogin);
+  const [cartConfirm, setCartConfirm] = useState(false);
+  const [cartOk, setCartOk] = useState();
+  const token = localStorage.getItem('token');
 
   function showSubCat(target) {
     setSelect(prev => {
@@ -196,6 +214,21 @@ function Courses() {
       else return target;
     });
   }
+
+  function cart(targetID) {
+    axios
+      .put(
+        `http://localhost:10010/cart?classId=${targetID}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then(result => setCartOk(result.statusText));
+  }
+  console.log(cartOk);
 
   function toUrl(target, value) {
     if (searchParams.has(target)) {
@@ -244,6 +277,12 @@ function Courses() {
     window.scrollTo(0, 0);
   }, [params.cat1, parameters, location.search]);
 
+  // useEffect(() => {
+  //   if (cartOk) {
+  //     cartConfirm(true);
+  //     setTimeout(() => {}, 3000);
+  //   }
+  // }, []);
   return (
     <Wrapper
       onClick={() => {
@@ -351,9 +390,27 @@ function Courses() {
         <MainWrapper>
           {!isLoading
             ? courseData?.data.map(el => (
-                <Class navigate={navigate} key={el.id} data={el} />
+                <Class
+                  navigate={navigate}
+                  key={el.id}
+                  data={el}
+                  setCartConfirm={setCartConfirm}
+                  cart={cart}
+                />
               ))
             : 'Loading...'}
+          {cartConfirm && (
+            <ModalBox>
+              <span>바구니에 담기 성공!</span>
+              <span
+                onClick={() => {
+                  setCartConfirm(false);
+                }}
+              >
+                X
+              </span>
+            </ModalBox>
+          )}
         </MainWrapper>
         <PageboxWrapper>
           <Pagination totalPage={Number(courseData?.pages)} toUrl={toUrl} />

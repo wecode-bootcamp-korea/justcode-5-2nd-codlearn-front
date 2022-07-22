@@ -178,21 +178,11 @@ const FakeCat = styled.div`
   }
 `;
 
-function Class({ data, navigate }) {
+function Class({ data, navigate, cart }) {
   const [fakecat, setFakecat] = useState(false);
   const [fakeheart, setFakeheart] = useState(false);
   const token = localStorage.getItem('token');
-  function cart() {
-    axios.put(
-      `http://localhost:10010/cart?classId=${data.id}`,
-      {},
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-  }
+
   function wishList() {
     axios.put(
       `http://localhost:10010/wishlist?classId=${data.id}`,
@@ -271,7 +261,7 @@ function Class({ data, navigate }) {
             <Fakecart
               onClick={e => {
                 e.stopPropagation();
-                cart();
+                cart(data.id);
               }}
               onMouseEnter={() => {
                 setFakecat(true);

@@ -16,17 +16,42 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
+import axios from 'axios';
 
 function SubSlider() {
   const [freeCourse, setFreeCourse] = useState([]);
   const [beginnerCourse, setBeginnerCourse] = useState([]);
   const [showLike, setShowLike] = useState(false);
   const [showMyFolder, setShowMyFolder] = useState(false);
-
+  const token = localStorage.getItem('token');
   const navigationPrevFreeRef = useRef(null);
   const navigationNextFreeRef = useRef(null);
   const navigationPrevBeginRef = useRef(null);
   const navigationNextBeginRef = useRef(null);
+
+  function cart(targetID) {
+    axios.put(
+      `http://localhost:10010/cart?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+
+  function wishList(targetID) {
+    axios.put(
+      `http://localhost:10010/wishlist?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
 
   useEffect(() => {
     fetch('http://localhost:10010/', { method: 'GET' })
@@ -36,7 +61,6 @@ function SubSlider() {
         setBeginnerCourse(res.intro15);
       });
   }, []);
-  console.log(freeCourse);
 
   return (
     <SubSliderWrap>
@@ -110,6 +134,10 @@ function SubSlider() {
                       </div>
                       <div
                         className="likeIcon"
+                        onClick={e => {
+                          e.stopPropagation();
+                          wishList(data.id);
+                        }}
                         onMouseEnter={() => {
                           setShowLike(true);
                         }}
@@ -236,6 +264,11 @@ function SubSlider() {
                       </div>
                       <div
                         className="likeIcon"
+                        onClick={e => {
+                          e.stopPropagation();
+                          console.log(1);
+                          wishList(data.id);
+                        }}
                         onMouseEnter={() => {
                           setShowLike(true);
                         }}
@@ -256,6 +289,10 @@ function SubSlider() {
                       </div>
                       <div
                         className="myFolderIcon"
+                        onClick={e => {
+                          e.stopPropagation();
+                          cart(data.id);
+                        }}
                         onMouseEnter={() => {
                           setShowMyFolder(true);
                         }}

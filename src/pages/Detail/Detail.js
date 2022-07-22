@@ -5,6 +5,7 @@ import StarRatings from 'react-star-ratings';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import Comments from './Comments';
+import axios from 'axios';
 const DetailWrapper = styled.div`
   margin-bottom: 50px;
 `;
@@ -187,6 +188,23 @@ function Detail() {
   const [data, setData] = useState();
   const [confirm, setConfirm] = useState(false);
   const difficulty = ['입문', '초급', '중급이상'];
+  const token = localStorage.getItem('token');
+  function cart(targetID) {
+    axios
+      .put(
+        `http://localhost:10010/cart?classId=${targetID}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then(
+        result =>
+          result.statusText === 'Created' && alert('장바구니에 추가되었습니다!')
+      );
+  }
   useEffect(() => {
     const fetchData = async () => {
       const result = await (
@@ -230,7 +248,7 @@ function Detail() {
                 starSpacing="0px"
                 starDimension="15px"
               />
-              <strong>({data.rate.toFixed(1)})</strong>
+              <strong>({data.rate ? data.rate.toFixed(1) : 0})</strong>
               <span>
                 <strong>{data.students}명</strong>의 수강생
               </span>
@@ -286,7 +304,9 @@ function Detail() {
               </DetailPrice>
               <DetailButtonWrapper>
                 <DetailButtonTop>수강신청 하기</DetailButtonTop>
-                <DetailButtonBottom>바구니에 담기</DetailButtonBottom>
+                <DetailButtonBottom onClick={() => cart(id)}>
+                  바구니에 담기
+                </DetailButtonBottom>
               </DetailButtonWrapper>
             </div>
             <DetailMoreInfo>
