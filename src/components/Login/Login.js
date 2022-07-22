@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,17 @@ import axios from 'axios';
 
 function Login({ openModal, setModal }) {
   const navigate = useNavigate();
+  const useLockBodyScroll = () => {
+    useLayoutEffect(() => {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }, []);
+  };
+
+  useLockBodyScroll();
+
   const [email, setEmail] = useState('');
   const onEmailHandler = e => {
     setEmail(e.currentTarget.value);
@@ -141,7 +152,7 @@ const Overlay = styled.div`
 `;
 const ModalWrapper = styled.div`
   width: 360px;
-  height: 66vh;
+  height: 500px;
   border-radius: 10px;
   background-color: white;
   position: fixed;
