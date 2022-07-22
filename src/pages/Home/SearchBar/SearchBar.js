@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import Loading from './Loading';
 
 import { createSearchParams } from 'react-router-dom';
+import BASE_URL from '../../../config';
 
 function SearchBar() {
   const [inputStyle, setInputStyle] = useState(false);
@@ -87,7 +88,7 @@ function SearchBar() {
       setLoading(false);
     }, 500);
     try {
-      const response = await fetch(`http://localhost:10010?s=${inputText}`, {
+      const response = await fetch(`${BASE_URL}?s=${inputText}`, {
         method: 'GET',
         headers: {
           Accept: 'application/json',

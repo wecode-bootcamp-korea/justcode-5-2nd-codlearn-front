@@ -6,13 +6,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ButtonWrapper, Header, ModalWrapper, Overlay } from './Updatemodal';
 import axios from 'axios';
+import BASE_URL from '../../config';
 function Deletemodal({ setShowDelete, id, reviewId }) {
   function closeModal() {
     setShowDelete(false);
   }
 
   const submit = () => {
-    axios.delete(`http://localhost:10010/course/${id}/review`, {
+    axios.delete(`${BASE_URL}/course/${id}/review`, {
       review_id: reviewId,
     });
   };

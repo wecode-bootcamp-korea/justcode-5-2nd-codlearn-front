@@ -41,7 +41,7 @@ function Login() {
 
   async function onLogin() {
     try {
-      const result = await axios.post('http://localhost:8000/user/login', {
+      const result = await axios.post(`${BASE_URL}/user/login`, {
         email,
         password,
       });

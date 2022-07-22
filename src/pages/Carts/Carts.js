@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import BASE_URL from '../../config';
+import CartCourse from '../../components/Carts/CartCourse';
+import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faX } from '@fortawesome/free-solid-svg-icons';
-library.add(faX);
+import { faX, faCircleQuestion, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+library.add(faX, faCircleQuestion, faAngleDown);
 
 const Wrapper = styled.div`
   display: flex;
@@ -88,7 +91,186 @@ const RightCart = styled.div`
   padding-top: 32px;
 `;
 
+const BuyerInfo = styled.div`
+  width: 300px;
+  font-size: 14px;
+  margin-bottom: 4px;
+  padding: 16px 20px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  background: #fff;
+`;
+
+const BuyerInfoHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f3f5;
+`;
+
+const BuyerInfoHeaderLeft = styled.div`
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1b1c1d;
+
+  div {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+    color: #abb0b4;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+`;
+
+const BuyerInfoHeaderRight = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  color: #b3edd4;
+`;
+
+const InputWrapper = styled.div`
+  margin-top: 10px;
+`;
+
+const InputHeader = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 4px;
+  color: #858a8d;
+
+  span {
+    color: #e5503c;
+  }
+`;
+
+const InputBox = styled.div`
+  display: flex;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: #fff;
+  
+  input {
+    width: 100%;
+    font-size: 14px;
+    border: 0;
+    background: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+`;
+
+const PhoneWrapper = styled.div`
+  display: flex;
+`;
+
+const PhoneInput = styled.div`
+
+`;
+
+const CountryNumber = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const NumIcon = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fff;
+`;
+
+const Num = styled.div`
+  font-size: 14px;
+`;
+
+const NumList = styled.ul`
+  position: absolute;
+  top: 43px;
+  left: -1px;
+  width: 180px;
+  height: 278px;
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: #fff;
+  list-style: none;
+  display: none;
+  z-index: 1;
+`;
+
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjU4Mzk0NjE0LCJleHAiOjE2NTg0ODEwMTR9.pakKaw-f8pBDjQWHDArfw2chi-uA-5ssFjxGq1qoySk';
+
 function Carts() {
+  const [ courses, setCourses ] = useState();
+  const [ checkedCourse, setCheckedCourse ] = useState([]);
+
+  const checkHandler = (checked, id) => {
+    if(checked) {
+      setCheckedCourse([...checkedCourse, id]);
+    }
+    else {
+      setCheckedCourse(checkedCourse.filter((v) => v !== id));
+    }
+  }
+
+  const checkAllHandler = (checked) => {
+    if (checked) {
+      const checkedIdArray = [];
+      courses?.data[0].class.forEach(e => checkedIdArray.push(e.class_id));
+      setCheckedCourse(checkedIdArray);
+    }
+    else {
+      setCheckedCourse([]);
+    }
+  }
+
+  // const deleteCourses = async () => {
+  //   await axios.post(`${BASE_URL}/cart`, {
+  //     deleteArray,
+  //   }, {headers: {Authorization: token},
+  // });
+  // };
+
+  // const deleteCourses = async () => {
+  //   await fetch(`${BASE_URL}/cart`, {
+  //     method: 'DELETE',
+  //     headers: {
+  //       Authorization: token,
+  //     },
+  //     body: JSON.stringify(deleteArray)
+  //   })
+  // }
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/cart`, {
+      method: 'GET',
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then(res => res.json())
+    .then(data => { 
+      setCourses(data);
+    });
+  }, []);
+
   return (
     <Wrapper>
       <LeftCart>
@@ -96,83 +278,83 @@ function Carts() {
         <div>
           <LeftCartHeader>
             <LeftCartHeaderLeft>
-              <input type='checkbox' id='cb1'/>
+              <input onChange={(e) => checkAllHandler(e.target.checked)} checked={checkedCourse.length === courses?.data[0].class.length} type='checkbox' id='cb1'/>
               <label for='cb1'></label>
               <SelectAll>전체선택</SelectAll>
               <ListCount>
-                <ListSelected>6</ListSelected>
+                <ListSelected>{checkedCourse.length}</ListSelected>
                 /
-                <span>6</span>
+                <span>{courses?.data[0].class.length}</span>
               </ListCount>
             </LeftCartHeaderLeft>
-            <LeftCartHeaderButton>
+            <LeftCartHeaderButton /*onClick={deleteCourses}*/>
               선택삭제
               <div>
                 <FontAwesomeIcon icon="fa-solid fa-x" />
               </div>
             </LeftCartHeaderButton>
           </LeftCartHeader>
-          <div>
-            <div>
-              <input type='checkbox' />
-            </div>
-            <div>이미지</div>
-            <div>
-              <div>강의제목</div>
-              <div>저자 | 기간</div>
-            </div>
-            <div>
-              <div>삭제버튼</div>
-            </div>
-            <div>
-              <span>가격</span>
-            </div>
-          </div>
+          {courses && courses?.data[0].class.map((v, i) => (
+            <CartCourse 
+              key={i}
+              id={v.class_id}
+              img={v.class_img}
+              name={v.class_name}
+              instructor={v.instructor_name}
+              price={v.price}
+              checkHandler={checkHandler}
+              checkedCourse={checkedCourse}
+            />
+          ))}
         </div>
       </LeftCart>
       <RightCart>
-        <div>
-          <div>
-            <span>
-              <div>구매자정보</div>
-              <div>?</div>
-            </span>
-            <div>저장</div>
-          </div>
-          <div>
-            <div>
-              이름
-              <span>*</span>
-            </div>
-            <div>
-              <input />
-            </div>
-          </div>
-          <div>
-          <div>
-              이메일
-              <span>*</span>
-            </div>
-            <div>
-              <input />
-            </div>
-          </div>
-          <div>
-            <div>
-              휴대폰 번호
-              <span>*</span>
-              (숫자만 입력)
-            </div>
-            <div>
+        <BuyerInfo>
+          <BuyerInfoHeader>
+            <BuyerInfoHeaderLeft>
+              <span>구매자정보</span>
               <div>
-                <div>
-                  <div>
-                    <div>
+                <FontAwesomeIcon icon="fa-solid fa-circle-question" />
+              </div>
+            </BuyerInfoHeaderLeft>
+            <BuyerInfoHeaderRight>저장</BuyerInfoHeaderRight>
+          </BuyerInfoHeader>
+          <InputWrapper>
+            <InputHeader>
+              이름
+              <span> * </span>
+            </InputHeader>
+            <InputBox>
+              <input type='text' placeholder='실명 입력' />
+            </InputBox>
+          </InputWrapper>
+          <InputWrapper>
+            <InputHeader>
+                이메일
+                <span> * </span>
+              </InputHeader>
+              <InputBox>
+                <input value={courses?.data[0].user.email} type='email' placeholder='이메일 입력' />
+              </InputBox>
+            </InputWrapper>
+          <InputWrapper>
+            <InputHeader>
+              휴대폰 번호
+              <span> * </span>
+              (숫자만 입력)
+            </InputHeader>
+            <PhoneWrapper>
+              <PhoneInput>
+                <CountryNumber>
+                  <NumIcon>
+                    <Num>
                       +82
+                    </Num>
+                    <div>
+                      <FontAwesomeIcon icon="fa-solid fa-angle-down" />
                     </div>
-                    <svg></svg>
-                  </div>
-                  <ul>
+                  </NumIcon>
+                  <NumList>
                     <li>
                       <p>+82</p>
                       <p>대한민국</p>
@@ -209,16 +391,16 @@ function Carts() {
                       <p>+44</p>
                       <p>영국</p>
                     </li>
-                  </ul>
-                </div>
+                  </NumList>
+                </CountryNumber>
                 <input />
-              </div>
+              </PhoneInput>
               <div>
                 인증요청
               </div>
-            </div>
-          </div>
-        </div>
+            </PhoneWrapper>
+          </InputWrapper>
+        </BuyerInfo>
         <div>
           <div>
             <div>

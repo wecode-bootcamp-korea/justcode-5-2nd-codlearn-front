@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Updatemodal from './Updatemodal';
 import Deletemodal from './Deletemodal';
+import BASE_URL from '../../config';
 
 const Wrapper = styled.div`
   margin-top: 40px;
@@ -156,7 +157,7 @@ function Comments({ id }) {
 
   async function get() {
     const result = await axios.get(
-      `http://localhost:10010/course/${id}/review`,
+      `${BASE_URL}/course/${id}/review`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -167,7 +168,7 @@ function Comments({ id }) {
   }
 
   const submit = async () => {
-    await axios.post(`http://localhost:10010/course/${id}/review`, {
+    await axios.post(`${BASE_URL}/course/${id}/review`, {
       class_id: id,
       user_id: 1,
       content,

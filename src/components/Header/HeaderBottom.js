@@ -15,7 +15,7 @@ import {
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-  const [token, setToken] = useState(true);
+  const [token, setToken] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
@@ -71,9 +71,9 @@ function HeaderBottom() {
     }
   };
 
-  useEffect(() => {
-    console.log(text);
-  }, [text]);
+  // useEffect(() => {
+  //   console.log(text);
+  // }, [text]);
 
   return (
     <HeaderBottomWrapper
