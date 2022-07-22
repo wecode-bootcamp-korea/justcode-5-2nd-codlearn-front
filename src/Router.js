@@ -12,6 +12,7 @@ import Hello from './pages/Hello/Hello';
 import KakaoLogin from './components/Login/KakaoLogin';
 import DashBoard from './pages/DashBoard/DashBoard';
 import Likes from './pages/Likes/Likes';
+import MyCourses from './pages/MyCourses/MyCourses';
 
 function Router() {
   const [openLoginModal, setOpenLoginModal] = useState(false);
@@ -34,6 +35,7 @@ function Router() {
         <Route path="/carts" element={<Carts />} />
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/likes" element={<Likes />} />
+        <Route path="/my_courses" element={<MyCourses />} />
       </Routes>
       <Footer />
     </BrowserRouter>
