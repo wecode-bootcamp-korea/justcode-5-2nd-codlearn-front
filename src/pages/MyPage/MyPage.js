@@ -11,6 +11,7 @@ function MyPage(props) {
           {location.pathname === '/dashboard' && <h4>대시보드</h4>}
           {location.pathname === '/likes' && <h4>좋아요</h4>}
           {location.pathname === '/my_courses' && <h4>내 학습</h4>}
+          {location.pathname === '/carts' && <h4>수강 바구니</h4>}
         </Title>
         <Container>
           <Main>
@@ -28,7 +29,13 @@ function MyPage(props) {
                     </Link>
                   </li>
                   <li>
-                    <Link to>수강바구니</Link>
+                    <Link to="/carts">
+                      {location.pathname === '/carts' ? (
+                        <span className="select">수강 바구니</span>
+                      ) : (
+                        <span>수강 바구니</span>
+                      )}
+                    </Link>
                   </li>
                   <li>
                     <Link to="/likes">
