@@ -141,7 +141,7 @@ const Overlay = styled.div`
 `;
 const ModalWrapper = styled.div`
   width: 360px;
-  height: 66vh;
+  height: 500px;
   border-radius: 10px;
   background-color: white;
   position: fixed;
