@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import BASE_URL from '../../config';
 import CartCourse from '../../components/Carts/CartCourse';
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../App';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -216,10 +218,28 @@ const NumList = styled.ul`
   z-index: 1;
 `;
 
+const PayButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 40px;
+  font-size: 16px;
+  color: white;
+  border-radius: 8px;
+  background: green;
+  cursor:pointer;
+`;
+
 function Carts() {
+  const LoginToken = localStorage.getItem('token');
+
   const [courses, setCourses] = useState();
   const [checkedCourse, setCheckedCourse] = useState([]);
+  const [checkId, setCheckId] = useState([]);
   
+  const navigate = useNavigate();
+
   const checkHandler = (checked, id) => {
     if (checked) {
       setCheckedCourse([...checkedCourse, id]);
@@ -237,12 +257,12 @@ function Carts() {
       setCheckedCourse([]);
     }
   };
-  const token = '';
+  
   useEffect(() => {
     fetch(`${BASE_URL}/cart`, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: LoginToken,
       },
     })
       .then(res => res.json())
@@ -251,18 +271,50 @@ function Carts() {
       });
   }, [courses]);
 
-  const deleteCourses = async () => {
-    const classList = checkedCourse.map(el => {
+  const deleteCourses = async (classArray) => {
+    const classList = classArray.map(el => {
       return { class_id: el };
     });
     await fetch(`${BASE_URL}/cart`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token,
+        Authorization: LoginToken,
       },
       body: JSON.stringify(classList),
     });
+  };
+
+  useEffect(() => {
+    if(checkId.length > 0) {
+      deleteCourses(checkId)
+    };
+  }, [checkId])
+  // const deleteCourse = async (id) => {
+  //   const classList = { class_id: id };
+  //   await fetch(`${BASE_URL}/cart`, {
+  //     method: 'DELETE',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: LoginToken,
+  //     },
+  //     body: JSON.stringify(classList),
+  //   });
+  // };
+
+  const addCourses = async () => {
+    const classList = checkedCourse.map(el => {
+      return { class_id: el };
+    });
+    await fetch(`${BASE_URL}/my_courses`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: LoginToken,
+      },
+      body: JSON.stringify(classList),
+    });
+    navigate('/my_courses');
   };
 
   return (
@@ -274,10 +326,9 @@ function Carts() {
             <LeftCartHeaderLeft>
               <input
                 onChange={e => {
-                  console.log('on change');
                   checkAllHandler(e.target.checked);
                 }}
-                checked={checkedCourse.length === courses?.data[0].class.length}
+                checked={checkedCourse.length === courses?.data[0]?.class.length}
                 type="checkbox"
                 id="cb1"
               />
@@ -285,10 +336,10 @@ function Carts() {
               <SelectAll>전체선택</SelectAll>
               <ListCount>
                 <ListSelected>{checkedCourse.length}</ListSelected>/
-                <span>{courses?.data[0].class.length}</span>
+                <span>{courses?.data[0]?.class.length}</span>
               </ListCount>
             </LeftCartHeaderLeft>
-            <LeftCartHeaderButton onClick={deleteCourses}>
+            <LeftCartHeaderButton onClick={(e) => deleteCourses(checkedCourse)}>
               선택삭제
               <div>
                 <FontAwesomeIcon icon="fa-solid fa-x" />
@@ -296,7 +347,7 @@ function Carts() {
             </LeftCartHeaderButton>
           </LeftCartHeader>
           {courses &&
-            courses?.data[0].class.map((v, i) => (
+            courses?.data[0]?.class.map((v, i) => (
               <CartCourse
                 key={i}
                 id={v.class_id}
@@ -306,6 +357,7 @@ function Carts() {
                 price={v.price}
                 checkHandler={checkHandler}
                 checkedCourse={checkedCourse}
+                setCheckId={setCheckId}
               />
             ))}
         </div>
@@ -337,7 +389,7 @@ function Carts() {
             </InputHeader>
             <InputBox>
               <input
-                value={courses?.data[0].user.email}
+                value={courses?.data[0]?.user.email}
                 type="email"
                 placeholder="이메일 입력"
               />
@@ -494,7 +546,7 @@ function Carts() {
                 <span>15%</span>
                 할인받기
               </div>
-              <div>결제하기</div>
+              <PayButton onClick={addCourses}>결제하기</PayButton>
             </div>
             <div>
               <div>
