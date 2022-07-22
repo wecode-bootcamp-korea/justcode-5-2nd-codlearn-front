@@ -11,6 +11,7 @@ import {
 import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 import Pagination from './Pagination';
+import BASE_URL from '../../config';
 import { LoginContext } from '../../App';
 
 const categories = [
@@ -233,8 +234,8 @@ function Courses() {
       const result = await (
         await fetch(
           params.cat1
-            ? `http://localhost:10010/courses${parameters}${location.search}`
-            : `http://localhost:10010/courses${location.search}`
+            ? `${BASE_URL}/courses${parameters}${location.search}`
+            : `${BASE_URL}/courses${location.search}`
         )
       ).json();
       setCourseData(result);

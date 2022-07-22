@@ -79,9 +79,9 @@ function HeaderBottom() {
     }
   };
 
-  useEffect(() => {
-    console.log(text);
-  }, [text]);
+  // useEffect(() => {
+  //   console.log(text);
+  // }, [text]);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
