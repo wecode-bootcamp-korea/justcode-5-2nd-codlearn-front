@@ -98,7 +98,7 @@ function CartCourse(props) {
             <div>{props.instructor}</div>
         </CourseInfo>
         <Close>
-            <div>
+            <div onClick={() => props.setCheckId([props.id])}>
                 <FontAwesomeIcon icon="fa-solid fa-x" />
             </div>
         </Close>
