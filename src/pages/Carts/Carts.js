@@ -228,7 +228,7 @@ const PayButton = styled.div`
   color: white;
   border-radius: 8px;
   background: green;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 function Carts() {
@@ -237,7 +237,7 @@ function Carts() {
   const [courses, setCourses] = useState();
   const [checkedCourse, setCheckedCourse] = useState([]);
   const [checkId, setCheckId] = useState([]);
-  
+
   const navigate = useNavigate();
 
   const checkHandler = (checked, id) => {
@@ -257,7 +257,7 @@ function Carts() {
       setCheckedCourse([]);
     }
   };
-  
+
   useEffect(() => {
     fetch(`${BASE_URL}/cart`, {
       method: 'GET',
@@ -271,7 +271,7 @@ function Carts() {
       });
   }, [courses]);
 
-  const deleteCourses = async (classArray) => {
+  const deleteCourses = async classArray => {
     const classList = classArray.map(el => {
       return { class_id: el };
     });
@@ -286,10 +286,10 @@ function Carts() {
   };
 
   useEffect(() => {
-    if(checkId.length > 0) {
-      deleteCourses(checkId)
-    };
-  }, [checkId])
+    if (checkId.length > 0) {
+      deleteCourses(checkId);
+    }
+  }, [checkId]);
   // const deleteCourse = async (id) => {
   //   const classList = { class_id: id };
   //   await fetch(`${BASE_URL}/cart`, {
@@ -328,7 +328,9 @@ function Carts() {
                 onChange={e => {
                   checkAllHandler(e.target.checked);
                 }}
-                checked={checkedCourse.length === courses?.data[0]?.class.length}
+                checked={
+                  checkedCourse.length === courses?.data[0]?.class?.length
+                }
                 type="checkbox"
                 id="cb1"
               />
@@ -336,10 +338,10 @@ function Carts() {
               <SelectAll>전체선택</SelectAll>
               <ListCount>
                 <ListSelected>{checkedCourse.length}</ListSelected>/
-                <span>{courses?.data[0]?.class.length}</span>
+                <span>{courses?.data[0]?.class?.length}</span>
               </ListCount>
             </LeftCartHeaderLeft>
-            <LeftCartHeaderButton onClick={(e) => deleteCourses(checkedCourse)}>
+            <LeftCartHeaderButton onClick={e => deleteCourses(checkedCourse)}>
               선택삭제
               <div>
                 <FontAwesomeIcon icon="fa-solid fa-x" />
@@ -347,7 +349,7 @@ function Carts() {
             </LeftCartHeaderButton>
           </LeftCartHeader>
           {courses &&
-            courses?.data[0]?.class.map((v, i) => (
+            courses?.data[0]?.class?.map((v, i) => (
               <CartCourse
                 key={i}
                 id={v.class_id}
@@ -389,7 +391,7 @@ function Carts() {
             </InputHeader>
             <InputBox>
               <input
-                value={courses?.data[0]?.user.email}
+                value={courses?.data[0]?.user?.email}
                 type="email"
                 placeholder="이메일 입력"
               />
