@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import BASE_URL from '../../config';
 import CartCourse from '../../components/Carts/CartCourse';
-import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faX, faCircleQuestion, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faX,
+  faCircleQuestion,
+  faAngleDown,
+} from '@fortawesome/free-solid-svg-icons';
 library.add(faX, faCircleQuestion, faAngleDown);
 
 const Wrapper = styled.div`
@@ -25,7 +28,7 @@ const LeftCart = styled.div`
 `;
 
 const CartName = styled.div`
-  font-size : 24px;
+  font-size: 24px;
   font-weight: 700;
   color: #1b1c1d;
   padding-top: 32px;
@@ -159,7 +162,7 @@ const InputBox = styled.div`
   border: 1px solid #dee2e6;
   border-radius: 4px;
   background: #fff;
-  
+
   input {
     width: 100%;
     font-size: 14px;
@@ -176,9 +179,7 @@ const PhoneWrapper = styled.div`
   display: flex;
 `;
 
-const PhoneInput = styled.div`
-
-`;
+const PhoneInput = styled.div``;
 
 const CountryNumber = styled.div`
   position: relative;
@@ -215,49 +216,28 @@ const NumList = styled.ul`
   z-index: 1;
 `;
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjU4Mzk0NjE0LCJleHAiOjE2NTg0ODEwMTR9.pakKaw-f8pBDjQWHDArfw2chi-uA-5ssFjxGq1qoySk';
-
 function Carts() {
-  const [ courses, setCourses ] = useState();
-  const [ checkedCourse, setCheckedCourse ] = useState([]);
-
+  const [courses, setCourses] = useState();
+  const [checkedCourse, setCheckedCourse] = useState([]);
+  
   const checkHandler = (checked, id) => {
-    if(checked) {
+    if (checked) {
       setCheckedCourse([...checkedCourse, id]);
+    } else {
+      setCheckedCourse(checkedCourse.filter(v => v !== id));
     }
-    else {
-      setCheckedCourse(checkedCourse.filter((v) => v !== id));
-    }
-  }
+  };
 
-  const checkAllHandler = (checked) => {
+  const checkAllHandler = checked => {
     if (checked) {
       const checkedIdArray = [];
       courses?.data[0].class.forEach(e => checkedIdArray.push(e.class_id));
       setCheckedCourse(checkedIdArray);
-    }
-    else {
+    } else {
       setCheckedCourse([]);
     }
-  }
-
-  // const deleteCourses = async () => {
-  //   await axios.post(`${BASE_URL}/cart`, {
-  //     deleteArray,
-  //   }, {headers: {Authorization: token},
-  // });
-  // };
-
-  // const deleteCourses = async () => {
-  //   await fetch(`${BASE_URL}/cart`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       Authorization: token,
-  //     },
-  //     body: JSON.stringify(deleteArray)
-  //   })
-  // }
-
+  };
+  const token = '';
   useEffect(() => {
     fetch(`${BASE_URL}/cart`, {
       method: 'GET',
@@ -265,11 +245,25 @@ function Carts() {
         Authorization: token,
       },
     })
-    .then(res => res.json())
-    .then(data => { 
-      setCourses(data);
+      .then(res => res.json())
+      .then(data => {
+        setCourses(data);
+      });
+  }, [courses]);
+
+  const deleteCourses = async () => {
+    const classList = checkedCourse.map(el => {
+      return { class_id: el };
     });
-  }, []);
+    await fetch(`${BASE_URL}/cart`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify(classList),
+    });
+  };
 
   return (
     <Wrapper>
@@ -278,34 +272,42 @@ function Carts() {
         <div>
           <LeftCartHeader>
             <LeftCartHeaderLeft>
-              <input onChange={(e) => checkAllHandler(e.target.checked)} checked={checkedCourse.length === courses?.data[0].class.length} type='checkbox' id='cb1'/>
-              <label for='cb1'></label>
+              <input
+                onChange={e => {
+                  console.log('on change');
+                  checkAllHandler(e.target.checked);
+                }}
+                checked={checkedCourse.length === courses?.data[0].class.length}
+                type="checkbox"
+                id="cb1"
+              />
+              <label for="cb1"></label>
               <SelectAll>전체선택</SelectAll>
               <ListCount>
-                <ListSelected>{checkedCourse.length}</ListSelected>
-                /
+                <ListSelected>{checkedCourse.length}</ListSelected>/
                 <span>{courses?.data[0].class.length}</span>
               </ListCount>
             </LeftCartHeaderLeft>
-            <LeftCartHeaderButton /*onClick={deleteCourses}*/>
+            <LeftCartHeaderButton onClick={deleteCourses}>
               선택삭제
               <div>
                 <FontAwesomeIcon icon="fa-solid fa-x" />
               </div>
             </LeftCartHeaderButton>
           </LeftCartHeader>
-          {courses && courses?.data[0].class.map((v, i) => (
-            <CartCourse 
-              key={i}
-              id={v.class_id}
-              img={v.class_img}
-              name={v.class_name}
-              instructor={v.instructor_name}
-              price={v.price}
-              checkHandler={checkHandler}
-              checkedCourse={checkedCourse}
-            />
-          ))}
+          {courses &&
+            courses?.data[0].class.map((v, i) => (
+              <CartCourse
+                key={i}
+                id={v.class_id}
+                img={v.class_img}
+                name={v.class_name}
+                instructor={v.instructor_name}
+                price={v.price}
+                checkHandler={checkHandler}
+                checkedCourse={checkedCourse}
+              />
+            ))}
         </div>
       </LeftCart>
       <RightCart>
@@ -325,18 +327,22 @@ function Carts() {
               <span> * </span>
             </InputHeader>
             <InputBox>
-              <input type='text' placeholder='실명 입력' />
+              <input type="text" placeholder="실명 입력" />
             </InputBox>
           </InputWrapper>
           <InputWrapper>
             <InputHeader>
-                이메일
-                <span> * </span>
-              </InputHeader>
-              <InputBox>
-                <input value={courses?.data[0].user.email} type='email' placeholder='이메일 입력' />
-              </InputBox>
-            </InputWrapper>
+              이메일
+              <span> * </span>
+            </InputHeader>
+            <InputBox>
+              <input
+                value={courses?.data[0].user.email}
+                type="email"
+                placeholder="이메일 입력"
+              />
+            </InputBox>
+          </InputWrapper>
           <InputWrapper>
             <InputHeader>
               휴대폰 번호
@@ -347,9 +353,7 @@ function Carts() {
               <PhoneInput>
                 <CountryNumber>
                   <NumIcon>
-                    <Num>
-                      +82
-                    </Num>
+                    <Num>+82</Num>
                     <div>
                       <FontAwesomeIcon icon="fa-solid fa-angle-down" />
                     </div>
@@ -395,9 +399,7 @@ function Carts() {
                 </CountryNumber>
                 <input />
               </PhoneInput>
-              <div>
-                인증요청
-              </div>
+              <div>인증요청</div>
             </PhoneWrapper>
           </InputWrapper>
         </BuyerInfo>
@@ -421,7 +423,7 @@ function Carts() {
                 </div>
               </div>
               <div>
-              <div>
+                <div>
                   <span>포인트</span>
                   <div>
                     <svg></svg>
@@ -464,14 +466,14 @@ function Carts() {
                       </div>
                     </div>
                     <div>
-                    <div>- 쿠폰할인</div>
+                      <div>- 쿠폰할인</div>
                       <div>
                         <span>0</span>
                         <span>원</span>
                       </div>
                     </div>
                     <div>
-                    <div>- 포인트사용</div>
+                      <div>- 포인트사용</div>
                       <div>
                         <span>0</span>
                         <span>잎</span>
@@ -497,9 +499,8 @@ function Carts() {
             <div>
               <div>
                 <label>
-                  회원 본인은 주문내용을 확인했으며, 
-                  <span>구매조건 및 개인정보취급방침</span>
-                  과 결제에 동의합니다.
+                  회원 본인은 주문내용을 확인했으며,
+                  <span>구매조건 및 개인정보취급방침</span>과 결제에 동의합니다.
                 </label>
               </div>
             </div>
