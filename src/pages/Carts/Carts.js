@@ -228,7 +228,7 @@ const PayButton = styled.div`
   color: white;
   border-radius: 8px;
   background: green;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 function Carts() {
@@ -237,7 +237,7 @@ function Carts() {
   const [courses, setCourses] = useState();
   const [checkedCourse, setCheckedCourse] = useState([]);
   const [checkId, setCheckId] = useState([]);
-  
+
   const navigate = useNavigate();
 
   const checkHandler = (checked, id) => {
@@ -257,7 +257,7 @@ function Carts() {
       setCheckedCourse([]);
     }
   };
-  
+
   useEffect(() => {
     fetch(`${BASE_URL}/cart`, {
       method: 'GET',
@@ -271,7 +271,7 @@ function Carts() {
       });
   }, [courses]);
 
-  const deleteCourses = async (classArray) => {
+  const deleteCourses = async classArray => {
     const classList = classArray.map(el => {
       return { class_id: el };
     });
@@ -286,10 +286,10 @@ function Carts() {
   };
 
   useEffect(() => {
-    if(checkId.length > 0) {
-      deleteCourses(checkId)
-    };
-  }, [checkId])
+    if (checkId.length > 0) {
+      deleteCourses(checkId);
+    }
+  }, [checkId]);
   // const deleteCourse = async (id) => {
   //   const classList = { class_id: id };
   //   await fetch(`${BASE_URL}/cart`, {
@@ -306,14 +306,18 @@ function Carts() {
     const classList = checkedCourse.map(el => {
       return { class_id: el };
     });
-    await fetch(`${BASE_URL}/my_courses`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: LoginToken,
-      },
-      body: JSON.stringify(classList),
-    });
+
+    Promise.all(
+      await fetch(`${BASE_URL}/my-classes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: LoginToken,
+        },
+        body: JSON.stringify(classList),
+      })
+    );
+
     navigate('/my_courses');
   };
 
@@ -328,7 +332,9 @@ function Carts() {
                 onChange={e => {
                   checkAllHandler(e.target.checked);
                 }}
-                checked={checkedCourse.length === courses?.data[0]?.class.length}
+                checked={
+                  checkedCourse.length === courses?.data[0]?.class.length
+                }
                 type="checkbox"
                 id="cb1"
               />
@@ -339,7 +345,7 @@ function Carts() {
                 <span>{courses?.data[0]?.class.length}</span>
               </ListCount>
             </LeftCartHeaderLeft>
-            <LeftCartHeaderButton onClick={(e) => deleteCourses(checkedCourse)}>
+            <LeftCartHeaderButton onClick={e => deleteCourses(checkedCourse)}>
               선택삭제
               <div>
                 <FontAwesomeIcon icon="fa-solid fa-x" />

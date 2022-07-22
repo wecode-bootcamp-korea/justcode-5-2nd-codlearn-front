@@ -43,7 +43,7 @@ function DashBoard() {
               <ColumnFrame>
                 <ColumnTitle>
                   <span>😄 </span>
-                  <span>{userData?.data.user.name}님 프로필</span>
+                  <span>{userData?.data?.user?.name}님 프로필</span>
                 </ColumnTitle>
                 <Content>
                   <div className="text">
@@ -63,7 +63,7 @@ function DashBoard() {
                 </ColumnTitle>
                 <Content>
                   <div className="text">
-                    {userData?.data.recentlyRegistered.map(data => (
+                    {userData?.data?.recentlyRegistered?.map(data => (
                       <p className="recentP">
                         <Link to={`/course/${data.class_id}`}>
                           {data.class_name}
@@ -83,7 +83,7 @@ function DashBoard() {
                 </ColumnTitle>
                 <Content>
                   <div className="text">
-                    {userData?.data.wishlist.map(data => (
+                    {userData?.data?.cart?.map(data => (
                       <p className="cartP">
                         <Link to={`/course/${data.class_id}`}>
                           {data.class_name}
@@ -102,7 +102,7 @@ function DashBoard() {
                 </ColumnTitle>
                 <Content>
                   <div className="text">
-                    {userData?.data.wishlist.map(data => (
+                    {userData?.data?.wishlist?.map(data => (
                       <p className="likeP">
                         <Link to={`/course/${data.class_id}`}>
                           {data.class_name}
