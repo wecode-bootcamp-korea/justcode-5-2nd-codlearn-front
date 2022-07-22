@@ -50,9 +50,8 @@ function MyCourses() {
 
 //slider - style
 const Wrap = styled.div`
-  padding: 20px;
-  width: 25%;
-
+  padding: 5px;
+  width: 33.333333%;
   a {
     display: block;
     text-decoration: none;
@@ -73,7 +72,7 @@ const WrapTitle = styled.h3`
 const ContentWrap = styled.div`
   margin-bottom: 15px;
   section {
-    width: 230px;
+    width: 100%;
     padding: 15px;
     background-color: white;
     img {
