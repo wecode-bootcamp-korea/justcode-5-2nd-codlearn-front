@@ -333,7 +333,8 @@ function Carts() {
                   checkAllHandler(e.target.checked);
                 }}
                 checked={
-                  checkedCourse.length === courses?.data[0]?.class.length
+
+                  checkedCourse.length === courses?.data[0]?.class?.length
                 }
                 type="checkbox"
                 id="cb1"
@@ -342,7 +343,7 @@ function Carts() {
               <SelectAll>전체선택</SelectAll>
               <ListCount>
                 <ListSelected>{checkedCourse.length}</ListSelected>/
-                <span>{courses?.data[0]?.class.length}</span>
+                <span>{courses?.data[0]?.class?.length}</span>
               </ListCount>
             </LeftCartHeaderLeft>
             <LeftCartHeaderButton onClick={e => deleteCourses(checkedCourse)}>
@@ -353,7 +354,7 @@ function Carts() {
             </LeftCartHeaderButton>
           </LeftCartHeader>
           {courses &&
-            courses?.data[0]?.class.map((v, i) => (
+            courses?.data[0]?.class?.map((v, i) => (
               <CartCourse
                 key={i}
                 id={v.class_id}
@@ -395,7 +396,7 @@ function Carts() {
             </InputHeader>
             <InputBox>
               <input
-                value={courses?.data[0]?.user.email}
+                value={courses?.data[0]?.user?.email}
                 type="email"
                 placeholder="이메일 입력"
               />
