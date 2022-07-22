@@ -1,9 +1,8 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -12,22 +11,31 @@ import {
   faBell,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import Login from '../Login/Login';
+import { LoginContext } from '../../App';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-  const [token, setToken] = useState(false);
+
+  const token = localStorage.getItem('token');
+
+  const [isLogin, setIsLogin] = useContext(LoginContext);
+
+  const [modal, setModal] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [scrollToggle, setScrollToggle] = useState(false);
   const [text, setText] = useState('');
-
+  const [query, setQuery] = useSearchParams();
+  const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
+  const loginToken = localStorage.getItem('token');
+
+  const openModal = () => {
+    setModal(true);
+  };
 
   const goToHome = () => {
     navigate('/');
-  };
-
-  const openLogInModal = () => {
-    navigate('/openLogInModal');
   };
 
   const goToSignUp = () => {
@@ -75,6 +83,19 @@ function HeaderBottom() {
   //   console.log(text);
   // }, [text]);
 
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [loginToken]);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsLogin(false);
+  };
+
   return (
     <HeaderBottomWrapper
       style={
@@ -82,6 +103,7 @@ function HeaderBottom() {
       }
     >
       <BottomWrapper>
+        {modal && <Login openModal={openModal} setModal={setModal} />}
         <BottomLeftWrapper>
           <img alt="codlearn-logo" src="images/logo.png" onClick={goToHome} />
           <Courses>
@@ -304,9 +326,9 @@ function HeaderBottom() {
           </div>
         </BottomLeftWrapper>
         <BottomRightWrapper>
-          <Search style={token ? { padding: 0 } : { padding: '0 24px 0 0' }}>
+          <Search style={isLogin ? { padding: 0 } : { padding: '0 24px 0 0' }}>
             <input value={text} onChange={writeText} onKeyUp={searchByEnter} />
-            <div style={token ? { right: '10px' } : { right: '32px' }}>
+            <div style={isLogin ? { right: '10px' } : { right: '32px' }}>
               <FontAwesomeIcon
                 onClick={nextToSearch}
                 icon="fa-solid fa-magnifying-glass"
@@ -316,7 +338,8 @@ function HeaderBottom() {
           <Share>
             <span>지식공유참여</span>
           </Share>
-          {token ? (
+
+          {isLogin ? (
             <IconWrapper>
               <div>
                 <Link to="/carts">
@@ -328,15 +351,24 @@ function HeaderBottom() {
                   <FontAwesomeIcon icon="fa-solid fa-bell" />
                 </Link>
               </div>
-              <div>
+              <MyPage>
                 <Link to="/dashboard">
                   <FontAwesomeIcon icon="fa-solid fa-user" />
                 </Link>
-              </div>
+                <Logout
+                  className="logout"
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  로그아웃
+                </Logout>
+              </MyPage>
             </IconWrapper>
+
           ) : (
             <>
-              <LoginButton onClick={openLogInModal}>로그인</LoginButton>
+              <LoginButton onClick={openModal}>로그인</LoginButton>
               <SignupButton onClick={goToSignUp}>회원가입</SignupButton>
             </>
           )}
@@ -351,7 +383,8 @@ const HeaderBottomWrapper = styled.div`
   width: 100%;
   background: white;
   box-shadow: 0 2px 4px 0 hsl(0deg 0% 81% / 50%);
-  z-index: 99;
+  position: relative;
+  z-index: 98;
 `;
 
 const BottomWrapper = styled.div`
@@ -361,7 +394,6 @@ const BottomWrapper = styled.div`
   height: 64px;
   margin: 0 auto;
   padding: 0 32px;
-
   img {
     &:hover {
       cursor: pointer;
@@ -374,8 +406,9 @@ const BottomLeftWrapper = styled.div`
   align-items: center;
 
   img {
-    width: 110px;
+    width: 120px;
     height: 100%;
+    object-fit: cover;
   }
 
   div {
@@ -425,6 +458,53 @@ const Courses = styled.div`
       display: block;
     }
   }
+`;
+
+const MyPage = styled.div`
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    :before {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      border-color: transparent transparent #e2e3e4;
+      border-style: solid;
+      border-width: 0 12px 12px;
+    }
+
+    :after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      border-color: transparent transparent #fff;
+      border-style: solid;
+      border-width: 0 10px 10px;
+    }
+
+    .logout {
+      display: block;
+    }
+  }
+`;
+
+const Logout = styled.p`
+  display: none;
+  position: absolute;
+  text-align: center;
+  border-radius: 10px;
+  width: 80px;
+  background: #fff;
+  top: 60px;
+  left: 0;
+  padding: 10px;
+  font-weight: 600;
+  cursor: pointer;
 `;
 
 const Categories = styled.ul`
@@ -600,7 +680,9 @@ const Search = styled.div`
     border: 1px solid transparent;
     border-radius: 3px;
     background: #f6f6f6;
-
+    &:focus {
+      outline: #1ec077;
+    }
     &:hover {
       border: 1px solid #5f5f5f;
     }
@@ -662,10 +744,21 @@ const SignupButton = styled.div`
   background: #ff7867;
   color: #fff;
   cursor: pointer;
-
   &:hover {
     background: #ff6d5a;
   }
 `;
-
+const UserMenu = styled.div`
+  display: block;
+  position: absolute;
+  padding: 20px 10px;
+  top: 47px;
+  right: 80px;
+`;
+const Fakediv = styled.div`
+  position: absolute;
+  background-color: tomato;
+  width: 100px;
+  z-index: 99;
+`;
 export default HeaderBottom;

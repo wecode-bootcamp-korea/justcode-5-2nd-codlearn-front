@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faXmark,
@@ -7,15 +6,22 @@ import {
 import { ButtonWrapper, Header, ModalWrapper, Overlay } from './Updatemodal';
 import axios from 'axios';
 import BASE_URL from '../../config';
-function Deletemodal({ setShowDelete, id, reviewId }) {
+
+function Deletemodal({ setShowDelete, id, reviewId, get }) {
   function closeModal() {
     setShowDelete(false);
   }
 
   const submit = () => {
-    axios.delete(`${BASE_URL}/course/${id}/review`, {
-      review_id: reviewId,
-    });
+    try {
+      axios.delete(`http://${BASE_URL}/course/${id}/review`, {
+        data: {
+          review_id: reviewId,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -48,8 +54,9 @@ function Deletemodal({ setShowDelete, id, reviewId }) {
           <button onClick={closeModal}>취소</button>
           <button
             onClick={() => {
-              closeModal();
               submit();
+              get();
+              closeModal();
             }}
           >
             삭제

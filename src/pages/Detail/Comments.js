@@ -144,23 +144,23 @@ function Comments({ id }) {
   const [showOption, setShowOption] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [cart, setCart] = useState();
+  const [targetID, setTargetID] = useState();
+
   const handleRating = rate => {
     setRating(rate / 20);
   };
-  console.log('렌더링되었습니다');
   const handleContent = e => {
     setContent(e.target.value);
   };
-
-  const accessToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.wq6RVyINzhOV6g8cixMo5mc3660Sq3caVOAxBTu1yis';
+  const token = localStorage.getItem('token');
 
   async function get() {
     const result = await axios.get(
       `${BASE_URL}/course/${id}/review`,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -168,19 +168,26 @@ function Comments({ id }) {
   }
 
   const submit = async () => {
-    await axios.post(`${BASE_URL}/course/${id}/review`, {
-      class_id: id,
-      user_id: 1,
-      content,
-      rating,
-    });
+    await axios.post(
+      `http://${BASE_URL}/course/${id}/review`,
+      {
+        class_id: id,
+        content,
+        rating,
+      },
+      {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      }
+    );
     get();
   };
 
   useEffect(() => {
     get();
   }, [id]);
-  console.log(reviews);
+
   return (
     <Wrapper>
       <Header>
@@ -237,50 +244,58 @@ function Comments({ id }) {
                     />
                     <span>{el.rate}</span>
                   </div>
-                  <Elipsis>
-                    <FontAwesomeIcon
-                      icon={faEllipsisVertical}
-                      onClick={() => setShowOption(prev => !prev)}
-                    />
-                  </Elipsis>
-                  <SModalWrapper show={showOption}>
-                    <Modify
-                      onClick={() => {
-                        setShowUpdate(true);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                      <span>수정</span>
-                    </Modify>
-                    <Delete
-                      onClick={() => {
-                        setShowDelete(true);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                      <span>삭제</span>
-                    </Delete>
-                  </SModalWrapper>
+                  {Object.keys(el).includes('canEdit') ? (
+                    <Elipsis>
+                      <FontAwesomeIcon
+                        icon={faEllipsisVertical}
+                        onClick={() => setShowOption(prev => !prev)}
+                      />
+                    </Elipsis>
+                  ) : null}
+                  {Object.keys(el).includes('canEdit') && (
+                    <SModalWrapper show={showOption}>
+                      <Modify
+                        onClick={() => {
+                          setShowUpdate(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                        <span>수정</span>
+                      </Modify>
+                      <Delete
+                        onClick={() => {
+                          setShowDelete(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTrashCan} />
+                        <span>삭제</span>
+                      </Delete>
+                      {showUpdate && (
+                        <Updatemodal
+                          setShowUpdate={setShowUpdate}
+                          setShowOption={setShowOption}
+                          id={id}
+                          reviewId={el.id}
+                          get={get}
+                        />
+                      )}
+                      {showDelete && (
+                        <Deletemodal
+                          setShowDelete={setShowDelete}
+                          setShowOption={setShowOption}
+                          id={id}
+                          get={get}
+                          reviewId={el.id}
+                        />
+                      )}
+                    </SModalWrapper>
+                  )}
                 </ReviewRatingWrapper>
                 <ReviewUserName>{el.user_name}</ReviewUserName>
               </ReviewInfo>
             </ReviewHeader>
             <ReviewContent>{el.review_content}</ReviewContent>
             <ReviewCreatedAt>{el.created_at.slice(0, 10)}</ReviewCreatedAt>
-            {showUpdate && (
-              <Updatemodal
-                setShowUpdate={setShowUpdate}
-                id={id}
-                reviewId={el.id}
-              />
-            )}
-            {showDelete && (
-              <Deletemodal
-                setShowDelete={setShowDelete}
-                id={id}
-                reviewId={el.id}
-              />
-            )}
           </>
         ))}
       </ReviewWrapper>

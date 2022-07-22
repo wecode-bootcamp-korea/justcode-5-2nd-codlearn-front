@@ -1,35 +1,24 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import BASE_URL from '../../config';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { KAKAO_AUTH_URL } from './OAuth';
+import { REDIRECT_URI } from './OAuth';
 
 function KakaoLogin() {
-  const navigate = useNavigate();
+  const CLIENT_ID = process.env.REACT_APP_REST_API_KEY;
 
-  const onKakaoLogin = async () => {
-    console.log('onKakaoLogin start');
-    await fetch(`${BASE_URL}/user/kakao/request`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => {
-        if (res.redirected) {
-          window.location.href = res.url;
-        }
-      })
-      .catch(function (err) {
-        console.info(err + ' url: ' + `${BASE_URL}/user/kakao/request`);
-      });
+  const requestURL = `${KAKAO_AUTH_URL}/?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  const onClick = () => {
+    window.open(requestURL);
   };
 
   return (
-    <SocialSignUpBtn onClick={onKakaoLogin}>
+    <SocialSignUpBtn onClick={onClick}>
       <KakaoLogo src="images/kakao_login.png" alt="logo" />
     </SocialSignUpBtn>
   );
 }
+
 export default KakaoLogin;
 
 const SocialSignUpBtn = styled.button`

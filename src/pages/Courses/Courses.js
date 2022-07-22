@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
   useNavigate,
   useLocation,
@@ -12,6 +12,7 @@ import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 import Pagination from './Pagination';
 import BASE_URL from '../../config';
+import { LoginContext } from '../../App';
 
 const categories = [
   {
@@ -170,8 +171,6 @@ const SortOptions = styled.div`
   }
 `;
 const PageboxWrapper = styled.div`
-  display: flex;
-  justify-content: center;
   margin: 45px 0px;
 `;
 
@@ -189,6 +188,8 @@ function Courses() {
   const params = useParams();
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
+  const [isLogin, setIsLogin] = useContext(LoginContext);
+  console.log(isLogin);
 
   function showSubCat(target) {
     setSelect(prev => {
@@ -196,6 +197,7 @@ function Courses() {
       else return target;
     });
   }
+
   function toUrl(target, value) {
     if (searchParams.has(target)) {
       searchParams.set(target, value);
@@ -219,8 +221,6 @@ function Courses() {
       navigate(`${cat1.value}/${cat2.value}`, {
         state: { category1: cat1.name, category2: cat2.name },
       });
-    } else if (!cat1.value && !cat2.value) {
-      navigate('/courses');
     } else if (cat1.value) {
       navigate(`${cat1.value}`, {
         state: { category1: cat1.name },
@@ -332,7 +332,7 @@ function Courses() {
                 setSortOn(prev => !prev);
               }}
             >
-              <div>{searchParams.has('order') ? sort : '선택'}</div>
+              <div>{searchParams.has('order') ? sort || '기본순' : '선택'}</div>
               <SortOptions sortOn={sortOn}>
                 {filterOpts.map(el => (
                   <div

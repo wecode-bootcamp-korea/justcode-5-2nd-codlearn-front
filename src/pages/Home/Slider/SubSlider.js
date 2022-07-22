@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import 'swiper/css';
@@ -12,7 +12,7 @@ import {
   faSignal,
   faFolderTree,
   faCubes,
-  faPlus,
+  faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
@@ -37,12 +37,13 @@ function SubSlider() {
         setBeginnerCourse(res.intro15);
       });
   }, []);
+  console.log(freeCourse);
 
   return (
     <SubSliderWrap>
       <FreeSlider>
         <Header>
-          <Link to>
+          <Link to="/courses?charge=free">
             <Title>
               무료강의? 오히려 좋아 ✨ <FontAwesomeIcon icon={faAngleRight} />
             </Title>
@@ -78,7 +79,7 @@ function SubSlider() {
         >
           {freeCourse.map(data => (
             <SwiperSlide key={data.id}>
-              <Link to className="linkHover">
+              <Link to={`/course/${data.id}`} className="linkHover">
                 <ContentHover className="ContentHover">
                   <p className="className">{data.class_name}</p>
                   <p className="level">
@@ -125,7 +126,7 @@ function SubSlider() {
                         className="myFolderText"
                         style={{ display: showMyFolder ? 'block' : 'none' }}
                       >
-                        <span className="text">내 폴더에 추가</span>
+                        <span className="text">장바구니에 추가</span>
                         <div className="arrowIcon"></div>
                       </div>
                       <div
@@ -137,7 +138,7 @@ function SubSlider() {
                           setShowMyFolder(false);
                         }}
                       >
-                        <FontAwesomeIcon icon={faPlus} />
+                        <FontAwesomeIcon icon={faCartShopping} />
                       </div>
                     </div>
                   </div>
@@ -168,7 +169,7 @@ function SubSlider() {
       </FreeSlider>
       <BeginnerSLider>
         <Header>
-          <Link to>
+          <Link to="/courses?level=1">
             <Title>
               왕초보도 할 수 있어요 💪 <FontAwesomeIcon icon={faAngleRight} />
             </Title>
@@ -251,7 +252,7 @@ function SubSlider() {
                         className="myFolderText"
                         style={{ display: showMyFolder ? 'block' : 'none' }}
                       >
-                        <span className="text">내 폴더에 추가</span>
+                        <span className="text">장바구니에 추가</span>
                         <div className="arrowIcon"></div>
                       </div>
                       <div
@@ -263,7 +264,7 @@ function SubSlider() {
                           setShowMyFolder(false);
                         }}
                       >
-                        <FontAwesomeIcon icon={faPlus} />
+                        <FontAwesomeIcon icon={faCartShopping} />
                       </div>
                     </div>
                   </div>
@@ -490,6 +491,9 @@ const ContentHover = styled.div`
       }
       .myFolderIcon {
         float: right;
+        &:hover {
+          color: red;
+        }
       }
     }
   }
