@@ -7,7 +7,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import SignUpErrModal from '../../components/Modal/SignUpErrModal';
 import BASE_URL from '../../config';
 import KakaoLogin from '../../components/Login/KakaoLogin';
-import Login from '../../components/Login/Login';
 
 const PWGuideLineComponent = ({ message, validation }) => {
   return <PWGuideLine validation={validation}>{message}</PWGuideLine>;
