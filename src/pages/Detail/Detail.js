@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faHashtag } from '@fortawesome/free-solid-svg-icons';
 import Comments from './Comments';
 import axios from 'axios';
+import BASE_URL from '../../config';
 const DetailWrapper = styled.div`
   margin-bottom: 50px;
 `;
@@ -207,9 +208,7 @@ function Detail() {
   }
   useEffect(() => {
     const fetchData = async () => {
-      const result = await (
-        await fetch(`http://localhost:10010/course/${id}`)
-      ).json();
+      const result = await (await fetch(`${BASE_URL}/course/${id}`)).json();
       setData(result);
     };
     fetchData();

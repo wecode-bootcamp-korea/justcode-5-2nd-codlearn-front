@@ -4,6 +4,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Rating } from 'react-simple-star-rating';
 import { useState } from 'react';
 import axios from 'axios';
+import BASE_URL from '../../config';
 export const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -75,7 +76,7 @@ function Updatemodal({ setShowUpdate, id, reviewId, get, setShowOption }) {
   };
 
   const submit = () => {
-    axios.put(`http://localhost:10010/course/${id}/review`, {
+    axios.put(`${BASE_URL}/course/${id}/review`, {
       review_contents: content,
       rate: rating,
       review_id: reviewId,

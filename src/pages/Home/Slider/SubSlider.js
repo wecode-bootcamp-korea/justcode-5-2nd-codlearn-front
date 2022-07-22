@@ -17,6 +17,7 @@ import {
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
 import axios from 'axios';
+import BASE_URL from '../../../config';
 
 function SubSlider() {
   const [freeCourse, setFreeCourse] = useState([]);
@@ -54,7 +55,7 @@ function SubSlider() {
   }
 
   useEffect(() => {
-    fetch('http://localhost:10010/', { method: 'GET' })
+    fetch(`${BASE_URL}/`, { method: 'GET' })
       .then(res => res.json())
       .then(res => {
         setFreeCourse(res.free15);

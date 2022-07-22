@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import MyPage from '../MyPage/MyPage';
 import styled from 'styled-components';
 import { LoginContext } from '../../App';
-
+import BASE_URL from '../../config';
 import axios from 'axios';
 
-function Likes() {
+function MyCourses() {
   const [isLogin, setIsLogin] = useContext(LoginContext);
   const [userData, setUserData] = useState([]);
   console.log(isLogin);
@@ -15,7 +15,7 @@ function Likes() {
 
   const boardApi = async () => {
     setIsLogin(true);
-    const response = await axios.get(`http://localhost:10010/dashboard`, {
+    const response = await axios.get(`${BASE_URL}/dashboard`, {
       headers: {
         Authorization: token,
       },
@@ -26,12 +26,12 @@ function Likes() {
   useEffect(() => {
     boardApi();
   }, []);
-  console.log('data : ', userData?.data?.wishlist);
+  console.log('data : ', userData?.data?.recentlyTaken);
 
   return (
     <MyPage>
       {/* <WrapTitle>전체({userData?.data?.wishlist.length})</WrapTitle> */}
-      {userData?.data?.wishlist?.map(data => (
+      {userData?.data?.recentlyTaken?.map(data => (
         <Wrap key={data.id}>
           <Link to={`/course/${data.class_id}`} className="linkHover">
             <ContentWrap>
@@ -123,4 +123,4 @@ const ContentWrap = styled.div`
   }
 `;
 
-export default Likes;
+export default MyCourses;
