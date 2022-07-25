@@ -185,7 +185,7 @@ function HeaderBottom() {
                     <Link to="courses/it/security">보안</Link>
                     <Dep3Categories className="security">
                       <li>
-                        <Link to="courses/it/security?skill=imformation-security">
+                        <Link to="courses/it/security?skill=information-security">
                           정보보안
                         </Link>
                       </li>
