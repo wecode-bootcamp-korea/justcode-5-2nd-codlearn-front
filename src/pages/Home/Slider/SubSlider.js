@@ -39,6 +39,7 @@ function SubSlider() {
       });
   }, []);
 
+
   return (
     <SubSliderWrap>
       <FreeSlider>
