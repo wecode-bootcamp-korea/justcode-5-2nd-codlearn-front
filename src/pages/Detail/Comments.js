@@ -156,20 +156,17 @@ function Comments({ id }) {
   const token = localStorage.getItem('token');
 
   async function get() {
-    const result = await axios.get(
-      `${BASE_URL}/course/${id}/review`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const result = await axios.get(`${BASE_URL}/course/${id}/review`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     setReviews(result.data);
   }
 
   const submit = async () => {
     await axios.post(
-      `http://${BASE_URL}/course/${id}/review`,
+      `${BASE_URL}/course/${id}/review`,
       {
         class_id: id,
         content,
