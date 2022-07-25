@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,6 +27,7 @@ function HeaderBottom() {
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
+  const location = useLocation();
   const loginToken = localStorage.getItem('token');
 
   const openModal = () => {
@@ -78,9 +79,9 @@ function HeaderBottom() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(text);
-  // }, [text]);
+  useEffect(() => {
+    console.log(text);
+  }, [text]);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
