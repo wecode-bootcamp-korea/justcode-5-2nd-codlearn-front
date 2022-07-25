@@ -135,7 +135,7 @@ function MainSlider() {
       setSlideIndex(1);
     }
 
-    console.log('slideIndex : ', slideIndex);
+    //console.log('slideIndex : ', slideIndex);
     return () => {
       clearTimeout(timer);
     };

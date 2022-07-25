@@ -37,7 +37,7 @@ function SubSlider() {
         setBeginnerCourse(res.intro15);
       });
   }, []);
-  console.log(freeCourse);
+  //console.log(freeCourse);
 
   return (
     <SubSliderWrap>

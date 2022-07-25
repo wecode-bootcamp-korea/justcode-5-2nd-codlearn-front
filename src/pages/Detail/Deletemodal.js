@@ -14,7 +14,7 @@ function Deletemodal({ setShowDelete, id, reviewId, get }) {
 
   const submit = () => {
     try {
-      axios.delete(`http://${BASE_URL}/course/${id}/review`, {
+      axios.delete(`${BASE_URL}/course/${id}/review`, {
         data: {
           review_id: reviewId,
         },
