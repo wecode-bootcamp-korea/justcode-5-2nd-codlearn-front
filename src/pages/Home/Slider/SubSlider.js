@@ -15,6 +15,7 @@ import {
   faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import axios from 'axios';
 import styled from 'styled-components';
 import BASE_URL from '../../../config';
 
@@ -30,6 +31,16 @@ function SubSlider() {
   const navigationPrevBeginRef = useRef(null);
   const navigationNextBeginRef = useRef(null);
 
+  const token = localStorage.getItem('token');
+
+  const goToCart = () => {
+    navigate('/carts');
+  };
+
+  const goToLikes = () => {
+    navigate('/likes');
+  };
+
   useEffect(() => {
     fetch(`${BASE_URL}/`, { method: 'GET' })
       .then(res => res.json())
@@ -38,7 +49,6 @@ function SubSlider() {
         setBeginnerCourse(res.intro15);
       });
   }, []);
-
 
   return (
     <SubSliderWrap>
@@ -82,9 +92,31 @@ function SubSlider() {
             const goToClass = () => {
               navigate(`/course/${data.id}`);
             };
+            function cart() {
+              axios.put(
+                `http://localhost:10010/cart?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
+            function wishList() {
+              axios.put(
+                `http://localhost:10010/wishlist?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
             return (
               <SwiperSlide key={data.id}>
-                <section className="linkHover" onClick={goToClass}>
+                <section className="linkHover">
                   <ContentHover className="ContentHover">
                     <p className="className">{data.class_name}</p>
                     <p className="level">
@@ -116,6 +148,10 @@ function SubSlider() {
                         </div>
                         <div
                           className="likeIcon"
+                          onClick={() => {
+                            wishList();
+                            goToLikes();
+                          }}
                           onMouseEnter={() => {
                             setShowLike(true);
                           }}
@@ -136,6 +172,10 @@ function SubSlider() {
                         </div>
                         <div
                           className="myFolderIcon"
+                          onClick={() => {
+                            cart();
+                            goToCart();
+                          }}
                           onMouseEnter={() => {
                             setShowMyFolder(true);
                           }}
@@ -147,7 +187,7 @@ function SubSlider() {
                         </div>
                       </div>
                     </div>
-                    <div className="bg"></div>
+                    <div className="bg" onClick={goToClass}></div>
                   </ContentHover>
                   <ContentWrap>
                     <section>
@@ -215,9 +255,31 @@ function SubSlider() {
             const goToClass = () => {
               navigate(`/course/${data.id}`);
             };
+            function cart() {
+              axios.put(
+                `http://localhost:10010/cart?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
+            function wishList() {
+              axios.put(
+                `http://localhost:10010/wishlist?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
             return (
               <SwiperSlide key={data.id}>
-                <section className="linkHover" onClick={goToClass}>
+                <section className="linkHover">
                   <ContentHover className="ContentHover">
                     <p className="className">{data.class_name}</p>
                     <p className="level">
@@ -249,6 +311,10 @@ function SubSlider() {
                         </div>
                         <div
                           className="likeIcon"
+                          onClick={() => {
+                            wishList();
+                            goToLikes();
+                          }}
                           onMouseEnter={() => {
                             setShowLike(true);
                           }}
@@ -269,6 +335,10 @@ function SubSlider() {
                         </div>
                         <div
                           className="myFolderIcon"
+                          onClick={() => {
+                            cart();
+                            goToCart();
+                          }}
                           onMouseEnter={() => {
                             setShowMyFolder(true);
                           }}
@@ -280,7 +350,7 @@ function SubSlider() {
                         </div>
                       </div>
                     </div>
-                    <div className="bg"></div>
+                    <div className="bg" onClick={goToClass}></div>
                   </ContentHover>
                   <ContentWrap>
                     <section>
