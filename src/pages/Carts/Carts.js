@@ -306,14 +306,18 @@ function Carts() {
     const classList = checkedCourse.map(el => {
       return { class_id: el };
     });
-    await fetch(`${BASE_URL}/my_courses`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: LoginToken,
-      },
-      body: JSON.stringify(classList),
-    });
+
+    Promise.all(
+      await fetch(`${BASE_URL}/my-classes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: LoginToken,
+        },
+        body: JSON.stringify(classList),
+      })
+    );
+
     navigate('/my_courses');
   };
 
@@ -329,6 +333,7 @@ function Carts() {
                   checkAllHandler(e.target.checked);
                 }}
                 checked={
+
                   checkedCourse.length === courses?.data[0]?.class?.length
                 }
                 type="checkbox"

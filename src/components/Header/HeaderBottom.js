@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,11 +13,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Login from '../Login/Login';
 import { LoginContext } from '../../App';
+import BASE_URL from '../../config';
+import * as oAuth from '../Login/OAuth';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
 function HeaderBottom() {
-  const token = localStorage.getItem('token');
-
+  const [token, setToken] = useState();
   const [isLogin, setIsLogin] = useContext(LoginContext);
 
   const [modal, setModal] = useState(false);
@@ -27,7 +28,7 @@ function HeaderBottom() {
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
   const navigate = useNavigate();
-  const loginToken = localStorage.getItem('token');
+  const location = useLocation();
 
   const openModal = () => {
     setModal(true);
@@ -42,6 +43,7 @@ function HeaderBottom() {
   };
 
   useEffect(() => {
+    setToken(localStorage.getItem('token'));
     (() => {
       window.addEventListener('scroll', () => setScrollY(window.pageYOffset));
       if (scrollY > 104) {
@@ -78,19 +80,37 @@ function HeaderBottom() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(text);
-  // }, [text]);
+  useEffect(() => {
+    console.log(text);
+  }, [text]);
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (token) {
       setIsLogin(true);
     } else {
       setIsLogin(false);
     }
-  }, [loginToken]);
+  }, [token]);
 
-  const logout = () => {
+  const kakaoLogout = async token => {
+    try {
+      await fetch(`${BASE_URL}/user/kakao/logout`, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log('data ', data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const logout = async () => {
+    await kakaoLogout(token);
     localStorage.removeItem('token');
     setIsLogin(false);
     goToHome();
@@ -185,7 +205,7 @@ function HeaderBottom() {
                     <Link to="courses/it/security">보안</Link>
                     <Dep3Categories className="security">
                       <li>
-                        <Link to="courses/it/security?skill=imformation-security">
+                        <Link to="courses/it/security?skill=information-security">
                           정보보안
                         </Link>
                       </li>

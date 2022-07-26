@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import 'swiper/css';
@@ -23,6 +23,7 @@ function SubSlider() {
   const [beginnerCourse, setBeginnerCourse] = useState([]);
   const [showLike, setShowLike] = useState(false);
   const [showMyFolder, setShowMyFolder] = useState(false);
+  const navigate = useNavigate();
 
   const navigationPrevFreeRef = useRef(null);
   const navigationNextFreeRef = useRef(null);
@@ -37,7 +38,7 @@ function SubSlider() {
         setBeginnerCourse(res.intro15);
       });
   }, []);
-  console.log(freeCourse);
+
 
   return (
     <SubSliderWrap>
@@ -77,94 +78,101 @@ function SubSlider() {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {freeCourse.map(data => (
-            <SwiperSlide key={data.id}>
-              <Link to={`/course/${data.id}`} className="linkHover">
-                <ContentHover className="ContentHover">
-                  <p className="className">{data.class_name}</p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faSignal} />
-                    </span>
-                    {data.level}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faFolderTree} />
-                    </span>
-                    {data.categories[0]}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faCubes} />
-                    </span>
-                    {data.categories[1]}, {data.categories[2]}
-                  </p>
-                  <div className="iconBox">
-                    <div className="likeBtn">
-                      <div
-                        className="likeText"
-                        style={{ display: showLike ? 'block' : 'none' }}
-                      >
-                        <span className="text">좋아요에 추가</span>
-                        <div className="arrowIcon"></div>
-                      </div>
-                      <div
-                        className="likeIcon"
-                        onMouseEnter={() => {
-                          setShowLike(true);
-                        }}
-                        onMouseLeave={() => {
-                          setShowLike(false);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faHeart} />
-                      </div>
-                    </div>
-                    <div className="myFolderBtn">
-                      <div
-                        className="myFolderText"
-                        style={{ display: showMyFolder ? 'block' : 'none' }}
-                      >
-                        <span className="text">장바구니에 추가</span>
-                        <div className="arrowIcon"></div>
-                      </div>
-                      <div
-                        className="myFolderIcon"
-                        onMouseEnter={() => {
-                          setShowMyFolder(true);
-                        }}
-                        onMouseLeave={() => {
-                          setShowMyFolder(false);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCartShopping} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg"></div>
-                </ContentHover>
-                <ContentWrap>
-                  <section>
-                    <img src={data.img} alt={data.class_name} />
+          {freeCourse.map(data => {
+            const goToClass = () => {
+              navigate(`/course/${data.id}`);
+            };
+            return (
+              <SwiperSlide key={data.id}>
+                <section className="linkHover" onClick={goToClass}>
+                  <ContentHover className="ContentHover">
                     <p className="className">{data.class_name}</p>
-                    <div className="instructorName">{data.instructor_name}</div>
-                    <StarRatings
-                      rating={data.rate ? data.rate : 0}
-                      starRatedColor="#F7DF1B"
-                      numberOfStars={5}
-                      starSpacing="0px"
-                      starDimension="15px"
-                    />
-                    <div className="price">{data.price === 0 && `무료`}</div>
-                    <div className="students">
-                      +{Math.floor(data.students / 100) * 100}명
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faSignal} />
+                      </span>
+                      {data.level}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faFolderTree} />
+                      </span>
+                      {data.categories[0]}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faCubes} />
+                      </span>
+                      {data.categories[1]}, {data.categories[2]}
+                    </p>
+                    <div className="iconBox">
+                      <div className="likeBtn">
+                        <div
+                          className="likeText"
+                          style={{ display: showLike ? 'block' : 'none' }}
+                        >
+                          <span className="text">좋아요에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="likeIcon"
+                          onMouseEnter={() => {
+                            setShowLike(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowLike(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faHeart} />
+                        </div>
+                      </div>
+                      <div className="myFolderBtn">
+                        <div
+                          className="myFolderText"
+                          style={{ display: showMyFolder ? 'block' : 'none' }}
+                        >
+                          <span className="text">장바구니에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="myFolderIcon"
+                          onMouseEnter={() => {
+                            setShowMyFolder(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowMyFolder(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </div>
+                      </div>
                     </div>
-                  </section>
-                </ContentWrap>
-              </Link>
-            </SwiperSlide>
-          ))}
+                    <div className="bg"></div>
+                  </ContentHover>
+                  <ContentWrap>
+                    <section>
+                      <img src={data.img} alt={data.class_name} />
+                      <p className="className">{data.class_name}</p>
+                      <div className="instructorName">
+                        {data.instructor_name}
+                      </div>
+                      <StarRatings
+                        rating={data.rate ? data.rate : 0}
+                        starRatedColor="#F7DF1B"
+                        numberOfStars={5}
+                        starSpacing="0px"
+                        starDimension="15px"
+                      />
+                      <div className="price">{data.price === 0 && `무료`}</div>
+                      <div className="students">
+                        +{Math.floor(data.students / 100) * 100}명
+                      </div>
+                    </section>
+                  </ContentWrap>
+                </section>
+              </SwiperSlide>
+            );
+          })}
         </StyleSwiper>
       </FreeSlider>
       <BeginnerSLider>
@@ -203,116 +211,127 @@ function SubSlider() {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {beginnerCourse.map(data => (
-            <SwiperSlide key={data.id}>
-              <Link to className="linkHover">
-                <ContentHover className="ContentHover">
-                  <p className="className">{data.class_name}</p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faSignal} />
-                    </span>
-                    {data.level}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faFolderTree} />
-                    </span>
-                    {data.categories[0]}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faCubes} />
-                    </span>
-                    {data.categories[1]}, {data.categories[2]}
-                  </p>
-                  <div className="iconBox">
-                    <div className="likeBtn">
-                      <div
-                        className="likeText"
-                        style={{ display: showLike ? 'block' : 'none' }}
-                      >
-                        <span className="text">좋아요에 추가</span>
-                        <div className="arrowIcon"></div>
-                      </div>
-                      <div
-                        className="likeIcon"
-                        onMouseEnter={() => {
-                          setShowLike(true);
-                        }}
-                        onMouseLeave={() => {
-                          setShowLike(false);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faHeart} />
-                      </div>
-                    </div>
-                    <div className="myFolderBtn">
-                      <div
-                        className="myFolderText"
-                        style={{ display: showMyFolder ? 'block' : 'none' }}
-                      >
-                        <span className="text">장바구니에 추가</span>
-                        <div className="arrowIcon"></div>
-                      </div>
-                      <div
-                        className="myFolderIcon"
-                        onMouseEnter={() => {
-                          setShowMyFolder(true);
-                        }}
-                        onMouseLeave={() => {
-                          setShowMyFolder(false);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCartShopping} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg"></div>
-                </ContentHover>
-                <ContentWrap>
-                  <section>
-                    <img src={data.img} alt={data.class_name} />
+          {beginnerCourse.map(data => {
+            const goToClass = () => {
+              navigate(`/course/${data.id}`);
+            };
+            return (
+              <SwiperSlide key={data.id}>
+                <section className="linkHover" onClick={goToClass}>
+                  <ContentHover className="ContentHover">
                     <p className="className">{data.class_name}</p>
-                    <div className="instructorName">{data.instructor_name}</div>
-                    <StarRatings
-                      rating={data.rate ? data.rate : 0}
-                      starRatedColor="#F7DF1B"
-                      numberOfStars={5}
-                      starSpacing="0px"
-                      starDimension="15px"
-                    />
-                    <div className="price">
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faSignal} />
+                      </span>
+                      {data.level}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faFolderTree} />
+                      </span>
+                      {data.categories[0]}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faCubes} />
+                      </span>
+                      {data.categories[1]}, {data.categories[2]}
+                    </p>
+                    <div className="iconBox">
+                      <div className="likeBtn">
+                        <div
+                          className="likeText"
+                          style={{ display: showLike ? 'block' : 'none' }}
+                        >
+                          <span className="text">좋아요에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="likeIcon"
+                          onMouseEnter={() => {
+                            setShowLike(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowLike(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faHeart} />
+                        </div>
+                      </div>
+                      <div className="myFolderBtn">
+                        <div
+                          className="myFolderText"
+                          style={{ display: showMyFolder ? 'block' : 'none' }}
+                        >
+                          <span className="text">장바구니에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="myFolderIcon"
+                          onMouseEnter={() => {
+                            setShowMyFolder(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowMyFolder(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg"></div>
+                  </ContentHover>
+                  <ContentWrap>
+                    <section>
+                      <img src={data.img} alt={data.class_name} />
+                      <p className="className">{data.class_name}</p>
+                      <div className="instructorName">
+                        {data.instructor_name}
+                      </div>
+                      <StarRatings
+                        rating={data.rate ? data.rate : 0}
+                        starRatedColor="#F7DF1B"
+                        numberOfStars={5}
+                        starSpacing="0px"
+                        starDimension="15px"
+                      />
+                      <div className="price">
+                        {data.discounted_price ? (
+                          <span>
+                            ₩{Number(data.price).toLocaleString('en')}
+                          </span>
+                        ) : null}
+                        {data.price === 0 && `무료`}
+                        {data.discounted_price
+                          ? '₩' +
+                            Number(data.discounted_price).toLocaleString('en')
+                          : data.price !== 0
+                          ? '₩' + Number(data.price).toLocaleString('en')
+                          : null}
+                      </div>
+                      <div className={data.students >= 100 ? 'students' : null}>
+                        {data.students >= 100
+                          ? `+${Math.floor(data.students / 100) * 100}명`
+                          : null}
+                      </div>
                       {data.discounted_price ? (
-                        <span>
-                          ₩{Number(data.discounted_price).toLocaleString('en')}
+                        <span
+                          className="students"
+                          style={{
+                            marginLeft: '10px',
+                            backgroundColor: 'hsl(1,100%,89%)',
+                          }}
+                        >
+                          할인중
                         </span>
                       ) : null}
-                      {data.price === 0
-                        ? `무료`
-                        : '₩' + Number(data.price).toLocaleString('en')}
-                    </div>
-                    <div className={data.students >= 100 ? 'students' : null}>
-                      {data.students >= 100
-                        ? `+${Math.floor(data.students / 100) * 100}명`
-                        : null}
-                    </div>
-                    {data.discounted_price ? (
-                      <span
-                        className="students"
-                        style={{
-                          marginLeft: '10px',
-                          backgroundColor: 'hsl(1,100%,89%)',
-                        }}
-                      >
-                        할인중
-                      </span>
-                    ) : null}
-                  </section>
-                </ContentWrap>
-              </Link>
-            </SwiperSlide>
-          ))}
+                    </section>
+                  </ContentWrap>
+                </section>
+              </SwiperSlide>
+            );
+          })}
         </StyleSwiper>
       </BeginnerSLider>
     </SubSliderWrap>
@@ -321,9 +340,10 @@ function SubSlider() {
 
 const SubSliderWrap = styled.section`
   margin: 80px 0;
-  a {
+  section {
     display: block;
     text-decoration: none;
+    cursor: pointer;
     &.linkHover:hover {
       .ContentHover {
         display: block;

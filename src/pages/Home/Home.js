@@ -10,6 +10,7 @@ function Home() {
   const location = useLocation();
   let token = new URL(window.location.href).searchParams.get('token');
   let auth;
+
   useEffect(() => {
     if (token) {
       navigate('./', {
@@ -20,7 +21,7 @@ function Home() {
 
   if (location?.state?.token) {
     auth = location.state.token;
-    console.log('auth ', auth);
+    localStorage.setItem('token', location.state.token);
   }
   return (
     <Main>
