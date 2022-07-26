@@ -8,7 +8,6 @@ import axios from 'axios';
 function DashBoard() {
   const [isLogin, setIsLogin] = useContext(LoginContext);
   const [userData, setUserData] = useState(null);
-  console.log(isLogin);
 
   const navigate = useNavigate();
 
@@ -32,8 +31,6 @@ function DashBoard() {
     boardApi();
   }, []);
 
-  console.log('data : ', userData?.data);
-  // to={`/course/${data.class_id}`}
   return (
     <>
       {isLogin ? (

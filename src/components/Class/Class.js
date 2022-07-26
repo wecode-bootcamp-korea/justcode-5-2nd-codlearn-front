@@ -7,7 +7,7 @@ import {
   faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Fake = styled.div`
@@ -123,6 +123,7 @@ const Fakecart = styled.div`
     color: tomato;
     cursor: default;
   }
+  color: ${props => (props.inCart ? 'tomato' : 'white')};
 `;
 const Fakecartspan = styled.span`
   font-size: 13px;
@@ -133,6 +134,15 @@ const Fakecartspan = styled.span`
   position: absolute;
   left: 80px;
 `;
+const Fakecartspan2 = styled.span`
+  font-size: 13px;
+  background-color: #f2df3a;
+  color: black;
+  padding: 7px 12px;
+  border-radius: 5px;
+  position: absolute;
+  left: 67px;
+`;
 const Fakeheartwrapper = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -140,13 +150,14 @@ const Fakeheartwrapper = styled.div`
   position: relative;
 `;
 const Fakeheartspan = styled.span`
+  display: block;
   font-size: 13px;
   background-color: #f2df3a;
   color: black;
   padding: 7px 12px;
   border-radius: 5px;
   position: absolute;
-  left: 90px;
+  left: 80px;
 `;
 const Fakeheart = styled.div`
   margin-left: 10px;
@@ -156,6 +167,7 @@ const Fakeheart = styled.div`
     color: tomato;
     cursor: default;
   }
+  color: ${props => (props.inWishList ? 'tomato' : 'white')};
 `;
 const Fakediv = styled.div`
   background-color: #f2df3a;
@@ -178,22 +190,29 @@ const FakeCat = styled.div`
   }
 `;
 
-function Class({ data, navigate, cart }) {
+function Class({
+  data,
+  navigate,
+  cart,
+  deleteCart,
+  wishList,
+  deleteWishList,
+  cartClass,
+  wishClass,
+  wishListUpdate,
+}) {
   const [fakecat, setFakecat] = useState(false);
   const [fakeheart, setFakeheart] = useState(false);
-  const token = localStorage.getItem('token');
+  const [actCat, setActCat] = useState();
 
-  function wishList() {
-    axios.put(
-      `http://localhost:10010/wishlist?classId=${data.id}`,
-      {},
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-  }
+  useEffect(() => {
+    if (cartClass?.includes(data.id)) {
+      setActCat(true);
+    } else {
+      setActCat(false);
+    }
+  }, [cartClass, data.id]);
+
   return (
     <Course>
       <CourseImg src={data.img} />
@@ -254,14 +273,24 @@ function Class({ data, navigate, cart }) {
           <Fakecartwrapper>
             {fakecat && (
               <>
-                <Fakecartspan>장바구니에 추가</Fakecartspan>
+                {actCat ? (
+                  <Fakecartspan2>장바구니에서 제거</Fakecartspan2>
+                ) : (
+                  <Fakecartspan>장바구니에 추가</Fakecartspan>
+                )}
                 <Fakediv />
               </>
             )}
             <Fakecart
               onClick={e => {
                 e.stopPropagation();
-                cart(data.id);
+                actCat
+                  ? deleteCart(data.id).then(() => {
+                      setActCat(false);
+                    })
+                  : cart(data.id).then(() => {
+                      setActCat(true);
+                    });
               }}
               onMouseEnter={() => {
                 setFakecat(true);
@@ -269,6 +298,7 @@ function Class({ data, navigate, cart }) {
               onMouseLeave={() => {
                 setFakecat(false);
               }}
+              inCart={actCat}
             >
               <FontAwesomeIcon icon={faCartShopping} />
             </Fakecart>
@@ -276,14 +306,24 @@ function Class({ data, navigate, cart }) {
           <Fakeheartwrapper>
             {fakeheart && (
               <>
-                <Fakeheartspan>좋아요에 추가</Fakeheartspan>
+                <Fakeheartspan>
+                  {wishClass?.includes(data.id)
+                    ? '위시리스트 삭제'
+                    : '위시리스트 추가'}
+                </Fakeheartspan>
                 <Fakediv />
               </>
             )}
             <Fakeheart
               onClick={e => {
                 e.stopPropagation();
-                wishList();
+                wishClass.includes(data.id)
+                  ? deleteWishList(data.id).then(() => {
+                      wishListUpdate();
+                    })
+                  : wishList(data.id).then(() => {
+                      wishListUpdate();
+                    });
               }}
               onMouseEnter={() => {
                 setFakeheart(true);
@@ -291,6 +331,7 @@ function Class({ data, navigate, cart }) {
               onMouseLeave={() => {
                 setFakeheart(false);
               }}
+              inWishList={wishClass?.includes(data.id)}
             >
               <FontAwesomeIcon icon={faHeart} />
             </Fakeheart>

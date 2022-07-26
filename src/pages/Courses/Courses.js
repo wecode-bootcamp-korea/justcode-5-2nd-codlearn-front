@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useNavigate,
   useLocation,
@@ -12,8 +12,8 @@ import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 import Pagination from './Pagination';
 import BASE_URL from '../../config';
-import { LoginContext } from '../../App';
 import axios from 'axios';
+import { faAppStoreIos } from '@fortawesome/free-brands-svg-icons';
 
 const categories = [
   {
@@ -206,7 +206,8 @@ function Courses() {
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
   const [cartConfirm, setCartConfirm] = useState(false);
-  const [cartOk, setCartOk] = useState();
+  const [cartClass, setCartClass] = useState();
+  const [wishClass, setWishClass] = useState();
   const token = localStorage.getItem('token');
 
   function showSubCat(target) {
@@ -217,19 +218,57 @@ function Courses() {
   }
 
   function cart(targetID) {
-    axios
-      .put(
-        `http://localhost:10010/cart?classId=${targetID}`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then(result => setCartOk(result.statusText));
+    return axios.put(
+      `${BASE_URL}/cart?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
   }
-  console.log(cartOk);
+
+  function deleteCart(targetID) {
+    return axios.delete(`${BASE_URL}/cart?classId=${targetID}`, {
+      data: [{ class_id: targetID }],
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
+
+  function wishList(targetID) {
+    return axios.put(
+      `${BASE_URL}/wishlist?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+
+  function wishListUpdate() {
+    axios
+      .get(`http://localhost:10010/wishlist`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(res => {
+        setWishClass(res.data.data.map(el => el.class_id));
+      });
+  }
+
+  function deleteWishList(targetID) {
+    return axios.delete(`${BASE_URL}/wishlist?classId=${targetID}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
 
   function toUrl(target, value) {
     if (searchParams.has(target)) {
@@ -278,12 +317,22 @@ function Courses() {
     window.scrollTo(0, 0);
   }, [params.cat1, parameters, location.search]);
 
-  // useEffect(() => {
-  //   if (cartOk) {
-  //     cartConfirm(true);
-  //     setTimeout(() => {}, 3000);
-  //   }
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/cart`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(res => {
+        setCartClass(res?.data?.data[0]?.class.map(el => el.class_id));
+      });
+  }, [token]);
+
+  useEffect(() => {
+    wishListUpdate();
+  }, [token]);
+
   return (
     <Wrapper
       onClick={() => {
@@ -295,13 +344,7 @@ function Courses() {
         <CategoryWrapper>
           <Category
             onClick={() => {
-              setCat1(prev => {
-                return { ...prev, name: '', value: '' };
-              });
-              setCat2(prev => {
-                return { ...prev, name: '', value: '' };
-              });
-              setSelect('');
+              navigate('/courses');
             }}
           >
             전체 강의
@@ -397,6 +440,12 @@ function Courses() {
                   data={el}
                   setCartConfirm={setCartConfirm}
                   cart={cart}
+                  deleteCart={deleteCart}
+                  wishList={wishList}
+                  deleteWishList={deleteWishList}
+                  cartClass={cartClass}
+                  wishClass={wishClass}
+                  wishListUpdate={wishListUpdate}
                 />
               ))
             : 'Loading...'}
