@@ -1,12 +1,11 @@
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { KAKAO_AUTH_URL } from './OAuth';
-import { REDIRECT_URI } from './OAuth';
+import * as oAuth from '../Login/OAuth';
 
 function KakaoLogin() {
   const CLIENT_ID = process.env.REACT_APP_REST_API_KEY;
 
-  const requestURL = `${KAKAO_AUTH_URL}/?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const requestURL = `${oAuth.KAKAO_AUTH_URL}/?client_id=${CLIENT_ID}&redirect_uri=${oAuth.REDIRECT_URI}&response_type=code`;
 
   const onClick = () => {
     window.open(requestURL);
