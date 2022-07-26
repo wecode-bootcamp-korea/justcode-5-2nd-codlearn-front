@@ -13,12 +13,14 @@ import KakaoLogin from './components/Login/KakaoLogin';
 import DashBoard from './pages/DashBoard/DashBoard';
 import Likes from './pages/Likes/Likes';
 import MyCourses from './pages/MyCourses/MyCourses';
+import ScrollTop from './components/ScrollTop/ScrollTop';
 
 function Router() {
   const [openLoginModal, setOpenLoginModal] = useState(false);
 
   return (
     <BrowserRouter>
+      <ScrollTop />
       <HeaderTop />
       <HeaderBottom />
       <Routes>
