@@ -206,11 +206,8 @@ function Class({
   const [actCat, setActCat] = useState();
 
   useEffect(() => {
-    if (cartClass?.includes(data.id)) {
-      setActCat(true);
-    } else {
-      setActCat(false);
-    }
+    const hasCart = cartClass?.includes(data.id) ?? false;
+    setActCat(hasCart);
   }, [cartClass, data.id]);
 
   return (
@@ -252,7 +249,7 @@ function Class({
       </div>
       <Fake
         onClick={() => {
-          navigate(`/course/${data.id}`);
+          navigate(`/course/${data.id}`, { state: { cartClass } });
         }}
       >
         <FakeName>{data.class_name}</FakeName>

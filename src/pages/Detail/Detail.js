@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faHashtag } from '@fortawesome/free-solid-svg-icons';
@@ -188,24 +188,33 @@ function Detail() {
   const { id } = useParams();
   const [data, setData] = useState();
   const [confirm, setConfirm] = useState(false);
+  const [cartClass, setCartClass] = useState();
   const difficulty = ['입문', '초급', '중급이상'];
   const token = localStorage.getItem('token');
-  function cart(targetID) {
+  const navigate = useNavigate();
+
+  function getCart() {
     axios
-      .put(
-        `http://localhost:10010/cart?classId=${targetID}`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then(
-        result =>
-          result.statusText === 'Created' && alert('장바구니에 추가되었습니다!')
-      );
+      .get(`${BASE_URL}/cart`, {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      })
+      .then(res => setCartClass(res.data.data[0].class.map(el => el.class_id)));
   }
+
+  function cart(targetID) {
+    return axios.put(
+      `http://localhost:10010/cart?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await (await fetch(`${BASE_URL}/course/${id}`)).json();
@@ -215,13 +224,16 @@ function Detail() {
   }, [id]);
 
   useEffect(() => {
-    if (confirm) {
-      setTimeout(() => {
-        setConfirm(false);
-      }, 3000);
-      return () => clearTimeout();
-    }
-  }, [confirm]);
+    getCart();
+  }, []);
+  // useEffect(() => {
+  //   if (confirm) {
+  //     setTimeout(() => {
+  //       setConfirm(false);
+  //     }, 3000);
+  //     return () => clearTimeout();
+  //   }
+  // }, [confirm]);
 
   return (
     data && (
@@ -302,10 +314,22 @@ function Detail() {
                   : '무료'}
               </DetailPrice>
               <DetailButtonWrapper>
-                <DetailButtonTop>수강신청 하기</DetailButtonTop>
-                <DetailButtonBottom onClick={() => cart(id)}>
-                  바구니에 담기
-                </DetailButtonBottom>
+                <DetailButtonTop
+                  onClick={() => {
+                    navigate('/carts');
+                  }}
+                >
+                  수강신청 하기
+                </DetailButtonTop>
+                {!cartClass?.includes(Number(id)) && (
+                  <DetailButtonBottom
+                    onClick={() => {
+                      cart(id).then(() => getCart());
+                    }}
+                  >
+                    바구니에 담기
+                  </DetailButtonBottom>
+                )}
               </DetailButtonWrapper>
             </div>
             <DetailMoreInfo>

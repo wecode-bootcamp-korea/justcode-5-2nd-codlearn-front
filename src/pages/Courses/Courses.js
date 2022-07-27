@@ -321,13 +321,13 @@ function Courses() {
     axios
       .get(`${BASE_URL}/cart`, {
         headers: {
-          Authorization: token,
+          Authorization: localStorage.getItem('token'),
         },
       })
       .then(res => {
         setCartClass(res?.data?.data[0]?.class.map(el => el.class_id));
       });
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     wishListUpdate();
