@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import 'swiper/css';
@@ -15,6 +15,7 @@ import {
   faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import axios from 'axios';
 import styled from 'styled-components';
 import axios from 'axios';
 import BASE_URL from '../../../config';
@@ -24,12 +25,18 @@ function SubSlider() {
   const [beginnerCourse, setBeginnerCourse] = useState([]);
   const [showLike, setShowLike] = useState(false);
   const [showMyFolder, setShowMyFolder] = useState(false);
+<<<<<<< HEAD
   const token = localStorage.getItem('token');
+=======
+  const navigate = useNavigate();
+
+>>>>>>> develop
   const navigationPrevFreeRef = useRef(null);
   const navigationNextFreeRef = useRef(null);
   const navigationPrevBeginRef = useRef(null);
   const navigationNextBeginRef = useRef(null);
 
+<<<<<<< HEAD
   function cart(targetID) {
     axios.put(
       `http://localhost:10010/cart?classId=${targetID}`,
@@ -53,6 +60,17 @@ function SubSlider() {
       }
     );
   }
+=======
+  const token = localStorage.getItem('token');
+
+  const goToCart = () => {
+    navigate('/carts');
+  };
+
+  const goToLikes = () => {
+    navigate('/likes');
+  };
+>>>>>>> develop
 
   useEffect(() => {
     fetch(`${BASE_URL}/`, { method: 'GET' })
@@ -101,38 +119,81 @@ function SubSlider() {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {freeCourse.map(data => (
-            <SwiperSlide key={data.id}>
-              <Link to={`/course/${data.id}`} className="linkHover">
-                <ContentHover className="ContentHover">
-                  <p className="className">{data.class_name}</p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faSignal} />
-                    </span>
-                    {data.level}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faFolderTree} />
-                    </span>
-                    {data.categories[0]}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faCubes} />
-                    </span>
-                    {data.categories[1]}, {data.categories[2]}
-                  </p>
-                  <div className="iconBox">
-                    <div className="likeBtn">
-                      <div
-                        className="likeText"
-                        style={{ display: showLike ? 'block' : 'none' }}
-                      >
-                        <span className="text">좋아요에 추가</span>
-                        <div className="arrowIcon"></div>
+          {freeCourse.map(data => {
+            const goToClass = () => {
+              navigate(`/course/${data.id}`);
+            };
+            function cart() {
+              axios.put(
+                `http://localhost:10010/cart?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
+            function wishList() {
+              axios.put(
+                `http://localhost:10010/wishlist?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
+            return (
+              <SwiperSlide key={data.id}>
+                <section className="linkHover">
+                  <ContentHover className="ContentHover">
+                    <p className="className">{data.class_name}</p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faSignal} />
+                      </span>
+                      {data.level}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faFolderTree} />
+                      </span>
+                      {data.categories[0]}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faCubes} />
+                      </span>
+                      {data.categories[1]}, {data.categories[2]}
+                    </p>
+                    <div className="iconBox">
+                      <div className="likeBtn">
+                        <div
+                          className="likeText"
+                          style={{ display: showLike ? 'block' : 'none' }}
+                        >
+                          <span className="text">좋아요에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="likeIcon"
+                          onClick={() => {
+                            wishList();
+                            goToLikes();
+                          }}
+                          onMouseEnter={() => {
+                            setShowLike(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowLike(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faHeart} />
+                        </div>
                       </div>
+<<<<<<< HEAD
                       <div
                         className="likeIcon"
                         onClick={e => {
@@ -147,52 +208,59 @@ function SubSlider() {
                         }}
                       >
                         <FontAwesomeIcon icon={faHeart} />
+=======
+                      <div className="myFolderBtn">
+                        <div
+                          className="myFolderText"
+                          style={{ display: showMyFolder ? 'block' : 'none' }}
+                        >
+                          <span className="text">장바구니에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="myFolderIcon"
+                          onClick={() => {
+                            cart();
+                            goToCart();
+                          }}
+                          onMouseEnter={() => {
+                            setShowMyFolder(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowMyFolder(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </div>
+>>>>>>> develop
                       </div>
                     </div>
-                    <div className="myFolderBtn">
-                      <div
-                        className="myFolderText"
-                        style={{ display: showMyFolder ? 'block' : 'none' }}
-                      >
-                        <span className="text">장바구니에 추가</span>
-                        <div className="arrowIcon"></div>
+                    <div className="bg" onClick={goToClass}></div>
+                  </ContentHover>
+                  <ContentWrap>
+                    <section>
+                      <img src={data.img} alt={data.class_name} />
+                      <p className="className">{data.class_name}</p>
+                      <div className="instructorName">
+                        {data.instructor_name}
                       </div>
-                      <div
-                        className="myFolderIcon"
-                        onMouseEnter={() => {
-                          setShowMyFolder(true);
-                        }}
-                        onMouseLeave={() => {
-                          setShowMyFolder(false);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCartShopping} />
+                      <StarRatings
+                        rating={data.rate ? data.rate : 0}
+                        starRatedColor="#F7DF1B"
+                        numberOfStars={5}
+                        starSpacing="0px"
+                        starDimension="15px"
+                      />
+                      <div className="price">{data.price === 0 && `무료`}</div>
+                      <div className="students">
+                        +{Math.floor(data.students / 100) * 100}명
                       </div>
-                    </div>
-                  </div>
-                  <div className="bg"></div>
-                </ContentHover>
-                <ContentWrap>
-                  <section>
-                    <img src={data.img} alt={data.class_name} />
-                    <p className="className">{data.class_name}</p>
-                    <div className="instructorName">{data.instructor_name}</div>
-                    <StarRatings
-                      rating={data.rate ? data.rate : 0}
-                      starRatedColor="#F7DF1B"
-                      numberOfStars={5}
-                      starSpacing="0px"
-                      starDimension="15px"
-                    />
-                    <div className="price">{data.price === 0 && `무료`}</div>
-                    <div className="students">
-                      +{Math.floor(data.students / 100) * 100}명
-                    </div>
-                  </section>
-                </ContentWrap>
-              </Link>
-            </SwiperSlide>
-          ))}
+                    </section>
+                  </ContentWrap>
+                </section>
+              </SwiperSlide>
+            );
+          })}
         </StyleSwiper>
       </FreeSlider>
       <BeginnerSLider>
@@ -231,38 +299,81 @@ function SubSlider() {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {beginnerCourse.map(data => (
-            <SwiperSlide key={data.id}>
-              <Link to className="linkHover">
-                <ContentHover className="ContentHover">
-                  <p className="className">{data.class_name}</p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faSignal} />
-                    </span>
-                    {data.level}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faFolderTree} />
-                    </span>
-                    {data.categories[0]}
-                  </p>
-                  <p className="level">
-                    <span>
-                      <FontAwesomeIcon icon={faCubes} />
-                    </span>
-                    {data.categories[1]}, {data.categories[2]}
-                  </p>
-                  <div className="iconBox">
-                    <div className="likeBtn">
-                      <div
-                        className="likeText"
-                        style={{ display: showLike ? 'block' : 'none' }}
-                      >
-                        <span className="text">좋아요에 추가</span>
-                        <div className="arrowIcon"></div>
+          {beginnerCourse.map(data => {
+            const goToClass = () => {
+              navigate(`/course/${data.id}`);
+            };
+            function cart() {
+              axios.put(
+                `http://localhost:10010/cart?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
+            function wishList() {
+              axios.put(
+                `http://localhost:10010/wishlist?classId=${data.id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+            }
+            return (
+              <SwiperSlide key={data.id}>
+                <section className="linkHover">
+                  <ContentHover className="ContentHover">
+                    <p className="className">{data.class_name}</p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faSignal} />
+                      </span>
+                      {data.level}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faFolderTree} />
+                      </span>
+                      {data.categories[0]}
+                    </p>
+                    <p className="level">
+                      <span>
+                        <FontAwesomeIcon icon={faCubes} />
+                      </span>
+                      {data.categories[1]}, {data.categories[2]}
+                    </p>
+                    <div className="iconBox">
+                      <div className="likeBtn">
+                        <div
+                          className="likeText"
+                          style={{ display: showLike ? 'block' : 'none' }}
+                        >
+                          <span className="text">좋아요에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="likeIcon"
+                          onClick={() => {
+                            wishList();
+                            goToLikes();
+                          }}
+                          onMouseEnter={() => {
+                            setShowLike(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowLike(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faHeart} />
+                        </div>
                       </div>
+<<<<<<< HEAD
                       <div
                         className="likeIcon"
                         onClick={e => {
@@ -278,16 +389,43 @@ function SubSlider() {
                         }}
                       >
                         <FontAwesomeIcon icon={faHeart} />
+=======
+                      <div className="myFolderBtn">
+                        <div
+                          className="myFolderText"
+                          style={{ display: showMyFolder ? 'block' : 'none' }}
+                        >
+                          <span className="text">장바구니에 추가</span>
+                          <div className="arrowIcon"></div>
+                        </div>
+                        <div
+                          className="myFolderIcon"
+                          onClick={() => {
+                            cart();
+                            goToCart();
+                          }}
+                          onMouseEnter={() => {
+                            setShowMyFolder(true);
+                          }}
+                          onMouseLeave={() => {
+                            setShowMyFolder(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </div>
+>>>>>>> develop
                       </div>
                     </div>
-                    <div className="myFolderBtn">
-                      <div
-                        className="myFolderText"
-                        style={{ display: showMyFolder ? 'block' : 'none' }}
-                      >
-                        <span className="text">장바구니에 추가</span>
-                        <div className="arrowIcon"></div>
+                    <div className="bg" onClick={goToClass}></div>
+                  </ContentHover>
+                  <ContentWrap>
+                    <section>
+                      <img src={data.img} alt={data.class_name} />
+                      <p className="className">{data.class_name}</p>
+                      <div className="instructorName">
+                        {data.instructor_name}
                       </div>
+<<<<<<< HEAD
                       <div
                         className="myFolderIcon"
                         onClick={e => {
@@ -302,54 +440,51 @@ function SubSlider() {
                         }}
                       >
                         <FontAwesomeIcon icon={faCartShopping} />
+=======
+                      <StarRatings
+                        rating={data.rate ? data.rate : 0}
+                        starRatedColor="#F7DF1B"
+                        numberOfStars={5}
+                        starSpacing="0px"
+                        starDimension="15px"
+                      />
+                      <div className="price">
+                        {data.discounted_price ? (
+                          <span>
+                            ₩{Number(data.price).toLocaleString('en')}
+                          </span>
+                        ) : null}
+                        {data.price === 0 && `무료`}
+                        {data.discounted_price
+                          ? '₩' +
+                            Number(data.discounted_price).toLocaleString('en')
+                          : data.price !== 0
+                          ? '₩' + Number(data.price).toLocaleString('en')
+                          : null}
                       </div>
-                    </div>
-                  </div>
-                  <div className="bg"></div>
-                </ContentHover>
-                <ContentWrap>
-                  <section>
-                    <img src={data.img} alt={data.class_name} />
-                    <p className="className">{data.class_name}</p>
-                    <div className="instructorName">{data.instructor_name}</div>
-                    <StarRatings
-                      rating={data.rate ? data.rate : 0}
-                      starRatedColor="#F7DF1B"
-                      numberOfStars={5}
-                      starSpacing="0px"
-                      starDimension="15px"
-                    />
-                    <div className="price">
+                      <div className={data.students >= 100 ? 'students' : null}>
+                        {data.students >= 100
+                          ? `+${Math.floor(data.students / 100) * 100}명`
+                          : null}
+>>>>>>> develop
+                      </div>
                       {data.discounted_price ? (
-                        <span>
-                          ₩{Number(data.discounted_price).toLocaleString('en')}
+                        <span
+                          className="students"
+                          style={{
+                            marginLeft: '10px',
+                            backgroundColor: 'hsl(1,100%,89%)',
+                          }}
+                        >
+                          할인중
                         </span>
                       ) : null}
-                      {data.price === 0
-                        ? `무료`
-                        : '₩' + Number(data.price).toLocaleString('en')}
-                    </div>
-                    <div className={data.students >= 100 ? 'students' : null}>
-                      {data.students >= 100
-                        ? `+${Math.floor(data.students / 100) * 100}명`
-                        : null}
-                    </div>
-                    {data.discounted_price ? (
-                      <span
-                        className="students"
-                        style={{
-                          marginLeft: '10px',
-                          backgroundColor: 'hsl(1,100%,89%)',
-                        }}
-                      >
-                        할인중
-                      </span>
-                    ) : null}
-                  </section>
-                </ContentWrap>
-              </Link>
-            </SwiperSlide>
-          ))}
+                    </section>
+                  </ContentWrap>
+                </section>
+              </SwiperSlide>
+            );
+          })}
         </StyleSwiper>
       </BeginnerSLider>
     </SubSliderWrap>
@@ -358,9 +493,10 @@ function SubSlider() {
 
 const SubSliderWrap = styled.section`
   margin: 80px 0;
-  a {
+  section {
     display: block;
     text-decoration: none;
+    cursor: pointer;
     &.linkHover:hover {
       .ContentHover {
         display: block;
