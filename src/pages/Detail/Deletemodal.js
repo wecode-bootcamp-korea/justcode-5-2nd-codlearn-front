@@ -14,11 +14,21 @@ function Deletemodal({ setShowDelete, id, reviewId, get }) {
 
   const submit = () => {
     try {
+<<<<<<< HEAD
+      return axios
+        .delete(`${BASE_URL}/course/${id}/review`, {
+          data: {
+            review_id: reviewId,
+          },
+        })
+        .then(() => get());
+=======
       axios.delete(`${BASE_URL}/course/${id}/review`, {
         data: {
           review_id: reviewId,
         },
       });
+>>>>>>> develop
     } catch (e) {
       console.log(e);
     }
@@ -55,7 +65,6 @@ function Deletemodal({ setShowDelete, id, reviewId, get }) {
           <button
             onClick={() => {
               submit();
-              get();
               closeModal();
             }}
           >

@@ -154,6 +154,7 @@ function MainSlider() {
       }, 300);
     }
 
+
     return () => {
       clearInterval(timer);
       clearTimeout();

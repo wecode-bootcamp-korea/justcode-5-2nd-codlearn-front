@@ -17,6 +17,7 @@ import {
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import axios from 'axios';
 import styled from 'styled-components';
+import axios from 'axios';
 import BASE_URL from '../../../config';
 
 function SubSlider() {
@@ -24,13 +25,42 @@ function SubSlider() {
   const [beginnerCourse, setBeginnerCourse] = useState([]);
   const [showLike, setShowLike] = useState(false);
   const [showMyFolder, setShowMyFolder] = useState(false);
+<<<<<<< HEAD
+  const token = localStorage.getItem('token');
+=======
   const navigate = useNavigate();
 
+>>>>>>> develop
   const navigationPrevFreeRef = useRef(null);
   const navigationNextFreeRef = useRef(null);
   const navigationPrevBeginRef = useRef(null);
   const navigationNextBeginRef = useRef(null);
 
+<<<<<<< HEAD
+  function cart(targetID) {
+    axios.put(
+      `http://localhost:10010/cart?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+
+  function wishList(targetID) {
+    axios.put(
+      `http://localhost:10010/wishlist?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+=======
   const token = localStorage.getItem('token');
 
   const goToCart = () => {
@@ -40,6 +70,7 @@ function SubSlider() {
   const goToLikes = () => {
     navigate('/likes');
   };
+>>>>>>> develop
 
   useEffect(() => {
     fetch(`${BASE_URL}/`, { method: 'GET' })
@@ -162,6 +193,22 @@ function SubSlider() {
                           <FontAwesomeIcon icon={faHeart} />
                         </div>
                       </div>
+<<<<<<< HEAD
+                      <div
+                        className="likeIcon"
+                        onClick={e => {
+                          e.stopPropagation();
+                          wishList(data.id);
+                        }}
+                        onMouseEnter={() => {
+                          setShowLike(true);
+                        }}
+                        onMouseLeave={() => {
+                          setShowLike(false);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faHeart} />
+=======
                       <div className="myFolderBtn">
                         <div
                           className="myFolderText"
@@ -185,6 +232,7 @@ function SubSlider() {
                         >
                           <FontAwesomeIcon icon={faCartShopping} />
                         </div>
+>>>>>>> develop
                       </div>
                     </div>
                     <div className="bg" onClick={goToClass}></div>
@@ -325,6 +373,23 @@ function SubSlider() {
                           <FontAwesomeIcon icon={faHeart} />
                         </div>
                       </div>
+<<<<<<< HEAD
+                      <div
+                        className="likeIcon"
+                        onClick={e => {
+                          e.stopPropagation();
+                          console.log(1);
+                          wishList(data.id);
+                        }}
+                        onMouseEnter={() => {
+                          setShowLike(true);
+                        }}
+                        onMouseLeave={() => {
+                          setShowLike(false);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faHeart} />
+=======
                       <div className="myFolderBtn">
                         <div
                           className="myFolderText"
@@ -348,6 +413,7 @@ function SubSlider() {
                         >
                           <FontAwesomeIcon icon={faCartShopping} />
                         </div>
+>>>>>>> develop
                       </div>
                     </div>
                     <div className="bg" onClick={goToClass}></div>
@@ -359,6 +425,22 @@ function SubSlider() {
                       <div className="instructorName">
                         {data.instructor_name}
                       </div>
+<<<<<<< HEAD
+                      <div
+                        className="myFolderIcon"
+                        onClick={e => {
+                          e.stopPropagation();
+                          cart(data.id);
+                        }}
+                        onMouseEnter={() => {
+                          setShowMyFolder(true);
+                        }}
+                        onMouseLeave={() => {
+                          setShowMyFolder(false);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCartShopping} />
+=======
                       <StarRatings
                         rating={data.rate ? data.rate : 0}
                         starRatedColor="#F7DF1B"
@@ -384,6 +466,7 @@ function SubSlider() {
                         {data.students >= 100
                           ? `+${Math.floor(data.students / 100) * 100}명`
                           : null}
+>>>>>>> develop
                       </div>
                       {data.discounted_price ? (
                         <span
