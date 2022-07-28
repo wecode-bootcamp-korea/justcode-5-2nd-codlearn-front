@@ -81,10 +81,6 @@ function HeaderBottom() {
   };
 
   useEffect(() => {
-    console.log(text);
-  }, [text]);
-
-  useEffect(() => {
     if (token) {
       setIsLogin(true);
     } else {

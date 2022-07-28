@@ -103,7 +103,6 @@ function MainSlider() {
       }vw)`;
       sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
       setSlideIndex(prev => prev - 1);
-      console.log(sliderContainerRef.current.style.transform);
     }
   };
   //(slideIndex + 1) * 100
@@ -113,7 +112,6 @@ function MainSlider() {
     }vw)`;
     sliderContainerRef.current.style.transition = 'transform 1s ease-in';
     setSlideIndex(prev => prev + 1);
-    console.log(sliderContainerRef.current.style.transform);
   };
 
   const clickPause = () => {
@@ -153,7 +151,6 @@ function MainSlider() {
         setSlideIndex(1);
       }, 300);
     }
-
 
     return () => {
       clearInterval(timer);
