@@ -141,4 +141,3 @@ function Updatemodal({ setShowUpdate, id, reviewId, get, setShowOption }) {
   );
 }
 export default Updatemodal;
-//http://localhost:10010/course/${id}/review
