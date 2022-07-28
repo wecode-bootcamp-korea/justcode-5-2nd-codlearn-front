@@ -154,6 +154,7 @@ function Comments({ id }) {
     setContent(e.target.value);
   };
   const token = localStorage.getItem('token');
+  const isWrote = reviews?.some(el => Object.keys(el).includes('canEdit'));
 
   async function get() {
     const result = await axios.get(`${BASE_URL}/course/${id}/review`, {
@@ -194,36 +195,38 @@ function Comments({ id }) {
           적립됩니다.
         </p>
       </Header>
-      <Body>
-        <Rating
-          allowHalfIcon
-          onClick={handleRating}
-          fillColorArray={[
-            '#f17a45',
-            '#f19745',
-            '#f1a545',
-            '#f1b345',
-            '#f1d045',
-          ]}
-          ratingValue={rating}
-        />
-        <p>더블클릭하여 별점을 입력해주세요.</p>
-        <textarea
-          value={content}
-          onChange={handleContent}
-          placeholder="좋은 수강평을 남겨주시면 지식공유자와 이후 배우는 사람들에게 큰 도움이 됩니다! 포인트도 드려요!! (5자 이상)"
-        />
-        <ButtonWrapper>
-          <button
-            onClick={() => {
-              submit();
-              setContent('');
-            }}
-          >
-            등록
-          </button>
-        </ButtonWrapper>
-      </Body>
+      {!isWrote && (
+        <Body>
+          <Rating
+            allowHalfIcon
+            onClick={handleRating}
+            fillColorArray={[
+              '#f17a45',
+              '#f19745',
+              '#f1a545',
+              '#f1b345',
+              '#f1d045',
+            ]}
+            ratingValue={rating}
+          />
+          <p>더블클릭하여 별점을 입력해주세요.</p>
+          <textarea
+            value={content}
+            onChange={handleContent}
+            placeholder="좋은 수강평을 남겨주시면 지식공유자와 이후 배우는 사람들에게 큰 도움이 됩니다! 포인트도 드려요!! (5자 이상)"
+          />
+          <ButtonWrapper>
+            <button
+              onClick={() => {
+                submit();
+                setContent('');
+              }}
+            >
+              등록
+            </button>
+          </ButtonWrapper>
+        </Body>
+      )}
       <ReviewWrapper>
         {reviews?.map((el, idx) => (
           <>
