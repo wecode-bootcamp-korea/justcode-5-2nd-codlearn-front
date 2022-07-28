@@ -37,6 +37,28 @@ const CartName = styled.div`
   padding-bottom: 16px;
 `;
 
+const EmptyCartWrapper = styled.div`
+  margin-top: 114px;
+  text-align: center;
+
+  div {
+    color: #3e4042;
+    padding-bottom: 20px;
+  }
+`;
+
+const ShowCoursesButton = styled.button`
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid #00c471;
+  border-radius: 4px;
+  color: #00c471;
+  font-weight: 500;
+  background-color: #fff;
+  cursor: pointer;
+`;
+
 const LeftCartHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -181,14 +203,34 @@ const PhoneWrapper = styled.div`
   display: flex;
 `;
 
-const PhoneInput = styled.div``;
+const PhoneInput = styled.div`
+  display: flex;
+  padding: 0 12px;
+  width: 172px;
+  height: 40px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #fff;
+
+  input {
+    width: 100%;
+    font-size: 14px;
+    border: 0;
+    background: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+`;
 
 const CountryNumber = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 50px;
   height: 100%;
+  margin-right: 10px;
 `;
 
 const NumIcon = styled.div`
@@ -205,17 +247,77 @@ const Num = styled.div`
 const NumList = styled.ul`
   position: absolute;
   top: 43px;
-  left: -1px;
+  left: -13px;
   width: 180px;
   height: 278px;
   overflow-y: auto;
   padding: 16px;
   border: 1px solid #dee2e6;
   border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
   background: #fff;
   list-style: none;
-  display: none;
   z-index: 1;
+
+  li {
+    display: flex;
+    flex-direction: row;
+    padding: 8px;
+  }
+`;
+
+const CountryNum = styled.p`
+  width: 56px;
+  color: #616568;
+  cursor: pointer;
+`;
+
+const CountryName = styled.p`
+  width: 75px;
+  color: #616568;
+  cursor: pointer;
+`;
+
+const SmallButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 78px;
+  height: 40px;
+  margin-left: 8px;
+  padding: 0 12px;
+  border: 1px solid #d5dbe2;
+  border-radius: 4px;
+  color: #495057;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+`;
+
+const VoucherInfo = styled(BuyerInfo)`
+
+`;
+
+const VoucherInfoHeader = styled(BuyerInfoHeader)`
+
+`;
+
+const VoucherInfoHeaderLeft = styled(BuyerInfoHeaderLeft)`
+
+`;
+
+const VoucherInfoHeaderRightText = styled.span`
+  font-size: 14px;
+  font-weight: 400;
+  color: #abb0b4;
+`;
+
+const VoucherInfoHeaderRightNum = styled.span`
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #b3edd4;
 `;
 
 const PayButton = styled.div`
@@ -237,8 +339,26 @@ function Carts() {
   const [courses, setCourses] = useState();
   const [checkedCourse, setCheckedCourse] = useState([]);
   const [checkId, setCheckId] = useState([]);
+  const [isUpdated, setIsUpdated] = useState(true);
+  const [isCountryNumList, setIsCountryNumList] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(isUpdated) {
+      fetch(`${BASE_URL}/cart`, {
+        method: 'GET',
+        headers: {
+          Authorization: LoginToken,
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          setCourses(data);
+        });
+    };
+    setIsUpdated(false);
+  }, [isUpdated]);
 
   const checkHandler = (checked, id) => {
     if (checked) {
@@ -258,19 +378,6 @@ function Carts() {
     }
   };
 
-  useEffect(() => {
-    fetch(`${BASE_URL}/cart`, {
-      method: 'GET',
-      headers: {
-        Authorization: LoginToken,
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        setCourses(data);
-      });
-  }, [courses]);
-
   const deleteCourses = async classArray => {
     const classList = classArray.map(el => {
       return { class_id: el };
@@ -283,6 +390,7 @@ function Carts() {
       },
       body: JSON.stringify(classList),
     });
+    setIsUpdated(true);
   };
 
   useEffect(() => {
@@ -290,17 +398,6 @@ function Carts() {
       deleteCourses(checkId);
     }
   }, [checkId]);
-  // const deleteCourse = async (id) => {
-  //   const classList = { class_id: id };
-  //   await fetch(`${BASE_URL}/cart`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: LoginToken,
-  //     },
-  //     body: JSON.stringify(classList),
-  //   });
-  // };
 
   const addCourses = async () => {
     const classList = checkedCourse.map(el => {
@@ -325,49 +422,59 @@ function Carts() {
     <Wrapper>
       <LeftCart>
         <CartName>수강바구니</CartName>
-        <div>
-          <LeftCartHeader>
-            <LeftCartHeaderLeft>
-              <input
-                onChange={e => {
-                  checkAllHandler(e.target.checked);
-                }}
-                checked={
-
-                  checkedCourse.length === courses?.data[0]?.class?.length
-                }
-                type="checkbox"
-                id="cb1"
-              />
-              <label for="cb1"></label>
-              <SelectAll>전체선택</SelectAll>
-              <ListCount>
-                <ListSelected>{checkedCourse.length}</ListSelected>/
-                <span>{courses?.data[0]?.class?.length}</span>
-              </ListCount>
-            </LeftCartHeaderLeft>
-            <LeftCartHeaderButton onClick={e => deleteCourses(checkedCourse)}>
-              선택삭제
-              <div>
-                <FontAwesomeIcon icon="fa-solid fa-x" />
-              </div>
-            </LeftCartHeaderButton>
-          </LeftCartHeader>
-          {courses &&
-            courses?.data[0]?.class?.map((v, i) => (
-              <CartCourse
-                key={i}
-                id={v.class_id}
-                img={v.class_img}
-                name={v.class_name}
-                instructor={v.instructor_name}
-                price={v.price}
-                checkHandler={checkHandler}
-                checkedCourse={checkedCourse}
-                setCheckId={setCheckId}
-              />
-            ))}
-        </div>
+        {courses?.data[0]?.class ? (
+          <div>
+            <LeftCartHeader>
+              <LeftCartHeaderLeft>
+                <input
+                  onChange={e => {
+                    checkAllHandler(e.target.checked);
+                  }}
+                  checked={
+                    checkedCourse.length === courses?.data[0]?.class?.length
+                  }
+                  type="checkbox"
+                  id="cb1"
+                />
+                <label for="cb1"></label>
+                <SelectAll>전체선택</SelectAll>
+                <ListCount>
+                  <ListSelected>{checkedCourse.length}</ListSelected>/
+                  <span>{courses?.data[0]?.class?.length}</span>
+                </ListCount>
+              </LeftCartHeaderLeft>
+              <LeftCartHeaderButton onClick={e => deleteCourses(checkedCourse)}>
+                선택삭제
+                <div>
+                  <FontAwesomeIcon icon="fa-solid fa-x" />
+                </div>
+              </LeftCartHeaderButton>
+            </LeftCartHeader>
+            {courses &&
+              courses?.data[0]?.class?.map((v, i) => (
+                <CartCourse
+                  key={i}
+                  id={v.class_id}
+                  img={v.class_img}
+                  name={v.class_name}
+                  instructor={v.instructor_name}
+                  price={v.price}
+                  checkHandler={checkHandler}
+                  checkedCourse={checkedCourse}
+                  setCheckId={setCheckId}
+                />
+              ))}
+          </div>
+        ) : (
+          <EmptyCartWrapper>
+            <div>
+              <p style={{height: '24px',fontWeight: 700, fontSize: '16px'}}>담긴 강의가 없습니다.</p>
+              <p style={{height: '24px', paddingTop: '4px', color: '#858a8d', fontSize: '14px'}}>나를 성장 시켜줄 좋은 지식들을 찾아보세요.</p>
+            </div>
+            <ShowCoursesButton onClick={() => {navigate('/courses')}}>강의리스트 보기</ShowCoursesButton>
+          </EmptyCartWrapper>
+        )
+        }
       </LeftCart>
       <RightCart>
         <BuyerInfo>
@@ -413,88 +520,96 @@ function Carts() {
                 <CountryNumber>
                   <NumIcon>
                     <Num>+82</Num>
-                    <div>
+                    <div style={{marginLeft: '10px', cursor: 'pointer'}} onClick={() => {setIsCountryNumList(prev => !prev)}}>
                       <FontAwesomeIcon icon="fa-solid fa-angle-down" />
                     </div>
                   </NumIcon>
-                  <NumList>
+                  <NumList style={isCountryNumList ? {display: 'block'} : {display: 'none'}}>
                     <li>
-                      <p>+82</p>
-                      <p>대한민국</p>
+                      <CountryNum>+82</CountryNum>
+                      <CountryName>대한민국</CountryName>
                     </li>
                     <li>
-                      <p>+81</p>
-                      <p>일본</p>
+                      <CountryNum>+81</CountryNum>
+                      <CountryName>일본</CountryName>
                     </li>
                     <li>
-                      <p>+1</p>
-                      <p>미국</p>
+                      <CountryNum>+1</CountryNum>
+                      <CountryName>미국</CountryName>
                     </li>
                     <li>
-                      <p>+49</p>
-                      <p>독일</p>
+                      <CountryNum>+49</CountryNum>
+                      <CountryName>독일</CountryName>
                     </li>
                     <li>
-                      <p>+61</p>
-                      <p>오스트레일리아</p>
+                      <CountryNum>+61</CountryNum>
+                      <CountryName>오스트레일리아</CountryName>
                     </li>
                     <li>
-                      <p>+52</p>
-                      <p>멕시코</p>
+                      <CountryNum>+52</CountryNum>
+                      <CountryName>멕시코</CountryName>
                     </li>
                     <li>
-                      <p>+32</p>
-                      <p>벨기에</p>
+                      <CountryNum>+32</CountryNum>
+                      <CountryName>벨기에</CountryName>
                     </li>
                     <li>
-                      <p>+55</p>
-                      <p>브라질</p>
+                      <CountryNum>+55</CountryNum>
+                      <CountryName>브라질</CountryName>
                     </li>
                     <li>
-                      <p>+44</p>
-                      <p>영국</p>
+                      <CountryNum>+44</CountryNum>
+                      <CountryName>영국</CountryName>
                     </li>
                   </NumList>
                 </CountryNumber>
                 <input />
               </PhoneInput>
-              <div>인증요청</div>
+              <SmallButton>인증요청</SmallButton>
             </PhoneWrapper>
           </InputWrapper>
         </BuyerInfo>
-        <div>
+        <VoucherInfo>
           <div>
             <div>
               <div>
-                <div>
-                  <span>쿠폰</span>
+                <VoucherInfoHeader>
+                  <VoucherInfoHeaderLeft>
+                    <span>쿠폰</span>
+                    <div>
+                      <FontAwesomeIcon icon="fa-solid fa-circle-question" />
+                    </div>
+                  </VoucherInfoHeaderLeft>
                   <div>
-                    <svg></svg>
+                    <VoucherInfoHeaderRightText>사용가능</VoucherInfoHeaderRightText>
+                    <VoucherInfoHeaderRightNum>0</VoucherInfoHeaderRightNum>
                   </div>
-                  <span>사용가능</span>
-                  <span>0</span>
-                </div>
+                </VoucherInfoHeader>
                 <div>
                   <div>
                     <input />
                   </div>
-                  <div>쿠폰선택</div>
+                  <SmallButton>쿠폰선택</SmallButton>
                 </div>
               </div>
               <div>
-                <div>
-                  <span>포인트</span>
+                <VoucherInfoHeader>
+                  <VoucherInfoHeaderLeft>
+                    <span>포인트</span>
+                    <div>
+                    <FontAwesomeIcon icon="fa-solid fa-circle-question" />
+                    </div>
+                  </VoucherInfoHeaderLeft>
                   <div>
-                    <svg></svg>
+                    <VoucherInfoHeaderRightText>보유</VoucherInfoHeaderRightText>
+                    <VoucherInfoHeaderRightNum>0</VoucherInfoHeaderRightNum>
                   </div>
-                  <span>보유</span>
-                  <span>0</span>
-                </div>
+                </VoucherInfoHeader>
                 <div>
                   <div>
                     <input />
                   </div>
-                  <div>전액사용</div>
+                  <SmallButton>전액사용</SmallButton>
                 </div>
               </div>
               <div>
@@ -570,7 +685,7 @@ function Carts() {
               <span>문의 바로가기</span>
             </div>
           </div>
-        </div>
+        </VoucherInfo>
       </RightCart>
     </Wrapper>
   );
