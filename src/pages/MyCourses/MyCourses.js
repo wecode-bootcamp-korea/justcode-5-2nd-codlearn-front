@@ -9,7 +9,6 @@ import axios from 'axios';
 function MyCourses() {
   const [isLogin, setIsLogin] = useContext(LoginContext);
   const [userData, setUserData] = useState([]);
-  console.log(isLogin);
 
   const token = localStorage.getItem('token');
 
@@ -26,7 +25,6 @@ function MyCourses() {
   useEffect(() => {
     boardApi();
   }, []);
-  console.log('data : ', userData?.data?.recentlyTaken);
 
   return (
     <MyPage>

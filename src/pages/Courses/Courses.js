@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useNavigate,
   useLocation,
@@ -12,7 +12,8 @@ import Class from '../../components/Class/Class';
 import Filter from '../../components/Filter/Filter';
 import Pagination from './Pagination';
 import BASE_URL from '../../config';
-import { LoginContext } from '../../App';
+import axios from 'axios';
+import { faAppStoreIos } from '@fortawesome/free-brands-svg-icons';
 
 const categories = [
   {
@@ -173,7 +174,23 @@ const SortOptions = styled.div`
 const PageboxWrapper = styled.div`
   margin: 45px 0px;
 `;
-
+const ModalBox = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #3d4042;
+  color: white;
+  font-weight: 700;
+  border-radius: 20px;
+  width: 300px;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  span:last-child {
+    cursor: pointer;
+  }
+`;
 function Courses() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -188,13 +205,68 @@ function Courses() {
   const params = useParams();
   const [query, setQuery] = useSearchParams();
   const searchParams = new URLSearchParams(query);
-  const [isLogin, setIsLogin] = useContext(LoginContext);
-  console.log(isLogin);
+  const [cartConfirm, setCartConfirm] = useState(false);
+  const [cartClass, setCartClass] = useState();
+  const [wishClass, setWishClass] = useState();
+  const token = localStorage.getItem('token');
 
   function showSubCat(target) {
     setSelect(prev => {
       if (prev === target) return '';
       else return target;
+    });
+  }
+
+  function cart(targetID) {
+    return axios.put(
+      `${BASE_URL}/cart?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+
+  function deleteCart(targetID) {
+    return axios.delete(`${BASE_URL}/cart?classId=${targetID}`, {
+      data: [{ class_id: targetID }],
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
+
+  function wishList(targetID) {
+    return axios.put(
+      `${BASE_URL}/wishlist?classId=${targetID}`,
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+  }
+
+  function wishListUpdate() {
+    axios
+      .get(`http://localhost:10010/wishlist`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(res => {
+        setWishClass(res.data.data.map(el => el.class_id));
+      });
+  }
+
+  function deleteWishList(targetID) {
+    return axios.delete(`${BASE_URL}/wishlist?classId=${targetID}`, {
+      headers: {
+        Authorization: token,
+      },
     });
   }
 
@@ -245,6 +317,22 @@ function Courses() {
     window.scrollTo(0, 0);
   }, [params.cat1, parameters, location.search]);
 
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/cart`, {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+        },
+      })
+      .then(res => {
+        setCartClass(res?.data?.data[0]?.class.map(el => el.class_id));
+      });
+  }, []);
+
+  useEffect(() => {
+    wishListUpdate();
+  }, [token]);
+
   return (
     <Wrapper
       onClick={() => {
@@ -256,13 +344,7 @@ function Courses() {
         <CategoryWrapper>
           <Category
             onClick={() => {
-              setCat1(prev => {
-                return { ...prev, name: '', value: '' };
-              });
-              setCat2(prev => {
-                return { ...prev, name: '', value: '' };
-              });
-              setSelect('');
+              navigate('/courses');
             }}
           >
             전체 강의
@@ -352,9 +434,33 @@ function Courses() {
         <MainWrapper>
           {!isLoading
             ? courseData?.data.map(el => (
-                <Class navigate={navigate} key={el.id} data={el} />
+                <Class
+                  navigate={navigate}
+                  key={el.id}
+                  data={el}
+                  setCartConfirm={setCartConfirm}
+                  cart={cart}
+                  deleteCart={deleteCart}
+                  wishList={wishList}
+                  deleteWishList={deleteWishList}
+                  cartClass={cartClass}
+                  wishClass={wishClass}
+                  wishListUpdate={wishListUpdate}
+                />
               ))
             : 'Loading...'}
+          {cartConfirm && (
+            <ModalBox>
+              <span>바구니에 담기 성공!</span>
+              <span
+                onClick={() => {
+                  setCartConfirm(false);
+                }}
+              >
+                X
+              </span>
+            </ModalBox>
+          )}
         </MainWrapper>
         <PageboxWrapper>
           <Pagination totalPage={Number(courseData?.pages)} toUrl={toUrl} />

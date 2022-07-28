@@ -176,9 +176,7 @@ function SignUp() {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('data', data);
         if (data.message === 'SIGNUP_SUCCEEDED') {
-          console.log(data.status);
           navigate('/hello');
         } else if (data.message === 'SIGNUP_FAILED: EMAIL_EXIST') {
           setOpenErrModal(true);

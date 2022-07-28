@@ -23,13 +23,11 @@ function Login({ openModal, setModal }) {
   const [email, setEmail] = useState('');
   const onEmailHandler = e => {
     setEmail(e.currentTarget.value);
-    console.log('emailvalue :', e.currentTarget.value);
   };
 
   const [password, setPassword] = useState('');
   const onPasswordHandler = e => {
     setPassword(e.currentTarget.value);
-    console.log('pwvalue :', e.currentTarget.value);
   };
   const [passwordType, setPasswordType] = useState({
     type: 'password',
@@ -54,7 +52,7 @@ function Login({ openModal, setModal }) {
         email,
         password,
       });
-      console.log(result);
+
       localStorage.setItem('token', result.data.token);
     } catch (err) {
       console.log(err);
