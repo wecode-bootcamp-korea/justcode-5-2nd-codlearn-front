@@ -9,7 +9,6 @@ import axios from 'axios';
 function Likes() {
   const [isLogin, setIsLogin] = useContext(LoginContext);
   const [userData, setUserData] = useState([]);
-  console.log(isLogin);
 
   const token = localStorage.getItem('token');
 
@@ -26,7 +25,6 @@ function Likes() {
   useEffect(() => {
     boardApi();
   }, []);
-  console.log('data : ', userData?.data?.wishlist);
 
   return (
     <MyPage>

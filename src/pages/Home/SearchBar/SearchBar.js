@@ -43,10 +43,7 @@ function SearchBar() {
 
   let searchQuery = new URLSearchParams(useLocation().search);
   let courses = searchQuery.get('courses');
-<<<<<<< HEAD
 
-=======
->>>>>>> develop
   const goToCoure = () => {
     //setQuery(`/${courses}?s=${inputText}`);
 
