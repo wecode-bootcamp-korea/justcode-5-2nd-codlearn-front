@@ -205,7 +205,7 @@ function Detail() {
 
   function cart(targetID) {
     return axios.put(
-      `http://localhost:10010/cart?classId=${targetID}`,
+      `${BASE_URL}/cart?classId=${targetID}`,
       {},
       {
         headers: {

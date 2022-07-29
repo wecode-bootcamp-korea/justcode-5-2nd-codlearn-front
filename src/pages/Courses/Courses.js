@@ -252,7 +252,7 @@ function Courses() {
 
   function wishListUpdate() {
     axios
-      .get(`http://localhost:10010/wishlist`, {
+      .get(`${BASE_URL}/wishlist`, {
         headers: {
           Authorization: token,
         },

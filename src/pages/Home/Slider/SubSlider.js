@@ -94,7 +94,7 @@ function SubSlider() {
             };
             function cart() {
               axios.put(
-                `http://localhost:10010/cart?classId=${data.id}`,
+                `${BASE_URL}:10010/cart?classId=${data.id}`,
                 {},
                 {
                   headers: {
@@ -105,7 +105,7 @@ function SubSlider() {
             }
             function wishList() {
               axios.put(
-                `http://localhost:10010/wishlist?classId=${data.id}`,
+                `${BASE_URL}/wishlist?classId=${data.id}`,
                 {},
                 {
                   headers: {
@@ -257,7 +257,7 @@ function SubSlider() {
             };
             function cart() {
               axios.put(
-                `http://localhost:10010/cart?classId=${data.id}`,
+                `${BASE_URL}/cart?classId=${data.id}`,
                 {},
                 {
                   headers: {
@@ -268,7 +268,7 @@ function SubSlider() {
             }
             function wishList() {
               axios.put(
-                `http://localhost:10010/wishlist?classId=${data.id}`,
+                `${BASE_URL}/wishlist?classId=${data.id}`,
                 {},
                 {
                   headers: {
