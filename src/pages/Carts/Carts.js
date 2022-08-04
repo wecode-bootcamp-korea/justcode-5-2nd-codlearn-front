@@ -10,9 +10,12 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faX,
   faCircleQuestion,
+  faAngleUp,
   faAngleDown,
+  faCircleCheck,
+  faMessage
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faX, faCircleQuestion, faAngleDown);
+library.add(faX, faCircleQuestion, faAngleUp, faAngleDown, faCircleCheck, faMessage);
 
 const Wrapper = styled.div`
   display: flex;
@@ -283,10 +286,10 @@ const SmallButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 78px;
+  min-width: 73px;
   height: 40px;
   margin-left: 8px;
-  padding: 0 12px;
+  padding: 0 8px;
   border: 1px solid #d5dbe2;
   border-radius: 4px;
   color: #495057;
@@ -300,7 +303,9 @@ const VoucherInfo = styled(BuyerInfo)`
 `;
 
 const VoucherInfoHeader = styled(BuyerInfoHeader)`
-
+  border-bottom: none;
+  padding : 0;
+  margin-bottom : 4px;
 `;
 
 const VoucherInfoHeaderLeft = styled(BuyerInfoHeaderLeft)`
@@ -320,17 +325,191 @@ const VoucherInfoHeaderRightNum = styled.span`
   color: #b3edd4;
 `;
 
+const CouponInteraction = styled.div`
+  display: flex;
+`;
+
+const PointInteraction = styled(CouponInteraction)`
+
+`;
+
+const VoucherInput = styled.div`
+  display: flex;
+  padding: 0 12px;
+  width: 176px;
+  height: 40px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: ${(props) => props.color || '#fff'};
+
+  input {
+    width: 100%;
+    font-size: 14px;
+    border: 0;
+    background: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #ced4da;
+      text-align: right;
+    }
+  }
+`;
+
+const PriceRegular = styled.div`
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: -.3px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  color: #858a8d;
+`;
+
+const PriceDiscount = styled.div`
+
+`;
+
+const PriceDiscountSummary = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const PriceDiscountButton = styled.div`
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: -.3px;
+  font-size: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  color: #e5503c;
+  border: 0;
+  background: none;
+  cursor: pointer;
+
+  span {
+    margin-right: 4px;
+  }
+
+  svg {
+    color: #abb0b4;
+  }
+`;
+
+const CartNumUnit = styled.div`
+  font-weight: 500;
+  line-height: 1.43;
+  letter-spacing: -.3px;
+  font-size: 14px;
+  display: flex;
+  flex-shrink: 0;
+  color: ${(props) => props.color || '#858a8d'};
+`;
+
+const PriceDiscountDetail = styled.div`
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: -.3px;
+  font-size: 14px;
+  padding-top: 7px;
+  color: #abb0b5;
+`;
+
+const PriceDiscountDetailItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
+`;
+
+const PricePay = styled.div`
+  line-height: 1.47;
+  letter-spacing: -.3px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 4px;
+  color: #1b1c1d;
+`;
+
 const PayButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
+  width: 100%;
   height: 40px;
-  font-size: 16px;
+  margin-top: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
   color: white;
-  border-radius: 8px;
-  background: green;
+  border: 1px solid #00c471;
+  border-radius: 4px;
+  background: #00c471;
   cursor: pointer;
+`;
+
+const DiscountButton = styled(PayButton)`
+  margin-top: 16px;
+  border: none;
+  background: #3e4042;
+
+  span {
+    line-height: 1.43;
+    letter-spacing: -.3px;
+    font-size: 14px;
+    font-weight: 700;
+    padding-left: 4px;
+    padding-right: 2px;
+    color: #4dd69c;
+  }
+`;
+
+const TermsAgreement = styled.div`
+  margin-top: 8px;
+  line-height: 1.5;
+  letter-spacing: -.3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #abb0b5;
+
+  span {
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const HasQuestions = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+
+  div{
+    line-height: 1.43;
+    letter-spacing: -.3px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 4px;
+    color: #858a8d;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  span{
+    margin-left: 4px;
+  }
 `;
 
 function Carts() {
@@ -341,6 +520,7 @@ function Carts() {
   const [checkId, setCheckId] = useState([]);
   const [isUpdated, setIsUpdated] = useState(true);
   const [isCountryNumList, setIsCountryNumList] = useState(false);
+  const [isPriceDetailOpen, setIsPriceDetailOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -572,7 +752,7 @@ function Carts() {
         <VoucherInfo>
           <div>
             <div>
-              <div>
+              <div style={{marginBottom: '20px'}}>
                 <VoucherInfoHeader>
                   <VoucherInfoHeaderLeft>
                     <span>쿠폰</span>
@@ -585,19 +765,19 @@ function Carts() {
                     <VoucherInfoHeaderRightNum>0</VoucherInfoHeaderRightNum>
                   </div>
                 </VoucherInfoHeader>
-                <div>
-                  <div>
-                    <input />
-                  </div>
+                <CouponInteraction>
+                  <VoucherInput color='#f8f9fa'>
+                    <input value={0} style={{color: '#abb0b4', textAlign: 'right'}} />
+                  </VoucherInput>
                   <SmallButton>쿠폰선택</SmallButton>
-                </div>
+                </CouponInteraction>
               </div>
-              <div>
+              <div style={{marginBottom: '20px'}}>
                 <VoucherInfoHeader>
                   <VoucherInfoHeaderLeft>
                     <span>포인트</span>
                     <div>
-                    <FontAwesomeIcon icon="fa-solid fa-circle-question" />
+                      <FontAwesomeIcon icon="fa-solid fa-circle-question" />
                     </div>
                   </VoucherInfoHeaderLeft>
                   <div>
@@ -605,87 +785,87 @@ function Carts() {
                     <VoucherInfoHeaderRightNum>0</VoucherInfoHeaderRightNum>
                   </div>
                 </VoucherInfoHeader>
-                <div>
-                  <div>
-                    <input />
-                  </div>
+                <PointInteraction>
+                  <VoucherInput>
+                    <input type='number' style={{textAlign: 'right'}} placeholder='1,000잎 이상 사용가능' />
+                  </VoucherInput>
                   <SmallButton>전액사용</SmallButton>
-                </div>
+                </PointInteraction>
               </div>
-              <div>
+              <PriceRegular>
                 <span>선택상품 금액</span>
                 <div>
-                  <span>415800</span>
+                  <span>415,800</span>
                   <span>원</span>
                 </div>
-              </div>
-              <div>
-                <div>
-                  <div>
+              </PriceRegular>
+              <PriceDiscount>
+                <PriceDiscountSummary>
+                  <PriceDiscountButton onClick={() => {setIsPriceDetailOpen(prev => !prev)}}>
                     <span>할인금액</span>
-                    <svg></svg>
-                  </div>
-                  <div>
-                    <span>-35750</span>
+                    {isPriceDetailOpen ? <FontAwesomeIcon icon="fa-solid fa-angle-up" /> : <FontAwesomeIcon icon="fa-solid fa-angle-down" />}
+                  </PriceDiscountButton>
+                  <CartNumUnit color='#e5503c'>
+                    <span>-35,750</span>
                     <span>원</span>
-                  </div>
-                </div>
-                <div>
+                  </CartNumUnit>
+                </PriceDiscountSummary>
+                <PriceDiscountDetail style={isPriceDetailOpen ? {display: 'block'} : {display: 'none'}}>
                   <div>
-                    <div>
+                    <PriceDiscountDetailItem>
                       <div>- 즉시할인</div>
-                      <div>
-                        <span>-35750</span>
+                      <CartNumUnit>
+                        <span>-35,750</span>
                         <span>원</span>
-                      </div>
-                    </div>
-                    <div>
+                      </CartNumUnit>
+                    </PriceDiscountDetailItem>
+                    <PriceDiscountDetailItem>
                       <div>- 쿠폰할인</div>
-                      <div>
+                      <CartNumUnit>
                         <span>0</span>
                         <span>원</span>
-                      </div>
-                    </div>
-                    <div>
+                      </CartNumUnit>
+                    </PriceDiscountDetailItem>
+                    <PriceDiscountDetailItem>
                       <div>- 포인트사용</div>
-                      <div>
+                      <CartNumUnit>
                         <span>0</span>
                         <span>잎</span>
-                      </div>
-                    </div>
+                      </CartNumUnit>
+                    </PriceDiscountDetailItem>
                   </div>
-                </div>
-              </div>
-              <div>
+                </PriceDiscountDetail>
+              </PriceDiscount>
+              <PricePay>
                 <span>총 결제금액</span>
                 <div>
-                  <span>380050</span>
+                  <span>380,050</span>
                   <span>원</span>
                 </div>
-              </div>
-              <div>
-                <i></i>
+              </PricePay>
+              <DiscountButton>
+              <FontAwesomeIcon icon="fa-solid fa-circle-check" />
                 <span>15%</span>
                 할인받기
-              </div>
+              </DiscountButton>
               <PayButton onClick={addCourses}>결제하기</PayButton>
             </div>
-            <div>
+            <TermsAgreement>
               <div>
                 <label>
                   회원 본인은 주문내용을 확인했으며,
                   <span>구매조건 및 개인정보취급방침</span>과 결제에 동의합니다.
                 </label>
               </div>
-            </div>
-          </div>
-          <div>
-            <div>
-              <i></i>
-              <span>문의 바로가기</span>
-            </div>
+            </TermsAgreement>
           </div>
         </VoucherInfo>
+        <HasQuestions>
+          <div>
+            <FontAwesomeIcon icon="fa-solid fa-message" />
+            <span>문의 바로가기</span>
+          </div>
+        </HasQuestions>
       </RightCart>
     </Wrapper>
   );
