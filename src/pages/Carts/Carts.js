@@ -598,6 +598,9 @@ function Carts() {
     navigate('/my_courses');
   };
 
+  let totalPrice = 0;
+  courses?.data[0]?.class?.map((v, i) => totalPrice += v.price);
+
   return (
     <Wrapper>
       <LeftCart>
@@ -795,7 +798,7 @@ function Carts() {
               <PriceRegular>
                 <span>선택상품 금액</span>
                 <div>
-                  <span>415,800</span>
+                  <span>{totalPrice.toLocaleString()}</span>
                   <span>원</span>
                 </div>
               </PriceRegular>
@@ -806,7 +809,7 @@ function Carts() {
                     {isPriceDetailOpen ? <FontAwesomeIcon icon="fa-solid fa-angle-up" /> : <FontAwesomeIcon icon="fa-solid fa-angle-down" />}
                   </PriceDiscountButton>
                   <CartNumUnit color='#e5503c'>
-                    <span>-35,750</span>
+                    <span>0</span>
                     <span>원</span>
                   </CartNumUnit>
                 </PriceDiscountSummary>
@@ -815,7 +818,7 @@ function Carts() {
                     <PriceDiscountDetailItem>
                       <div>- 즉시할인</div>
                       <CartNumUnit>
-                        <span>-35,750</span>
+                        <span>0</span>
                         <span>원</span>
                       </CartNumUnit>
                     </PriceDiscountDetailItem>
@@ -839,7 +842,7 @@ function Carts() {
               <PricePay>
                 <span>총 결제금액</span>
                 <div>
-                  <span>380,050</span>
+                  <span>{totalPrice.toLocaleString()}</span>
                   <span>원</span>
                 </div>
               </PricePay>
