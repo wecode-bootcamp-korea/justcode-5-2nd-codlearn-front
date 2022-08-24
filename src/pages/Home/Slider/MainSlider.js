@@ -135,10 +135,7 @@ function MainSlider() {
       setSlideIndex(1);
     }
 
-<<<<<<< HEAD
-=======
     //console.log('slideIndex : ', slideIndex);
->>>>>>> develop
     return () => {
       clearTimeout(timer);
     };
