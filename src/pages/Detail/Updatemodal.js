@@ -70,7 +70,7 @@ export const ButtonWrapper = styled.div`
 function Updatemodal({ setShowUpdate, id, reviewId, get, setShowOption }) {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState();
-  console.log(reviewId);
+
   const handleContent = e => {
     setContent(e.target.value);
   };
@@ -141,4 +141,3 @@ function Updatemodal({ setShowUpdate, id, reviewId, get, setShowOption }) {
   );
 }
 export default Updatemodal;
-//http://localhost:10010/course/${id}/review

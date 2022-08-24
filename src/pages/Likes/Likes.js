@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import MyPage from '../MyPage/MyPage';
 import styled from 'styled-components';
 import { LoginContext } from '../../App';
+import BASE_URL from '../../config';
 
 import axios from 'axios';
 
 function Likes() {
   const [isLogin, setIsLogin] = useContext(LoginContext);
   const [userData, setUserData] = useState([]);
-  console.log(isLogin);
 
   const token = localStorage.getItem('token');
 
   const boardApi = async () => {
     setIsLogin(true);
-    const response = await axios.get(`http://localhost:10010/dashboard`, {
+    const response = await axios.get(`${BASE_URL}/dashboard`, {
       headers: {
         Authorization: token,
       },
@@ -26,7 +26,6 @@ function Likes() {
   useEffect(() => {
     boardApi();
   }, []);
-  console.log('data : ', userData?.data?.wishlist);
 
   return (
     <MyPage>

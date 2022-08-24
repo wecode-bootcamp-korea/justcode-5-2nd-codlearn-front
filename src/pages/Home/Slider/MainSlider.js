@@ -90,17 +90,25 @@ function MainSlider() {
   };
   const newSlide = addSlide();
   const slidelength = newSlide.length;
-  const clickPrev = () => {
-    sliderContainerRef.current.style.transform = `translateX(-${
-      (slideIndex - 1) * 100
-    }vw)`;
-    sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
-    setSlideIndex(prev => prev - 1);
-  };
 
+  const clickPrev = () => {
+    if (slideIndex <= 0) {
+      sliderContainerRef.current.style.transform = `translateX(-100vw)`;
+      sliderContainerRef.current.style.transition = 'transform 0s';
+      //setSlideIndex(0);
+      //setSlideIndex(prev => prev - 1);
+    } else {
+      sliderContainerRef.current.style.transform = `translateX(-${
+        (slideIndex - 2) * 100
+      }vw)`;
+      sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
+      setSlideIndex(prev => prev - 1);
+    }
+  };
+  //(slideIndex + 1) * 100
   const clickNext = () => {
     sliderContainerRef.current.style.transform = `translateX(-${
-      (slideIndex + 1) * 100
+      slideIndex * 100
     }vw)`;
     sliderContainerRef.current.style.transition = 'transform 1s ease-in';
     setSlideIndex(prev => prev + 1);
@@ -108,20 +116,27 @@ function MainSlider() {
 
   const clickPause = () => {
     setPause(!pause);
+
     //setSlideIndex(10);
   };
 
   const showIndex = () => {
     if (slideIndex < 8) {
-      return slideIndex;
-    } else if (slideIndex === 8) {
+      if (slideIndex <= 0) {
+        sliderContainerRef.current.style.transform = `translateX(-600vw)`;
+        setSlideIndex(7);
+      } else {
+        return slideIndex;
+      }
+    } else {
+      sliderContainerRef.current.style.transform = `translateX(-800vw)`;
       return 1;
     }
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (slideIndex <= slidelength - 1) {
+    const timer = setInterval(() => {
+      if (slideIndex < slidelength - 1) {
         setSlideIndex(prev => prev + 1);
         sliderContainerRef.current.style.transition = 'transform 0.5s ease-in';
         sliderContainerRef.current.style.transform = `translateX(-${
@@ -129,15 +144,17 @@ function MainSlider() {
         }vw)`;
       }
     }, 2000);
-    if (slideIndex > slidelength - 1) {
-      sliderContainerRef.current.style.transition = 'transform 0s ';
-      sliderContainerRef.current.style.transform = `translateX(-0vw)`;
-      setSlideIndex(1);
+    if (slideIndex >= slidelength - 1) {
+      setTimeout(() => {
+        sliderContainerRef.current.style.transition = 'transform 0s';
+        sliderContainerRef.current.style.transform = `translateX(-0vw)`;
+        setSlideIndex(1);
+      }, 300);
     }
 
-    //console.log('slideIndex : ', slideIndex);
     return () => {
-      clearTimeout(timer);
+      clearInterval(timer);
+      clearTimeout();
     };
   }, [slideIndex, slidelength, pause]);
 
