@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import icon from '../../images/icon.png';
 function HeaderTop() {
   return (
     <HeaderTopWrapper>
       <TopWrapper>
-        <Education>          
-          <img alt='codlearn-icon' src='images/icon.png' />
-          <span>교육</span>          
+        <Education>
+          <img alt="codlearn-icon" src={icon} />
+          <span>교육</span>
         </Education>
-        <Employment>          
-          <img alt='codlearn-icon' src='images/icon.png' />
-          <span>채용</span>          
+        <Employment>
+          <img alt="codlearn-icon" src={icon} />
+          <span>채용</span>
         </Employment>
       </TopWrapper>
     </HeaderTopWrapper>

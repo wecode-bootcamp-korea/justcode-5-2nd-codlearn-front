@@ -14,6 +14,7 @@ import {
 import Login from '../Login/Login';
 import { LoginContext } from '../../App';
 import BASE_URL from '../../config';
+import icon from '../../images/logo.png';
 import * as oAuth from '../Login/OAuth';
 library.add(faMagnifyingGlass, faCartShopping, faBell, faUser);
 
@@ -121,7 +122,7 @@ function HeaderBottom() {
       <BottomWrapper>
         {modal && <Login openModal={openModal} setModal={setModal} />}
         <BottomLeftWrapper>
-          <img alt="codlearn-logo" src="images/logo.png" onClick={goToHome} />
+          <img alt="codlearn-logo" src={icon} onClick={goToHome} />
           <Courses>
             <span>
               <Link to="courses">강의</Link>

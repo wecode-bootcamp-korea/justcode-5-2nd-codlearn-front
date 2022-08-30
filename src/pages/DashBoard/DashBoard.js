@@ -5,7 +5,7 @@ import MyPage from '../MyPage/MyPage';
 import styled from 'styled-components';
 import axios from 'axios';
 import BASE_URL from '../../config';
-
+import icon from '../../images/icon.png';
 function DashBoard() {
   const [isLogin, setIsLogin] = useContext(LoginContext);
   const [userData, setUserData] = useState(null);
@@ -46,7 +46,7 @@ function DashBoard() {
                 <Content>
                   <div className="text">
                     <div className="logoIcon">
-                      <img src="images/icon.png" alt="icon" />
+                      <img src={icon} alt="icon" />
                     </div>
                     <p> {userData?.data.user.name}님, 오늘 하루 화이팅! 👋🏻</p>
                   </div>

@@ -433,7 +433,7 @@ function Courses() {
         </MainSortWrapper>
         <MainWrapper>
           {!isLoading
-            ? courseData?.data.map(el => (
+            ? courseData?.data?.map(el => (
                 <Class
                   navigate={navigate}
                   key={el.id}

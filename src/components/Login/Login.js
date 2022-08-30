@@ -6,7 +6,7 @@ import { faEye, faEyeSlash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import BASE_URL from '../../config';
 import KakaoLogin from './KakaoLogin';
 import axios from 'axios';
-
+import logo from '../../images/logo.png';
 function Login({ openModal, setModal }) {
   const navigate = useNavigate();
   const useLockBodyScroll = () => {
@@ -92,7 +92,7 @@ function Login({ openModal, setModal }) {
             <CloseIcon icon={faXmark} />
           </Close>
           <Logo>
-            <img src="images/logo.png" alt="logo" />
+            <img src={logo} alt="logo" />
           </Logo>
           <SignInForm onSubmit={onSubmitHandler}>
             <InputBlock>

@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import * as oAuth from '../Login/OAuth';
-
+import logo from '../../images/kakao_login.png';
 function KakaoLogin() {
   const CLIENT_ID = process.env.REACT_APP_REST_API_KEY;
 
@@ -13,7 +13,7 @@ function KakaoLogin() {
 
   return (
     <SocialSignUpBtn onClick={onClick}>
-      <KakaoLogo src="images/kakao_login.png" alt="logo" />
+      <KakaoLogo src={logo} alt="logo" />
     </SocialSignUpBtn>
   );
 }

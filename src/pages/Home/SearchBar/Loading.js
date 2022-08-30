@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import logo from '../../../images/logo.png';
 function Loading() {
   return (
     <LoadingWrap>
       <LoadingImg>
-        <img src="images/logo.png" alt="logo" />
+        <img src={logo} alt="logo" />
       </LoadingImg>
     </LoadingWrap>
   );
