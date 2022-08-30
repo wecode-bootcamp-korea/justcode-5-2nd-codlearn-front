@@ -192,11 +192,11 @@ function MainSlider() {
                   clickPause();
                 }}
               >
-                {!pause ? (
+                {/* {!pause ? (
                   <FontAwesomeIcon icon={faPause} />
                 ) : (
                   <FontAwesomeIcon icon={faCaretRight} />
-                )}
+                )} */}
               </PauseButton>
               <NextButton onClick={clickNext}>
                 <FontAwesomeIcon icon={faAngleRight} />
